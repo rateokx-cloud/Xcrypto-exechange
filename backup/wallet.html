@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Assets – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dash-body">
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">C</div><span class="nav-logo-text">CryptoX</span></a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='index.html'">Markets</button>
+    <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab" onclick="location.href='earn.html'">Earn</button>
+  </div>
+  <div class="nav-right">
+    <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
+    <a href="withdraw.html" class="btn btn-dark btn-sm"><i class="fas fa-arrow-up"></i> Withdraw</a>
+    <div class="user-nav">
+      <div class="avatar" id="navAv">--</div>
+      <div class="dropdown">
+        <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+        <div class="drop-item" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> Assets</div>
+        <div class="drop-divider"></div>
+        <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="dash-layout">
+  <aside class="dash-sidebar">
+    <div class="ds-section">Overview</div>
+    <a href="dashboard.html" class="ds-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+    <a href="wallet.html" class="ds-item active"><i class="fas fa-wallet"></i><span>Assets</span></a>
+    <a href="orders.html" class="ds-item"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+    <div class="ds-section">Wallet</div>
+    <a href="deposit.html" class="ds-item"><i class="fas fa-arrow-down"></i><span>Deposit</span></a>
+    <a href="withdraw.html" class="ds-item"><i class="fas fa-arrow-up"></i><span>Withdraw</span></a>
+    <div class="ds-section">Account</div>
+    <a href="profile.html" class="ds-item"><i class="fas fa-user-cog"></i><span>Settings</span></a>
+  </aside>
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div class="dash-breadcrumb"><i class="fas fa-home"></i><i class="fas fa-chevron-right"></i><span class="current">My Assets</span></div>
+    </div>
+    <!-- Total balance card -->
+    <div class="asset-block" style="margin-bottom:20px">
+      <div class="ab-title"><i class="fas fa-coins"></i> Estimated Total Balance
+        <button onclick="toggleHide()" style="background:none;border:none;color:var(--t3);cursor:pointer;margin-left:6px"><i id="hideIcon" class="fas fa-eye"></i></button>
+        <span style="margin-left:auto;display:flex;gap:16px;font-size:12px">
+          <a href="wallet.html" style="color:var(--yellow)">Spot Wallet ›</a>
+          <a href="#" style="color:var(--t3)">Earn Wallet ›</a>
+          <a href="#" style="color:var(--t3)">Futures Wallet ›</a>
+        </span>
+      </div>
+      <div class="ab-value"><span id="walletTotal">$0.00</span><span class="unit">USD</span></div>
+      <div class="ab-btc" id="walletBtcEq">≈ 0.00000000 BTC</div>
+      <div class="ab-actions">
+        <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
+        <a href="withdraw.html" class="btn btn-dark btn-sm"><i class="fas fa-arrow-up"></i> Withdraw</a>
+        <a href="trade.html" class="btn btn-dark btn-sm"><i class="fas fa-exchange-alt"></i> Trade</a>
+        <a href="p2p.html" class="btn btn-dark btn-sm"><i class="fas fa-handshake"></i> P2P</a>
+      </div>
+    </div>
+    <!-- Asset table -->
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <h3>Asset Balances</h3>
+        <div class="flex gap8">
+          <input type="text" class="tbl-search" placeholder="Search coin..." id="coinSearch" oninput="filterCoins()" style="width:160px"/>
+          <label class="flex gap6" style="font-size:12px;color:var(--t2);cursor:pointer">
+            <input type="checkbox" id="hideZero" onchange="filterCoins()" style="accent-color:var(--yellow)"/> Hide zero balances
+          </label>
+        </div>
+      </div>
+      <div class="admin-card-body">
+        <table class="data-table" id="walletTbl">
+          <thead><tr>
+            <th>Coin</th><th style="text-align:right">Total</th><th style="text-align:right">Available</th>
+            <th style="text-align:right">In Order</th><th style="text-align:right">Price</th>
+            <th style="text-align:right">USD Value</th><th style="text-align:right">24H</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="walletTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Transaction history -->
+    <div class="admin-card" style="margin-top:16px">
+      <div class="admin-card-head">
+        <h3>Transaction History</h3>
+        <div class="flex gap6">
+          <button class="btn btn-dark btn-xs tx-tab active" data-tx="all">All</button>
+          <button class="btn btn-dark btn-xs tx-tab" data-tx="trade">Trades</button>
+          <button class="btn btn-dark btn-xs tx-tab" data-tx="deposit">Deposits</button>
+          <button class="btn btn-dark btn-xs tx-tab" data-tx="withdrawal">Withdrawals</button>
+        </div>
+      </div>
+      <div class="admin-card-body">
+        <table class="data-table">
+          <thead><tr><th>Date</th><th>Type</th><th>Coin</th><th style="text-align:right">Amount</th><th>Status</th><th>Details</th></tr></thead>
+          <tbody id="txTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/wallet.js"></script>
+</body>
+</html>

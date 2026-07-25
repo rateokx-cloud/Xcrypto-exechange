@@ -1,0 +1,63 @@
+/* ============================================
+   CRYPTOX — Admin Panel Additional Styles
+   ============================================ */
+
+/* The main styles are in style.css.
+   This file contains admin-specific overrides and extras. */
+
+.admin-sidebar.collapsed { width: 64px; }
+.admin-sidebar.collapsed .a-item span,
+.admin-sidebar.collapsed .menu-sec,
+.admin-sidebar.collapsed .a-badge { display: none; }
+.admin-sidebar.collapsed .a-item { justify-content: center; padding: 10px; }
+
+/* Charts row */
+.admin-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.admin-tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+/* Chart canvas */
+.chart-canvas-wrap { background: var(--bg); border-radius: 0 0 var(--radius2) var(--radius2); }
+.chart-canvas-wrap canvas { width: 100%; height: 180px; display: block; }
+
+/* Period buttons */
+.period-btns { display: flex; gap: 3px; }
+.pbtn { padding: 3px 8px; border-radius: var(--radius); border: 1px solid var(--border); background: none; color: var(--t3); font-size: 11px; cursor: pointer; transition: all .12s; }
+.pbtn:hover { color: var(--t2); border-color: var(--border2); }
+.pbtn.active { background: var(--yellow); color: #111; border-color: var(--yellow); font-weight: 600; }
+
+/* KYC review card */
+.kyc-doc-preview { width: 100%; height: 140px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--t3); font-size: 32px; }
+
+/* User detail card */
+.user-detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.udetail-item { background: var(--bg3); border-radius: var(--radius); padding: 12px; }
+.udetail-item label { font-size: 11px; color: var(--t3); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .3px; }
+.udetail-item span { font-size: 13px; font-weight: 600; color: var(--t1); }
+
+/* Action bar */
+.action-bar { display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: var(--bg3); border-top: 1px solid var(--border); }
+
+/* Real-time indicator */
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; display: inline-block; margin-right: 4px; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.8)} }
+
+/* Stats sub-row */
+.astat-today { display: flex; gap: 16px; margin-top: 4px; }
+.astat-today-item { font-size: 11px; color: var(--t3); }
+.astat-today-item strong { color: var(--t2); }
+
+/* Announcement type colors */
+.ann-type { padding: 2px 7px; border-radius: var(--radius); font-size: 11px; font-weight: 600; }
+.ann-info { background: rgba(59,130,246,.12); color: #60a5fa; }
+.ann-warn { background: rgba(240,185,11,.12); color: var(--yellow); }
+.ann-critical { background: var(--red-dim); color: var(--red); }
+.ann-success { background: var(--green-dim); color: var(--green); }
+
+@media(max-width:1200px) {
+  .astat-grid { grid-template-columns: repeat(3,1fr); }
+  .admin-charts-row,.admin-tables-row { grid-template-columns: 1fr; }
+}
+@media(max-width:768px) {
+  .admin-sidebar { display: none; }
+  .astat-grid { grid-template-columns: repeat(2,1fr); }
+}

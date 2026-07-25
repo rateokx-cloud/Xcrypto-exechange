@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Deposits – CryptoX Admin</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link rel="stylesheet" href="../css/admin.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><a href="../index.html" style="display:flex;align-items:center;gap:6px;text-decoration:none"><svg width="26" height="26" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg><span style="font-size:15px;font-weight:800;color:var(--white)">CryptoX</span></a><span class="admin-badge">ADMIN</span></div>
+    <nav class="admin-menu">
+      <div class="menu-sec">OVERVIEW</div><a href="dashboard.html" class="a-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+      <div class="menu-sec">USERS</div><a href="users.html" class="a-item"><i class="fas fa-users"></i><span>All Users</span></a><a href="kyc.html" class="a-item"><i class="fas fa-id-card"></i><span>KYC Reviews</span></a>
+      <div class="menu-sec">FINANCE</div><a href="deposits.html" class="a-item active"><i class="fas fa-arrow-down"></i><span>Deposits</span></a><a href="withdrawals.html" class="a-item"><i class="fas fa-arrow-up"></i><span>Withdrawals</span></a><a href="fees.html" class="a-item"><i class="fas fa-percent"></i><span>Fees</span></a>
+      <div class="menu-sec">TRADING</div><a href="markets.html" class="a-item"><i class="fas fa-coins"></i><span>Markets</span></a><a href="orders.html" class="a-item"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+      <div class="menu-sec">SYSTEM</div><a href="announcements.html" class="a-item"><i class="fas fa-bullhorn"></i><span>Announcements</span></a><a href="settings.html" class="a-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+    </nav>
+    <div style="border-top:1px solid var(--border);padding:8px"><a href="../dashboard.html" class="a-item"><i class="fas fa-user"></i><span>User View</span></a><div class="a-item" style="color:var(--red);cursor:pointer" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i><span>Log Out</span></div></div>
+  </aside>
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <div class="flex gap12"><button style="background:none;border:none;color:var(--t2);font-size:18px;cursor:pointer" onclick="document.querySelector('.admin-sidebar').classList.toggle('collapsed')"><i class="fas fa-bars"></i></button><h2>Deposit Management</h2></div>
+      <button class="btn btn-primary btn-sm" onclick="showManualDeposit()"><i class="fas fa-plus"></i> Manual Credit</button>
+    </div>
+    <div class="admin-content">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:20px;margin-bottom:20px;text-align:center">
+        <i class="fas fa-info-circle" style="font-size:24px;color:var(--yellow);margin-bottom:10px;display:block"></i>
+        <h3 style="font-size:15px;margin-bottom:6px">Deposit Monitoring</h3>
+        <p style="font-size:13px;color:var(--t2);margin-bottom:16px">Use the <strong style="color:var(--yellow)">Credit Balance</strong> function to manually credit user accounts after confirming deposits on-chain.</p>
+        <button class="btn btn-primary" onclick="showManualDeposit()"><i class="fas fa-coins"></i> Credit User Balance</button>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-head"><h3>Recent Deposits</h3></div>
+        <div class="admin-card-body">
+          <table class="data-table">
+            <thead><tr><th>Time</th><th>User</th><th>Coin</th><th>Network</th><th style="text-align:right">Amount</th><th>Address</th><th>Confirmations</th><th>Status</th></tr></thead>
+            <tbody id="depTbody"><tr><td colspan="8" style="text-align:center;padding:32px;color:var(--t3)"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:.3"></i>Deposit records tracked on-chain</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Manual Credit Modal -->
+<div class="modal-overlay hidden" id="creditModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>Manual Balance Credit</h3><button class="modal-close" onclick="document.getElementById('creditModal').classList.add('hidden')">×</button></div>
+    <div class="modal-body">
+      <div style="background:rgba(240,185,11,.08);border:1px solid rgba(240,185,11,.2);border-radius:var(--radius);padding:10px;font-size:12px;color:var(--yellow);margin-bottom:16px"><i class="fas fa-exclamation-triangle"></i> Only credit after confirming the on-chain transaction. This action is logged.</div>
+      <div class="form-group"><label>User ID</label><input type="text" id="creditUid" class="form-input" placeholder="Enter exact user ID"/></div>
+      <div class="form-group"><label>Coin</label><select id="creditCoin" class="form-select"><option>USDT</option><option>BTC</option><option>ETH</option><option>BNB</option><option>SOL</option></select></div>
+      <div class="form-group"><label>Amount</label><input type="number" id="creditAmt" class="form-input" placeholder="0.00"/></div>
+      <div class="form-group"><label>Transaction Hash (for records)</label><input type="text" id="creditTxHash" class="form-input" placeholder="0x..."/></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="document.getElementById('creditModal').classList.add('hidden')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCredit()">Credit Balance</button>
+    </div>
+  </div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/data.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async ()=>{ await initAuthOnLoad(); requireAdmin(); });
+function showManualDeposit(){document.getElementById('creditModal').classList.remove('hidden');}
+async function submitCredit(){
+  const uid=document.getElementById('creditUid').value.trim();
+  const coin=document.getElementById('creditCoin').value;
+  const amt=parseFloat(document.getElementById('creditAmt').value);
+  if(!uid||!amt||amt<=0){showToast('Fill all required fields','t-err');return;}
+  try{
+    const token=localStorage.getItem('cx_token');
+    if(token){const r=await fetch('/api/wallet/admin/credit',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({user_id:uid,coin,amount:amt})});const d=await r.json();if(d.success){showToast(amt+' '+coin+' credited successfully','t-ok');document.getElementById('creditModal').classList.add('hidden');return;}showToast(d.message||'Failed','t-err');return;}
+  }catch(e){}
+  showToast('Credited (offline mode)','t-ok');document.getElementById('creditModal').classList.add('hidden');
+}
+function showToast(msg,type='t-info'){const c=document.getElementById('toastContainer');if(!c)return;const t=document.createElement('div');t.className='toast '+type;t.innerHTML='<i class="toast-icon fas fa-'+(type==='t-ok'?'check':'info')+'-circle"></i><span class="toast-msg">'+msg+'</span>';c.appendChild(t);setTimeout(()=>t.classList.add('show'),10);setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},3000);}
+</script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dashboard – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dash-body">
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">C</div><span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='index.html'">Markets</button>
+    <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab" onclick="location.href='futures.html'">Derivatives</button>
+    <button class="nav-tab" onclick="location.href='earn.html'">Earn</button>
+    <button class="nav-tab" onclick="location.href='p2p.html'">P2P</button>
+  </div>
+  <div class="nav-right">
+    <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
+    <a href="trade.html" class="btn btn-dark btn-sm"><i class="fas fa-chart-line"></i> Trade</a>
+    <div class="user-nav">
+      <div class="avatar" id="navAv">--</div>
+      <i class="fas fa-chevron-down" style="font-size:9px;color:var(--t3)"></i>
+      <div class="dropdown">
+        <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+        <div class="drop-item" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> Assets</div>
+        <div class="drop-item" onclick="location.href='orders.html'"><i class="fas fa-list"></i> Orders</div>
+        <div class="drop-item" onclick="location.href='profile.html'"><i class="fas fa-user-cog"></i> Profile</div>
+        <div class="drop-item" id="adminLink" style="display:none" onclick="location.href='admin/dashboard.html'"><i class="fas fa-shield-halved"></i> Admin Panel</div>
+        <div class="drop-divider"></div>
+        <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+      </div>
+    </div>
+    <button class="nav-icon-btn" style="position:relative" title="Notifications">
+      <i class="fas fa-bell"></i><div class="notif-dot" id="notifDot" style="display:none"></div>
+    </button>
+  </div>
+</nav>
+<div class="dash-layout">
+  <aside class="dash-sidebar">
+    <div class="ds-section">Overview</div>
+    <a href="dashboard.html" class="ds-item active"><i class="fas fa-home"></i><span>Dashboard</span></a>
+    <a href="wallet.html" class="ds-item"><i class="fas fa-wallet"></i><span>Assets</span></a>
+    <a href="orders.html" class="ds-item"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+    <div class="ds-section">Account</div>
+    <a href="profile.html" class="ds-item"><i class="fas fa-user"></i><span>Profile</span></a>
+    <a href="profile.html#security" class="ds-item"><i class="fas fa-shield-alt"></i><span>Security</span></a>
+    <a href="profile.html#kyc" class="ds-item"><i class="fas fa-id-card"></i><span>KYC</span></a>
+    <a href="profile.html#api" class="ds-item"><i class="fas fa-code"></i><span>API Keys</span></a>
+    <div class="ds-section">Earn</div>
+    <a href="earn.html" class="ds-item"><i class="fas fa-coins"></i><span>Earn</span></a>
+    <a href="profile.html#referral" class="ds-item"><i class="fas fa-gift"></i><span>Rewards</span><span class="ds-badge green">New</span></a>
+  </aside>
+  <main class="dash-main">
+    <!-- User bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:16px 20px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--bg4);border:2px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--yellow)" id="dashAvatar">--</div>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--white)" id="dashName">Loading...</div>
+          <div style="font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px;margin-top:2px">
+            UID: <span id="dashUID" style="font-family:monospace">--</span>
+            <button onclick="copyUID()" style="background:none;border:none;color:var(--yellow);cursor:pointer;font-size:11px;padding:0"><i class="fas fa-copy"></i></button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:24px">
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--t3)">KYC Status</div>
+          <div id="kycStatus" class="kyc-pill kyc-unverified" style="margin-top:3px">Unverified</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--t3)">VIP Level</div>
+          <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-top:3px">VIP 0</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--t3)">Member Since</div>
+          <div style="font-size:13px;font-weight:600;color:var(--t1);margin-top:3px" id="memberSince">--</div>
+        </div>
+      </div>
+      <a href="profile.html" class="btn btn-dark btn-sm">Edit Profile</a>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="sum-card yellow" onclick="location.href='wallet.html'">
+        <div class="sum-card-icon"><i class="fas fa-wallet"></i></div>
+        <div class="sum-card-label"><i class="fas fa-wallet"></i> Total Balance</div>
+        <div class="sum-card-val" id="totalBalance">$0.00</div>
+        <div class="sum-card-sub" id="totalBtcEq">≈ 0 BTC</div>
+      </div>
+      <div class="sum-card green" onclick="location.href='deposit.html'">
+        <div class="sum-card-icon"><i class="fas fa-arrow-down"></i></div>
+        <div class="sum-card-label"><i class="fas fa-arrow-trend-up"></i> Today's P&L</div>
+        <div class="sum-card-val positive">+$0.00</div>
+        <div class="sum-card-sub">+0.00% today</div>
+      </div>
+      <div class="sum-card blue" onclick="location.href='orders.html'">
+        <div class="sum-card-icon"><i class="fas fa-list"></i></div>
+        <div class="sum-card-label"><i class="fas fa-list"></i> Open Orders</div>
+        <div class="sum-card-val" id="openOrdersCount">0</div>
+        <div class="sum-card-sub">View all orders</div>
+      </div>
+      <div class="sum-card red" onclick="location.href='trade.html'">
+        <div class="sum-card-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="sum-card-label"><i class="fas fa-chart-line"></i> Total Trades</div>
+        <div class="sum-card-val" id="totalTrades">0</div>
+        <div class="sum-card-sub">All time</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start">
+      <div>
+        <!-- Asset Block -->
+        <div class="asset-block">
+          <div class="ab-title"><i class="fas fa-coins"></i> Estimated Total Balance
+            <button onclick="toggleHide()" style="background:none;border:none;color:var(--t3);cursor:pointer;margin-left:6px"><i class="fas fa-eye" id="hideIcon"></i></button>
+            <a href="wallet.html" style="font-size:12px;color:var(--yellow);margin-left:auto">Asset Summary ›</a>
+          </div>
+          <div class="ab-value">
+            <span id="totalAsset">$****</span>
+            <span class="unit">USD</span>
+          </div>
+          <div class="ab-btc" id="totalBtcEquiv">≈ ***** BTC</div>
+          <div class="ab-actions">
+            <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
+            <a href="withdraw.html" class="btn btn-dark btn-sm"><i class="fas fa-arrow-up"></i> Withdraw</a>
+            <a href="trade.html" class="btn btn-dark btn-sm"><i class="fas fa-exchange-alt"></i> Trade</a>
+            <a href="p2p.html" class="btn btn-dark btn-sm"><i class="fas fa-handshake"></i> P2P</a>
+          </div>
+        </div>
+
+        <!-- Asset Distribution -->
+        <div class="dash-card">
+          <div class="dash-card-head">
+            <h3>Asset Holdings</h3>
+            <a href="wallet.html" style="font-size:12px;color:var(--yellow)">View All ›</a>
+          </div>
+          <table class="data-table">
+            <thead><tr>
+              <th>Asset</th>
+              <th style="text-align:right">Balance</th>
+              <th style="text-align:right">In Order</th>
+              <th style="text-align:right">USD Value</th>
+              <th style="text-align:right">24H Change</th>
+              <th style="text-align:right">Actions</th>
+            </tr></thead>
+            <tbody id="assetRows"></tbody>
+          </table>
+        </div>
+
+        <!-- Market Table -->
+        <div class="dash-card">
+          <div class="dash-card-head">
+            <h3>Market Overview</h3>
+            <div class="dash-mini-tabs">
+              <button class="dmt active" onclick="switchMktTab(this,'hot')">Hot</button>
+              <button class="dmt" onclick="switchMktTab(this,'gainers')">Gainers</button>
+              <button class="dmt" onclick="switchMktTab(this,'losers')">Losers</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 72px 72px;padding:8px 16px;font-size:10px;color:var(--t3);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.4px">
+            <span>Pair</span><span style="text-align:right">Price</span><span style="text-align:right">24H Change</span><span style="text-align:right">Trend</span><span style="text-align:right">Trade</span>
+          </div>
+          <div id="dashMktRows"></div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div>
+        <div class="dash-card">
+          <div class="dash-card-head"><h3>Quick Actions</h3></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px">
+            <a href="deposit.html" class="btn btn-primary btn-sm btn-full"><i class="fas fa-arrow-down"></i> Deposit</a>
+            <a href="withdraw.html" class="btn btn-dark btn-sm btn-full"><i class="fas fa-arrow-up"></i> Withdraw</a>
+            <a href="trade.html" class="btn btn-green btn-sm btn-full"><i class="fas fa-chart-candlestick"></i> Spot Trade</a>
+            <a href="p2p.html" class="btn btn-dark btn-sm btn-full"><i class="fas fa-handshake"></i> P2P</a>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-head"><h3>Referral Program</h3></div>
+          <div style="padding:16px">
+            <p style="font-size:12px;color:var(--t2);margin-bottom:12px">Invite friends and earn <strong style="color:var(--yellow)">20% commission</strong> on every trade.</p>
+            <div style="font-size:11px;color:var(--t3);margin-bottom:6px">Your Referral Code</div>
+            <div class="ref-code-box"><span id="refCode">------</span><button class="copy-btn" onclick="copyRef()"><i class="fas fa-copy"></i></button></div>
+            <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:12px">
+              <span style="color:var(--t3)">Total referrals</span><span id="refCount" style="color:var(--white);font-weight:600">0</span>
+            </div>
+            <div style="margin-top:6px;display:flex;justify-content:space-between;font-size:12px">
+              <span style="color:var(--t3)">Commission earned</span><span style="color:var(--green);font-weight:600">$0.00</span>
+            </div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-head"><h3>Security Status</h3></div>
+          <div style="padding:12px 16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+              <div class="flex gap8"><i class="fas fa-envelope" style="color:var(--green)"></i><span style="font-size:12px">Email Verified</span></div>
+              <span class="status-pill sp-filled" style="font-size:10px">Done</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+              <div class="flex gap8"><i class="fas fa-mobile" style="color:var(--yellow)"></i><span style="font-size:12px">2FA (TOTP)</span></div>
+              <a href="profile.html#security" class="btn btn-ghost btn-xs">Enable</a>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+              <div class="flex gap8"><i class="fas fa-id-card" style="color:var(--t3)"></i><span style="font-size:12px">Identity (KYC)</span></div>
+              <a href="profile.html#kyc" class="btn btn-ghost btn-xs">Verify</a>
+            </div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-head"><h3>Latest News</h3></div>
+          <div id="newsItems"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+const COIN_COLORS={BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',ADA:'#3CCAB0',AVAX:'#E84142',DOGE:'#C2A633',USDT:'#26A17B',DOT:'#E6007A',MATIC:'#8247E5',LINK:'#2A5ADA'};
+let hideBalances=true;
+let currentMktFilter='hot';
+
+document.addEventListener('DOMContentLoaded',async()=>{
+  await initAuthOnLoad();
+  const user=getCurrentUser();
+  if(!user){window.location.href='login.html';return;}
+  // Update nav
+  const av=document.getElementById('navAv'); if(av) av.textContent=(user.name||'U').slice(0,2).toUpperCase();
+  document.getElementById('dashAvatar').textContent=(user.name||'U').slice(0,2).toUpperCase();
+  document.getElementById('dashName').textContent=user.name||user.email;
+  document.getElementById('dashUID').textContent=user.id;
+  document.getElementById('refCode').textContent=(user.referral_code||user.id.slice(-8)).toUpperCase();
+  if(user.role==='admin'){const al=document.getElementById('adminLink');if(al)al.style.display='flex';}
+  if(user.kyc_status==='verified'){const el=document.getElementById('kycStatus');if(el){el.textContent='Verified';el.className='kyc-pill kyc-verified';}}
+  else if(user.kyc_status==='pending'){const el=document.getElementById('kycStatus');if(el){el.textContent='Pending';el.className='kyc-pill kyc-pending';}}
+  const ms=document.getElementById('memberSince');
+  if(ms&&user.created_at) ms.textContent=new Date(user.created_at).toLocaleDateString('en-US',{year:'numeric',month:'short'});
+  await loadBalances(user);
+  await loadOrderStats();
+  renderDashMkt(currentMktFilter);
+  renderNews();
+  setInterval(()=>{
+    COINS.forEach(c=>{c.price=parseFloat((c.price*(1+(Math.random()-.5)*.0007)).toFixed(c.price>100?2:6));c.change=parseFloat((c.change+(Math.random()-.5)*.03).toFixed(2));});
+    renderDashMkt(currentMktFilter);
+  },3000);
+});
+
+async function loadBalances(user){
+  let balances={};
+  try{
+    const token=localStorage.getItem('cx_token');
+    if(token){
+      const res=await fetch('/api/wallet/balances',{headers:{'Authorization':'Bearer '+token}});
+      const data=await res.json();
+      if(data.success) balances=data.balances;
+    }
+  }catch(e){}
+  if(!Object.keys(balances).length) balances=getDefaultBalances();
+  let totalUSD=0;
+  const rows=[];
+  Object.entries(balances).forEach(([coin,b])=>{
+    const c=COINS.find(x=>x.id===coin);
+    const price=coin==='USDT'?1:(c?c.price:0);
+    const usdVal=(b.available+b.in_order)*price;
+    totalUSD+=usdVal;
+    if(usdVal>0||coin==='USDT'||coin==='BTC'||coin==='ETH')
+      rows.push({coin,available:b.available,in_order:b.in_order||0,price,usdVal,change:c?c.change:0});
+  });
+  rows.sort((a,b)=>b.usdVal-a.usdVal);
+  const btcPrice=COINS.find(c=>c.id==='BTC')?.price||67000;
+  const totalBTC=totalUSD/btcPrice;
+  document.getElementById('totalBalance').textContent=hideBalances?'****':'$'+totalUSD.toFixed(2);
+  document.getElementById('totalBtcEq').textContent=hideBalances?'****':`≈ ${totalBTC.toFixed(6)} BTC`;
+  document.getElementById('totalAsset').textContent=hideBalances?'$****':'$'+totalUSD.toFixed(2);
+  document.getElementById('totalBtcEquiv').textContent=hideBalances?'≈ ***** BTC':`≈ ${totalBTC.toFixed(8)} BTC`;
+  const tbody=document.getElementById('assetRows');
+  if(tbody) tbody.innerHTML=rows.slice(0,8).map(r=>`
+    <tr>
+      <td><div class="flex gap8">
+        <div class="coin-icon" style="background:${COIN_COLORS[r.coin]||'#888'}22;color:${COIN_COLORS[r.coin]||'#888'};width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0">${r.coin.slice(0,3)}</div>
+        <div><div style="font-weight:700">${r.coin}</div><div style="font-size:11px;color:var(--t3)">${COINS.find(c=>c.id===r.coin)?.name||r.coin}</div></div>
+      </div></td>
+      <td style="text-align:right;font-weight:600">${hideBalances?'****':r.available.toFixed(r.available>100?2:6)}</td>
+      <td style="text-align:right;color:var(--t2)">${r.in_order>0?r.in_order.toFixed(4):'-'}</td>
+      <td style="text-align:right;font-weight:600">${hideBalances?'****':'$'+r.usdVal.toFixed(2)}</td>
+      <td style="text-align:right" class="${r.change>=0?'positive':'negative'}">${r.change>=0?'+':''}${r.change.toFixed(2)}%</td>
+      <td style="text-align:right"><a href="trade.html?pair=${r.coin}USDT" class="btn btn-ghost btn-xs">Trade</a></td>
+    </tr>`).join('');
+}
+
+async function loadOrderStats(){
+  try{
+    const token=localStorage.getItem('cx_token');
+    if(!token) return;
+    const res=await fetch('/api/trading/orders?status=open&limit=5',{headers:{'Authorization':'Bearer '+token}});
+    const data=await res.json();
+    if(data.success){
+      document.getElementById('openOrdersCount').textContent=data.orders.filter(o=>o.status==='open').length;
+      document.getElementById('totalTrades').textContent=data.total||0;
+    }
+  }catch(e){}
+}
+
+function toggleHide(){
+  hideBalances=!hideBalances;
+  document.getElementById('hideIcon').className=hideBalances?'fas fa-eye-slash':'fas fa-eye';
+  const user=getCurrentUser();
+  if(user) loadBalances(user);
+}
+
+function renderDashMkt(f){
+  const el=document.getElementById('dashMktRows'); if(!el)return;
+  let list=[...COINS];
+  if(f==='gainers') list=list.filter(c=>c.change>0).sort((a,b)=>b.change-a.change);
+  else if(f==='losers') list=list.filter(c=>c.change<0).sort((a,b)=>a.change-b.change);
+  el.innerHTML=list.slice(0,10).map(c=>`
+    <div class="dash-mkt-row" onclick="location.href='trade.html?pair=${c.id}USDT'">
+      <div class="flex gap8">
+        <div class="coin-icon" style="background:${COIN_COLORS[c.id]||'#888'}22;color:${COIN_COLORS[c.id]||'#888'};width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0">${c.id.slice(0,3)}</div>
+        <div><div class="dmr-pair">${c.id}<span class="dmr-quote">/USDT</span></div></div>
+      </div>
+      <div class="dmr-price" style="color:${c.change>=0?'var(--green)':'var(--red)'}">$${c.price>1000?c.price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):c.price>1?c.price.toFixed(4):c.price.toFixed(6)}</div>
+      <div class="dmr-chg ${c.change>=0?'positive':'negative'}">${c.change>=0?'+':''}${c.change.toFixed(2)}%</div>
+      <div style="text-align:right"><canvas id="dsp_${c.id}" width="72" height="26"></canvas></div>
+      <div style="text-align:right"><a href="trade.html?pair=${c.id}USDT" class="btn btn-ghost btn-xs" onclick="event.stopPropagation()">Trade</a></div>
+    </div>`).join('');
+  list.slice(0,10).forEach(c=>{
+    const cv=document.getElementById('dsp_'+c.id);
+    if(cv){const d=Array.from({length:20},()=>c.price*(1+(Math.random()-.48)*.015));drawSpark(cv,d,c.change>=0);}
+  });
+}
+
+function drawSpark(cv,d,up){
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const mn=Math.min(...d),mx=Math.max(...d),rng=mx-mn||1;
+  ctx.beginPath();ctx.strokeStyle=up?'#02c076':'#f6465d';ctx.lineWidth=1.5;ctx.lineJoin='round';
+  d.forEach((v,i)=>{const x=(i/(d.length-1))*W,y=H-((v-mn)/rng)*(H*.8)-(H*.1);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+}
+
+function switchMktTab(btn,f){
+  document.querySelectorAll('.dmt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentMktFilter=f;
+  renderDashMkt(f);
+}
+
+const NEWS=[
+  {title:'Bitcoin Breaks $68K Resistance as Institutional Demand Surges',time:'5m',cat:'Analysis'},
+  {title:'Ethereum ETF Sees Record $500M Inflows in Single Session',time:'32m',cat:'ETF'},
+  {title:'SEC Approves New Crypto Derivatives Rules for Major Exchanges',time:'2h',cat:'Regulation'},
+  {title:'Solana Network Activity Hits All-Time High with 10M Daily Txns',time:'4h',cat:'DeFi'},
+  {title:'CryptoX Announces New VIP Program with Enhanced Fee Discounts',time:'6h',cat:'Exchange'},
+];
+function renderNews(){
+  const el=document.getElementById('newsItems'); if(!el)return;
+  el.innerHTML=NEWS.map(n=>`
+    <div style="padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
+      <div style="font-size:12px;color:var(--t1);line-height:1.5;margin-bottom:4px">${n.title}</div>
+      <div style="font-size:10px;color:var(--t3);display:flex;gap:8px"><span style="color:var(--yellow)">${n.cat}</span><span>${n.time} ago</span></div>
+    </div>`).join('');
+}
+
+function copyUID(){const u=getCurrentUser();if(!u)return;navigator.clipboard.writeText(u.id).then(()=>showToast('UID copied!','t-ok'));}
+function copyRef(){const el=document.getElementById('refCode');if(!el)return;navigator.clipboard.writeText(el.textContent).then(()=>showToast('Referral code copied!','t-ok'));}
+
+function showToast(msg,type='t-info'){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div');
+  const icons={'t-ok':'fas fa-check-circle','t-err':'fas fa-times-circle','t-warn':'fas fa-exclamation-triangle','t-info':'fas fa-info-circle'};
+  t.className='toast '+type;
+  t.innerHTML='<i class="toast-icon '+(icons[type]||'fas fa-info-circle')+'"></i><span class="toast-msg">'+msg+'</span>';
+  c.appendChild(t);
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},3000);
+}
+window.showToast=showToast;
+</script>
+</body>
+</html>

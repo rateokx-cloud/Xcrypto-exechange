@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Account Settings – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dash-body">
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">C</div><span class="nav-logo-text">CryptoX</span></a>
+  <div class="nav-right">
+    <div class="user-nav"><div class="avatar" id="navAv">--</div><div class="dropdown">
+      <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+      <div class="drop-divider"></div>
+      <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+    </div></div>
+  </div>
+</nav>
+<div class="dash-layout">
+  <aside class="dash-sidebar">
+    <div class="ds-section">Overview</div>
+    <a href="dashboard.html" class="ds-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+    <a href="wallet.html" class="ds-item"><i class="fas fa-wallet"></i><span>Assets</span></a>
+    <a href="orders.html" class="ds-item"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+    <div class="ds-section">Account</div>
+    <a href="profile.html" class="ds-item active"><i class="fas fa-user-cog"></i><span>Profile</span></a>
+    <a href="deposit.html" class="ds-item"><i class="fas fa-arrow-down"></i><span>Deposit</span></a>
+    <a href="withdraw.html" class="ds-item"><i class="fas fa-arrow-up"></i><span>Withdraw</span></a>
+  </aside>
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div class="dash-breadcrumb"><a href="dashboard.html" style="color:var(--t3)">Dashboard</a><i class="fas fa-chevron-right"></i><span class="current">Account Settings</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start">
+      <!-- Left: Profile Card + Nav -->
+      <div>
+        <div class="admin-card" style="text-align:center;padding:24px;margin-bottom:12px">
+          <div class="profile-avatar" id="profileAv">--</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px" id="profileName">--</div>
+          <div style="font-size:12px;color:var(--t3);margin-bottom:10px" id="profileEmail">--</div>
+          <div id="kycBadge" class="kyc-pill kyc-unverified"><i class="fas fa-times-circle"></i> Unverified</div>
+          <div style="border-top:1px solid var(--border);margin:14px 0;padding-top:12px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span style="color:var(--t3)">UID</span><span id="profileUID" style="font-family:monospace;font-size:11px">--</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span style="color:var(--t3)">VIP Level</span><span style="color:var(--yellow);font-weight:600">VIP 0</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t3)">Member Since</span><span id="memberSince">--</span></div>
+          </div>
+        </div>
+        <div class="admin-card" style="padding:8px">
+          <div class="profile-nav-item active" onclick="showTab('general',this)"><i class="fas fa-user" style="width:16px"></i> Profile Info</div>
+          <div class="profile-nav-item" onclick="showTab('security',this)"><i class="fas fa-shield-alt" style="width:16px"></i> Security</div>
+          <div class="profile-nav-item" onclick="showTab('kyc',this)"><i class="fas fa-id-card" style="width:16px"></i> KYC / Identity</div>
+          <div class="profile-nav-item" onclick="showTab('api',this)"><i class="fas fa-code" style="width:16px"></i> API Keys</div>
+          <div class="profile-nav-item" onclick="showTab('referral',this)"><i class="fas fa-gift" style="width:16px"></i> Referral</div>
+          <div class="profile-nav-item" onclick="showTab('preferences',this)"><i class="fas fa-sliders" style="width:16px"></i> Preferences</div>
+        </div>
+      </div>
+      <!-- Right: Tabs -->
+      <div>
+        <!-- GENERAL -->
+        <div id="tab-general" class="admin-card">
+          <div class="admin-card-head"><h3>Personal Information</h3></div>
+          <div id="profileAlert" class="alert" style="display:none"></div>
+          <div style="padding:20px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="form-group"><label>Full Name</label><input type="text" id="pfName" class="form-input" placeholder="Your full name"/></div>
+              <div class="form-group"><label>Email Address</label><input type="email" id="pfEmail" class="form-input" readonly style="opacity:.6;cursor:not-allowed"/></div>
+              <div class="form-group"><label>Phone Number</label><input type="tel" id="pfPhone" class="form-input" placeholder="+62 xxx xxxx xxxx"/></div>
+              <div class="form-group"><label>Country</label><select id="pfCountry" class="form-select"><option>Indonesia</option><option>United States</option><option>Singapore</option><option>United Kingdom</option><option>Australia</option><option>Japan</option><option>Malaysia</option><option>Vietnam</option><option>Thailand</option></select></div>
+              <div class="form-group"><label>Date of Birth</label><input type="date" id="pfDob" class="form-input"/></div>
+              <div class="form-group"><label>Language</label><select class="form-select"><option>English</option><option>Bahasa Indonesia</option><option>Chinese</option><option>Japanese</option></select></div>
+            </div>
+            <button class="btn btn-primary" onclick="saveProfile()"><i class="fas fa-save"></i> Save Changes</button>
+          </div>
+        </div>
+        <!-- SECURITY -->
+        <div id="tab-security" style="display:none">
+          <div class="admin-card" style="margin-bottom:12px">
+            <div class="admin-card-head"><h3>Security Overview</h3></div>
+            <div style="padding:4px 20px 12px">
+              <div class="security-item">
+                <div class="si-left">
+                  <div class="si-icon" style="background:var(--green-dim);color:var(--green)"><i class="fas fa-envelope"></i></div>
+                  <div class="si-info"><h4>Email Verification</h4><p>Your email is verified and active</p></div>
+                </div>
+                <span class="status-pill sp-filled"><i class="fas fa-check"></i> Verified</span>
+              </div>
+              <div class="security-item">
+                <div class="si-left">
+                  <div class="si-icon" style="background:rgba(240,185,11,.12);color:var(--yellow)"><i class="fas fa-mobile-alt"></i></div>
+                  <div class="si-info"><h4>2FA Authentication (TOTP)</h4><p>Adds extra layer of security to your account</p></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <label class="toggle-sw"><input type="checkbox" id="tog2fa" onchange="toggle2FA(this)"/><span class="toggle-track"></span></label>
+                </div>
+              </div>
+              <div class="security-item">
+                <div class="si-left">
+                  <div class="si-icon" style="background:rgba(59,130,246,.12);color:#60a5fa"><i class="fas fa-fish"></i></div>
+                  <div class="si-info"><h4>Anti-Phishing Code</h4><p>Personalize all emails from CryptoX</p></div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="showToast('Anti-phishing code setup coming soon','t-info')">Set Code</button>
+              </div>
+            </div>
+          </div>
+          <div class="admin-card">
+            <div class="admin-card-head"><h3>Change Password</h3></div>
+            <div style="padding:20px;max-width:400px">
+              <div id="pwdAlert" class="alert" style="display:none"></div>
+              <div class="form-group"><label>Current Password</label><div class="pass-wrap"><input type="password" id="oldPwd" class="auth-input" style="height:42px" placeholder="Current password"/><button class="pass-eye" onclick="toggleP('oldPwd',this)"><i class="fas fa-eye"></i></button></div></div>
+              <div class="form-group"><label>New Password</label><div class="pass-wrap"><input type="password" id="newPwd" class="auth-input" style="height:42px" placeholder="At least 8 characters"/><button class="pass-eye" onclick="toggleP('newPwd',this)"><i class="fas fa-eye"></i></button></div></div>
+              <div class="form-group"><label>Confirm New Password</label><div class="pass-wrap"><input type="password" id="confPwd" class="auth-input" style="height:42px" placeholder="Repeat new password"/><button class="pass-eye" onclick="toggleP('confPwd',this)"><i class="fas fa-eye"></i></button></div></div>
+              <button class="btn btn-primary" onclick="changePassword()"><i class="fas fa-lock"></i> Update Password</button>
+            </div>
+          </div>
+        </div>
+        <!-- KYC -->
+        <div id="tab-kyc" style="display:none">
+          <div class="admin-card">
+            <div class="admin-card-head"><h3>Identity Verification (KYC)</h3><span class="status-pill sp-pending" id="kycLevelBadge">Level 0</span></div>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:16px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">1</div>
+                    <div><div style="font-weight:700">Basic Verification</div><div style="font-size:12px;color:var(--t2);margin-top:2px">Email • Phone</div></div>
+                  </div>
+                  <span class="status-pill sp-filled"><i class="fas fa-check"></i> Complete</span>
+                </div>
+                <div style="font-size:12px;color:var(--t3);display:flex;gap:16px">
+                  <span><i class="fas fa-check" style="color:var(--green)"></i> Deposit crypto</span>
+                  <span><i class="fas fa-check" style="color:var(--green)"></i> Spot trading</span>
+                  <span><i class="fas fa-check" style="color:var(--green)"></i> Daily withdraw: 2 BTC</span>
+                </div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:16px" id="kyc2Card">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="width:30px;height:30px;border-radius:50%;background:var(--bg5);color:var(--t2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">2</div>
+                    <div><div style="font-weight:700">Identity Verification</div><div style="font-size:12px;color:var(--t2);margin-top:2px">Government ID • Selfie</div></div>
+                  </div>
+                  <span class="status-pill sp-pending" id="kyc2Status">Not Started</span>
+                </div>
+                <div style="font-size:12px;color:var(--t3);display:flex;gap:16px;margin-bottom:14px">
+                  <span>• Fiat on/off ramp</span><span>• P2P trading</span><span>• Daily withdraw: 100 BTC</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+                  <div class="form-group" style="margin-bottom:0"><label>Document Type</label><select class="form-select" id="kycDocType"><option value="passport">Passport</option><option value="national_id">National ID</option><option value="driver_license">Driver's License</option></select></div>
+                  <div class="form-group" style="margin-bottom:0"><label>Country</label><select class="form-select" id="kycCountry"><option>Indonesia</option><option>United States</option><option>Singapore</option><option>Malaysia</option></select></div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="submitKYC()"><i class="fas fa-id-card"></i> Start Verification</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- API KEYS -->
+        <div id="tab-api" style="display:none">
+          <div class="admin-card">
+            <div class="admin-card-head"><h3>API Key Management</h3><button class="btn btn-primary btn-sm" onclick="createApiKey()"><i class="fas fa-plus"></i> Create Key</button></div>
+            <div style="padding:0 20px 16px">
+              <div style="background:rgba(240,185,11,.08);border:1px solid rgba(240,185,11,.2);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:var(--yellow);margin:16px 0"><i class="fas fa-shield-halved"></i> Store your API key securely. It will only be shown once after creation.</div>
+              <div id="apiKeysList"></div>
+            </div>
+          </div>
+        </div>
+        <!-- REFERRAL -->
+        <div id="tab-referral" style="display:none">
+          <div class="admin-card">
+            <div class="admin-card-head"><h3>Referral Program</h3></div>
+            <div style="padding:20px">
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+                <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;text-align:center">
+                  <div style="font-size:28px;font-weight:900;color:var(--white)" id="refFriends">0</div>
+                  <div style="font-size:12px;color:var(--t3);margin-top:4px">Friends Invited</div>
+                </div>
+                <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;text-align:center">
+                  <div style="font-size:28px;font-weight:900;color:var(--green)">$0.00</div>
+                  <div style="font-size:12px;color:var(--t3);margin-top:4px">Commission Earned</div>
+                </div>
+                <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;text-align:center">
+                  <div style="font-size:28px;font-weight:900;color:var(--yellow)">20%</div>
+                  <div style="font-size:12px;color:var(--t3);margin-top:4px">Commission Rate</div>
+                </div>
+              </div>
+              <div class="form-group"><label>Your Referral Link</label><div class="input-group"><input type="text" id="refLink" readonly style="font-size:12px"/><button class="input-group-btn" onclick="copyRef('refLink')"><i class="fas fa-copy"></i> Copy</button></div></div>
+              <div class="form-group"><label>Your Referral Code</label><div style="display:flex;align-items:center;gap:10px"><div class="ref-code-box" style="flex:1"><span id="refCodeDisplay">------</span></div><button class="btn btn-ghost btn-sm" onclick="copyRef('refCodeDisplay')"><i class="fas fa-copy"></i> Copy</button></div></div>
+              <div style="margin-top:20px">
+                <h4 style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--t1)">Invited Friends</h4>
+                <div id="refList" style="font-size:13px;color:var(--t3);text-align:center;padding:20px">No referrals yet</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- PREFERENCES -->
+        <div id="tab-preferences" style="display:none">
+          <div class="admin-card">
+            <div class="admin-card-head"><h3>Preferences</h3></div>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px">
+                <div><div style="font-weight:600">Theme</div><div style="font-size:12px;color:var(--t3)">Interface appearance</div></div>
+                <select class="sel-sm"><option value="dark">Dark Mode</option><option value="light">Light Mode</option></select>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px">
+                <div><div style="font-weight:600">Default Currency</div><div style="font-size:12px;color:var(--t3)">Price display currency</div></div>
+                <select class="sel-sm"><option>USD</option><option>EUR</option><option>IDR</option><option>SGD</option></select>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px">
+                <div><div style="font-weight:600">Order Notifications</div><div style="font-size:12px;color:var(--t3)">Email alerts for order fills</div></div>
+                <label class="toggle-sw"><input type="checkbox" checked/><span class="toggle-track"></span></label>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px">
+                <div><div style="font-weight:600">Price Alerts</div><div style="font-size:12px;color:var(--t3)">Push notifications for price movements</div></div>
+                <label class="toggle-sw"><input type="checkbox" checked/><span class="toggle-track"></span></label>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px">
+                <div><div style="font-weight:600">Show Balances</div><div style="font-size:12px;color:var(--t3)">Display balance amounts by default</div></div>
+                <label class="toggle-sw"><input type="checkbox" checked/><span class="toggle-track"></span></label>
+              </div>
+              <button class="btn btn-primary" style="width:fit-content" onclick="showToast('Preferences saved!','t-ok')"><i class="fas fa-save"></i> Save Preferences</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CryptoX – Trade Crypto with Confidence</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="30" height="30" rx="6" fill="#f0b90b"/>
+      <path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/>
+      <path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/>
+      <path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/>
+    </svg>
+    <span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div class="nav-links">
+    <div class="nav-tab-wrap">
+      <button class="nav-tab">Buy Crypto <i class="fas fa-chevron-down" style="font-size:9px"></i></button>
+      <div class="nav-dropdown">
+        <div class="drop-item" onclick="location.href='deposit.html'"><i class="fas fa-credit-card"></i> Buy with Card</div>
+        <div class="drop-item" onclick="location.href='p2p.html'"><i class="fas fa-handshake"></i> P2P Trading</div>
+      </div>
+    </div>
+    <button class="nav-tab" onclick="scrollToMarket()">Markets</button>
+    <div class="nav-tab-wrap">
+      <button class="nav-tab active">Trade <i class="fas fa-chevron-down" style="font-size:9px"></i></button>
+      <div class="nav-dropdown">
+        <div class="drop-item" onclick="location.href='trade.html'"><i class="fas fa-chart-candlestick"></i> Spot Trading</div>
+        <div class="drop-item" onclick="location.href='futures.html'"><i class="fas fa-bolt"></i> Futures</div>
+        <div class="drop-item" onclick="location.href='orders.html'"><i class="fas fa-list"></i> My Orders</div>
+      </div>
+    </div>
+    <button class="nav-tab" onclick="location.href='earn.html'">Earn <span class="nav-tag">APY 25%</span></button>
+    <button class="nav-tab" onclick="location.href='futures.html'">Derivatives</button>
+    <button class="nav-tab" onclick="location.href='p2p.html'">P2P</button>
+    <button class="nav-tab" style="color:var(--yellow)"><i class="fas fa-gift" style="font-size:11px"></i> Rewards</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="login.html" style="color:var(--t2);font-size:13px;font-weight:600;padding:0 12px;transition:color .12s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--t2)'">Log In</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+    <div class="nav-divider"></div>
+    <button class="nav-icon-btn" title="Search"><i class="fas fa-search"></i></button>
+    <button class="nav-icon-btn" title="Language"><i class="fas fa-globe"></i></button>
+    <button class="nav-icon-btn" id="themeBtn" title="Theme"><i class="fas fa-sun"></i></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- Animated SVG Background -->
+  <div class="hero-bg">
+    <svg class="hero-svg-bg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="heroGrad1" cx="65%" cy="20%" r="50%">
+          <stop offset="0%" stop-color="#f0b90b" stop-opacity="0.07"/>
+          <stop offset="100%" stop-color="#f0b90b" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="heroGrad2" cx="10%" cy="70%" r="40%">
+          <stop offset="0%" stop-color="#02c076" stop-opacity="0.05"/>
+          <stop offset="100%" stop-color="#02c076" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="heroGrad3" cx="90%" cy="85%" r="35%">
+          <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.05"/>
+          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#f0b90b" stop-opacity="0"/>
+          <stop offset="40%" stop-color="#f0b90b" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#02c076" stop-opacity="0.3"/>
+        </linearGradient>
+        <linearGradient id="chartFill" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#f0b90b" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#f0b90b" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Gradient fills -->
+      <rect width="1440" height="600" fill="url(#heroGrad1)"/>
+      <rect width="1440" height="600" fill="url(#heroGrad2)"/>
+      <rect width="1440" height="600" fill="url(#heroGrad3)"/>
+      <!-- Grid lines horizontal -->
+      <g stroke="#ffffff" stroke-opacity="0.025" stroke-width="1">
+        <line x1="0" y1="100" x2="1440" y2="100"/>
+        <line x1="0" y1="200" x2="1440" y2="200"/>
+        <line x1="0" y1="300" x2="1440" y2="300"/>
+        <line x1="0" y1="400" x2="1440" y2="400"/>
+        <line x1="0" y1="500" x2="1440" y2="500"/>
+      </g>
+      <!-- Grid lines vertical -->
+      <g stroke="#ffffff" stroke-opacity="0.025" stroke-width="1">
+        <line x1="180" y1="0" x2="180" y2="600"/>
+        <line x1="360" y1="0" x2="360" y2="600"/>
+        <line x1="540" y1="0" x2="540" y2="600"/>
+        <line x1="720" y1="0" x2="720" y2="600"/>
+        <line x1="900" y1="0" x2="900" y2="600"/>
+        <line x1="1080" y1="0" x2="1080" y2="600"/>
+        <line x1="1260" y1="0" x2="1260" y2="600"/>
+      </g>
+      <!-- Hero chart line (decorative BTC-style price chart) -->
+      <path d="M700,420 L740,390 L770,410 L800,360 L840,380 L870,320 L910,340 L950,280 L990,300 L1030,240 L1070,270 L1110,210 L1150,230 L1190,180 L1230,200 L1270,155 L1310,170 L1350,130 L1390,145 L1430,110"
+        fill="none" stroke="url(#lineGrad)" stroke-width="2.5" stroke-linejoin="round" filter="url(#glow)"/>
+      <!-- Area fill under chart -->
+      <path d="M700,420 L740,390 L770,410 L800,360 L840,380 L870,320 L910,340 L950,280 L990,300 L1030,240 L1070,270 L1110,210 L1150,230 L1190,180 L1230,200 L1270,155 L1310,170 L1350,130 L1390,145 L1430,110 L1430,600 L700,600 Z"
+        fill="url(#chartFill)"/>
+      <!-- Candlestick decorations -->
+      <g opacity="0.25">
+        <rect x="780" y="355" width="8" height="30" rx="1" fill="#02c076"/>
+        <line x1="784" y1="350" x2="784" y2="355" stroke="#02c076" stroke-width="1.5"/>
+        <line x1="784" y1="385" x2="784" y2="392" stroke="#02c076" stroke-width="1.5"/>
+        <rect x="830" y="315" width="8" height="35" rx="1" fill="#f6465d"/>
+        <line x1="834" y1="308" x2="834" y2="315" stroke="#f6465d" stroke-width="1.5"/>
+        <line x1="834" y1="350" x2="834" y2="360" stroke="#f6465d" stroke-width="1.5"/>
+        <rect x="880" y="300" width="8" height="40" rx="1" fill="#02c076"/>
+        <line x1="884" y1="292" x2="884" y2="300" stroke="#02c076" stroke-width="1.5"/>
+        <line x1="884" y1="340" x2="884" y2="348" stroke="#02c076" stroke-width="1.5"/>
+        <rect x="930" y="265" width="8" height="32" rx="1" fill="#02c076"/>
+        <line x1="934" y1="258" x2="934" y2="265" stroke="#02c076" stroke-width="1.5"/>
+        <line x1="934" y1="297" x2="934" y2="306" stroke="#02c076" stroke-width="1.5"/>
+        <rect x="980" y="278" width="8" height="28" rx="1" fill="#f6465d"/>
+        <line x1="984" y1="270" x2="984" y2="278" stroke="#f6465d" stroke-width="1.5"/>
+        <line x1="984" y1="306" x2="984" y2="315" stroke="#f6465d" stroke-width="1.5"/>
+        <rect x="1030" y="225" width="8" height="38" rx="1" fill="#02c076"/>
+        <line x1="1034" y1="218" x2="1034" y2="225" stroke="#02c076" stroke-width="1.5"/>
+        <line x1="1034" y1="263" x2="1034" y2="272" stroke="#02c076" stroke-width="1.5"/>
+      </g>
+      <!-- Floating dot accents -->
+      <circle cx="850" cy="100" r="1.5" fill="#f0b90b" opacity="0.5" class="hero-dot"/>
+      <circle cx="1100" cy="80" r="1" fill="#02c076" opacity="0.6"/>
+      <circle cx="1200" cy="180" r="2" fill="#f0b90b" opacity="0.3"/>
+      <circle cx="950" cy="50" r="1.5" fill="#3b82f6" opacity="0.5"/>
+      <circle cx="1350" cy="250" r="1" fill="#02c076" opacity="0.4"/>
+      <!-- Hexagon decorative shapes -->
+      <polygon points="1380,40 1395,31 1410,40 1410,58 1395,67 1380,58" fill="none" stroke="#f0b90b" stroke-width="1" opacity="0.12"/>
+      <polygon points="720,500 732,493 744,500 744,514 732,521 720,514" fill="none" stroke="#02c076" stroke-width="1" opacity="0.1"/>
+    </svg>
+  </div>
+
+  <!-- Floating Coin SVG Badges -->
+  <div class="hero-coins">
+    <div class="coin-float coin-float-1">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="26" cy="26" r="25" fill="#F7931A" fill-opacity="0.15" stroke="#F7931A" stroke-opacity="0.4" stroke-width="1.5"/>
+        <text x="26" y="31" text-anchor="middle" fill="#F7931A" font-size="13" font-weight="800" font-family="Inter,sans-serif">BTC</text>
+      </svg>
+    </div>
+    <div class="coin-float coin-float-2">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="21" fill="#627EEA" fill-opacity="0.15" stroke="#627EEA" stroke-opacity="0.4" stroke-width="1.5"/>
+        <text x="22" y="27" text-anchor="middle" fill="#627EEA" font-size="11" font-weight="800" font-family="Inter,sans-serif">ETH</text>
+      </svg>
+    </div>
+    <div class="coin-float coin-float-3">
+      <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="19" cy="19" r="18" fill="#9945FF" fill-opacity="0.15" stroke="#9945FF" stroke-opacity="0.4" stroke-width="1.5"/>
+        <text x="19" y="24" text-anchor="middle" fill="#9945FF" font-size="10" font-weight="800" font-family="Inter,sans-serif">SOL</text>
+      </svg>
+    </div>
+    <div class="coin-float coin-float-4">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="17" cy="17" r="16" fill="#F0B90B" fill-opacity="0.15" stroke="#F0B90B" stroke-opacity="0.4" stroke-width="1.5"/>
+        <text x="17" y="22" text-anchor="middle" fill="#F0B90B" font-size="9" font-weight="800" font-family="Inter,sans-serif">BNB</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="hero-wrap">
+    <div class="hero-text">
+      <div class="hero-badge">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L8.8 5.1L13.3 5.6L10.1 8.5L11 13L7 10.7L3 13L3.9 8.5L0.7 5.6L5.2 5.1L7 1Z" fill="#f0b90b"/></svg>
+        Welcome Bonus up to 11,000 USDT
+      </div>
+      <h1 class="hero-title">Trade Crypto<br/>with <span class="accent">Confidence</span></h1>
+      <p class="hero-sub">The most trusted platform for buying, selling, and trading<br/>700+ cryptocurrencies globally.</p>
+      <div class="hero-cta">
+        <div class="hero-cta-email">
+          <input type="email" id="heroEmail" placeholder="Enter your email address"/>
+          <button class="btn btn-primary" onclick="heroSignup()">Get Started</button>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--t3);margin-bottom:20px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="vertical-align:-1px;margin-right:4px"><path d="M6 1L7.2 4.1L10.5 4.5L8.1 6.7L8.8 10L6 8.4L3.2 10L3.9 6.7L1.5 4.5L4.8 4.1L6 1Z" fill="#02c076"/></svg>
+        No credit card required &nbsp;•&nbsp; Free to sign up
+      </p>
+      <div class="hero-stats">
+        <div class="hstat-item">
+          <span class="hstat-val" id="hstatUsers">40M+</span>
+          <span class="hstat-lbl">Registered Users</span>
+        </div>
+        <div class="hstat-item">
+          <span class="hstat-val" id="hstatVol">$5.2B</span>
+          <span class="hstat-lbl">24H Volume</span>
+        </div>
+        <div class="hstat-item">
+          <span class="hstat-val">700+</span>
+          <span class="hstat-lbl">Listed Tokens</span>
+        </div>
+        <div class="hstat-item">
+          <span class="hstat-val">200+</span>
+          <span class="hstat-lbl">Countries</span>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT HERO CARD -->
+    <div class="hero-card">
+      <div class="hero-card-head">
+        <div class="hero-card-tabs">
+          <button class="hct active" data-tab="hot">🔥 Hot</button>
+          <button class="hct" data-tab="gainers">Top Gainers</button>
+          <button class="hct" data-tab="new">New</button>
+        </div>
+        <a href="trade.html" style="font-size:12px;color:var(--yellow)">View All ›</a>
+      </div>
+      <div id="heroPriceList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BADGES STRIP -->
+<div class="trust-strip">
+  <div class="container">
+    <div class="trust-inner">
+      <div class="trust-item">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11 2L3 5.5V11C3 15.42 6.5 19.55 11 21C15.5 19.55 19 15.42 19 11V5.5L11 2Z" fill="#02c076" fill-opacity="0.15" stroke="#02c076" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M7.5 11L10 13.5L14.5 9" stroke="#02c076" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>SSL Secured</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="8" width="16" height="12" rx="2" fill="#f0b90b" fill-opacity="0.12" stroke="#f0b90b" stroke-width="1.5"/>
+          <path d="M7 8V6C7 3.79 8.79 2 11 2C13.21 2 15 3.79 15 6V8" stroke="#f0b90b" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="11" cy="14" r="1.5" fill="#f0b90b"/>
+        </svg>
+        <span>Cold Wallet Storage</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="8" fill="#3b82f6" fill-opacity="0.12" stroke="#3b82f6" stroke-width="1.5"/>
+          <path d="M8 11L10 13L14 9" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Regulated Exchange</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11 3C11 3 5 6 5 12C5 15.87 7.69 19.11 11 20C14.31 19.11 17 15.87 17 12C17 6 11 3 11 3Z" fill="#9945ff" fill-opacity="0.12" stroke="#a78bfa" stroke-width="1.5"/>
+          <path d="M8.5 12L10.5 14L13.5 10" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>24/7 Support</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="5" width="18" height="13" rx="2" fill="#02c076" fill-opacity="0.12" stroke="#02c076" stroke-width="1.5"/>
+          <path d="M2 9H20" stroke="#02c076" stroke-width="1.5"/>
+          <rect x="5" y="13" width="4" height="2" rx="0.5" fill="#02c076"/>
+        </svg>
+        <span>Instant Deposits</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="8" fill="#f0b90b" fill-opacity="0.12" stroke="#f0b90b" stroke-width="1.5"/>
+          <path d="M11 7V11.5L14 13.5" stroke="#f0b90b" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <span>99.99% Uptime</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TICKER TAPE -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner"></div>
+</div>
+
+<!-- MARKET TABLE -->
+<section class="section" id="marketSection">
+  <div class="container">
+    <div class="flex-between gap16" style="margin-bottom:20px">
+      <div>
+        <h2 class="sec-title">Live Markets</h2>
+        <p class="sec-sub">Real-time prices across all trading pairs</p>
+      </div>
+      <a href="trade.html" class="btn btn-ghost btn-sm">View All Markets <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="mkt-filter-bar">
+      <div class="mkt-tabs">
+        <button class="mkt-tab active" data-f="hot">🔥 Hot</button>
+        <button class="mkt-tab" data-f="gainers">▲ Gainers</button>
+        <button class="mkt-tab" data-f="losers">▼ Losers</button>
+        <button class="mkt-tab" data-f="volume">Volume</button>
+        <button class="mkt-tab" data-f="new">New</button>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <input type="text" id="mktSearch" placeholder="Search..." style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:6px 12px;color:var(--t1);font-size:12px;outline:none;width:160px" oninput="renderMktTable(currentFilter,this.value)"/>
+      </div>
+    </div>
+    <div class="mkt-table-wrap">
+      <table class="mkt-table">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th style="text-align:left">Name</th>
+            <th>Price</th>
+            <th>24H Change</th>
+            <th>24H High</th>
+            <th>24H Low</th>
+            <th>Volume (24H)</th>
+            <th>Chart</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="mktTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="feat-section">
+  <div class="container">
+    <div style="text-align:center">
+      <h2 style="font-size:30px;font-weight:900;color:var(--white);margin-bottom:8px">Why Choose CryptoX?</h2>
+      <p style="color:var(--t2);font-size:14px">Built for traders, trusted by millions worldwide</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon fi-yellow">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6V12C4 16.84 7.5 21.3 12 22C16.5 21.3 20 16.84 20 12V6L12 2Z" fill="#f0b90b" fill-opacity="0.2" stroke="#f0b90b" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 12L11 15L16 10" stroke="#f0b90b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Bank-Grade Security</h3>
+        <p>Multi-layer security with cold storage, 2FA, anti-phishing codes, and 24/7 monitoring to keep your assets safe.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H12L11 22L19.5 10.5H12L13 2Z" fill="#02c076" fill-opacity="0.2" stroke="#02c076" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Lightning Fast</h3>
+        <p>100,000+ transactions per second with our matching engine. Zero downtime since launch, even during peak trading.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#3b82f6" fill-opacity="0.15" stroke="#60a5fa" stroke-width="1.8"/><path d="M12 7V12M12 15V17" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/><path d="M9.5 9.5C9.5 8.12 10.62 7 12 7C13.38 7 14.5 8.12 14.5 9.5C14.5 11.5 12 12.5 12 12.5" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Lowest Fees</h3>
+        <p>Maker fees as low as 0.02% for VIP traders. Competitive rates with volume discounts and staking incentives.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#8b5cf6" fill-opacity="0.15" stroke="#a78bfa" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="#a78bfa" fill-opacity="0.3" stroke="#a78bfa" stroke-width="1.5"/><path d="M12 3V5M12 19V21M3 12H5M19 12H21" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3>700+ Assets</h3>
+        <p>Spot, futures, margin, and earn products across 700+ tokens. The widest selection on any major exchange.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <div class="sec-eyebrow">Simple Process</div>
+      <h2 class="sec-title" style="font-size:28px;font-weight:900;color:var(--white)">Start Trading in 3 Simple Steps</h2>
+      <p class="sec-sub">Get started in minutes. No complexity, just trading.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-step-num">01</div>
+        <div class="how-icon">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="26" cy="26" r="25" fill="#f0b90b" fill-opacity="0.1" stroke="#f0b90b" stroke-opacity="0.3" stroke-width="1.5"/>
+            <circle cx="26" cy="22" r="7" fill="#f0b90b" fill-opacity="0.2" stroke="#f0b90b" stroke-width="1.8"/>
+            <path d="M14 38C14 33.58 19.37 30 26 30C32.63 30 38 33.58 38 38" stroke="#f0b90b" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M32 17L34 19L38 15" stroke="#f0b90b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Create Your Account</h3>
+        <p>Sign up with your email in under 2 minutes. No complex setup required to begin.</p>
+      </div>
+      <div class="how-connector">
+        <svg width="80" height="24" viewBox="0 0 80 24" fill="none"><path d="M0 12H70M70 12L60 6M70 12L60 18" stroke="#f0b90b" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="how-card">
+        <div class="how-step-num">02</div>
+        <div class="how-icon">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="26" cy="26" r="25" fill="#02c076" fill-opacity="0.1" stroke="#02c076" stroke-opacity="0.3" stroke-width="1.5"/>
+            <rect x="14" y="16" width="24" height="20" rx="3" fill="#02c076" fill-opacity="0.15" stroke="#02c076" stroke-width="1.8"/>
+            <path d="M14 22H38" stroke="#02c076" stroke-width="1.5"/>
+            <rect x="17" y="28" width="6" height="3" rx="0.5" fill="#02c076"/>
+            <path d="M30 18V14M26 18V15M22 18V16" stroke="#02c076" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Fund Your Wallet</h3>
+        <p>Deposit crypto or buy with card instantly. 50+ payment methods supported worldwide.</p>
+      </div>
+      <div class="how-connector">
+        <svg width="80" height="24" viewBox="0 0 80 24" fill="none"><path d="M0 12H70M70 12L60 6M70 12L60 18" stroke="#f0b90b" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="how-card">
+        <div class="how-step-num">03</div>
+        <div class="how-icon">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="26" cy="26" r="25" fill="#3b82f6" fill-opacity="0.1" stroke="#3b82f6" stroke-opacity="0.3" stroke-width="1.5"/>
+            <polyline points="14,38 20,28 26,32 32,20 38,14" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="17" y="34" width="4" height="8" rx="0.5" fill="#60a5fa" fill-opacity="0.4" transform="translate(0,-8)"/>
+            <rect x="23" y="34" width="4" height="8" rx="0.5" fill="#60a5fa" fill-opacity="0.4" transform="translate(0,-12)"/>
+            <rect x="29" y="34" width="4" height="8" rx="0.5" fill="#60a5fa" fill-opacity="0.4" transform="translate(0,-20)"/>
+          </svg>
+        </div>
+        <h3>Start Trading</h3>
+        <p>Access spot, futures, and P2P markets with professional tools at your fingertips.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP DOWNLOAD -->
+<section class="app-section">
+  <div class="container">
+    <div class="app-inner">
+      <div class="app-text">
+        <div class="sec-eyebrow">Mobile App</div>
+        <h2 style="font-size:32px;font-weight:900;color:var(--white);margin-bottom:12px;line-height:1.2">Trade Anywhere,<br/><span style="color:var(--yellow)">Anytime</span></h2>
+        <p style="font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.7">The CryptoX app gives you full trading power on the go. Advanced charts, instant alerts, one-tap trading and biometric login.</p>
+        <div class="app-features">
+          <div class="app-feat-item">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#02c076" fill-opacity="0.15" stroke="#02c076" stroke-width="1.5"/><path d="M5.5 9L8 11.5L12.5 7" stroke="#02c076" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Real-time price alerts</span>
+          </div>
+          <div class="app-feat-item">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#02c076" fill-opacity="0.15" stroke="#02c076" stroke-width="1.5"/><path d="M5.5 9L8 11.5L12.5 7" stroke="#02c076" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Biometric &amp; Face ID login</span>
+          </div>
+          <div class="app-feat-item">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#02c076" fill-opacity="0.15" stroke="#02c076" stroke-width="1.5"/><path d="M5.5 9L8 11.5L12.5 7" stroke="#02c076" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>TradingView advanced charts</span>
+          </div>
+          <div class="app-feat-item">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#02c076" fill-opacity="0.15" stroke="#02c076" stroke-width="1.5"/><path d="M5.5 9L8 11.5L12.5 7" stroke="#02c076" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Instant deposits &amp; withdrawals</span>
+          </div>
+        </div>
+        <div class="app-store-btns">
+          <a href="#" class="app-store-btn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M14.5 10.5C14.49 8.73 15.99 7.87 16.07 7.82C15.18 6.5 13.77 6.32 13.27 6.3C12.01 6.17 10.79 7.04 10.15 7.04C9.5 7.04 8.5 6.31 7.44 6.33C6.07 6.35 4.79 7.13 4.09 8.35C2.63 10.84 3.7 14.52 5.1 16.54C5.8 17.53 6.62 18.63 7.71 18.59C8.77 18.55 9.17 17.91 10.44 17.91C11.7 17.91 12.07 18.59 13.18 18.57C14.32 18.55 15.03 17.57 15.71 16.57C16.52 15.43 16.85 14.31 16.87 14.25C16.84 14.24 14.51 13.35 14.5 10.5Z" fill="white" opacity="0.9"/><path d="M12.46 5.01C13.02 4.32 13.4 3.38 13.3 2.42C12.5 2.46 11.5 2.96 10.92 3.64C10.41 4.24 9.96 5.21 10.08 6.14C10.97 6.21 11.89 5.69 12.46 5.01Z" fill="white" opacity="0.9"/></svg>
+            <div><span style="font-size:9px;opacity:.7">Download on the</span><br/><strong>App Store</strong></div>
+          </a>
+          <a href="#" class="app-store-btn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.5 2.5L11.5 10.5L3.5 18.5" stroke="white" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round"/><path d="M3.5 2.5L16.5 9L11.5 10.5" stroke="white" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 18.5L16.5 12L11.5 10.5" stroke="white" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><span style="font-size:9px;opacity:.7">Get it on</span><br/><strong>Google Play</strong></div>
+          </a>
+        </div>
+      </div>
+      <!-- Phone SVG Mockup -->
+      <div class="app-phone">
+        <svg width="280" height="520" viewBox="0 0 280 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="phoneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1a1f2b"/>
+              <stop offset="100%" stop-color="#0e1117"/>
+            </linearGradient>
+            <linearGradient id="phoneBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3a4155"/>
+              <stop offset="100%" stop-color="#252c3b"/>
+            </linearGradient>
+            <linearGradient id="screenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#12161c"/>
+              <stop offset="100%" stop-color="#0b0e11"/>
+            </linearGradient>
+            <linearGradient id="chartLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#f0b90b"/>
+              <stop offset="100%" stop-color="#02c076"/>
+            </linearGradient>
+            <linearGradient id="chartAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#f0b90b" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#f0b90b" stop-opacity="0"/>
+            </linearGradient>
+            <clipPath id="screenClip">
+              <rect x="20" y="50" width="240" height="420" rx="12"/>
+            </clipPath>
+          </defs>
+          <!-- Phone body -->
+          <rect x="5" y="5" width="270" height="510" rx="36" fill="url(#phoneGrad)" stroke="url(#phoneBorder)" stroke-width="2"/>
+          <!-- Screen bg -->
+          <rect x="20" y="50" width="240" height="420" rx="12" fill="url(#screenGrad)"/>
+          <!-- Notch -->
+          <rect x="105" y="14" width="70" height="22" rx="11" fill="#0b0e11"/>
+          <!-- Screen content (clipped) -->
+          <g clip-path="url(#screenClip)">
+            <!-- Status bar -->
+            <rect x="20" y="50" width="240" height="32" fill="#12161c"/>
+            <text x="35" y="70" fill="#848e9c" font-size="10" font-family="Inter,sans-serif">9:41</text>
+            <text x="215" y="70" fill="#848e9c" font-size="10" font-family="Inter,sans-serif" text-anchor="middle">●●●</text>
+            <!-- Nav bar -->
+            <rect x="20" y="82" width="240" height="44" fill="#12161c"/>
+            <text x="35" y="109" fill="#eaecef" font-size="13" font-weight="700" font-family="Inter,sans-serif">BTC/USDT</text>
+            <text x="165" y="109" fill="#02c076" font-size="12" font-weight="700" font-family="Inter,sans-serif">$67,432.50</text>
+            <text x="220" y="109" fill="#02c076" font-size="10" font-family="Inter,sans-serif">+2.45%</text>
+            <!-- Chart area -->
+            <rect x="20" y="126" width="240" height="160" fill="#0e1117"/>
+            <!-- Chart path -->
+            <path d="M30,250 L55,235 L75,242 L100,215 L120,225 L145,195 L165,205 L190,178 L210,185 L240,160 L250,155"
+              fill="none" stroke="url(#chartLineGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Chart area fill -->
+            <path d="M30,250 L55,235 L75,242 L100,215 L120,225 L145,195 L165,205 L190,178 L210,185 L240,160 L250,155 L250,286 L30,286 Z"
+              fill="url(#chartAreaGrad)"/>
+            <!-- Chart grid lines -->
+            <line x1="20" y1="160" x2="260" y2="160" stroke="#252c3b" stroke-width="0.8"/>
+            <line x1="20" y1="190" x2="260" y2="190" stroke="#252c3b" stroke-width="0.8"/>
+            <line x1="20" y1="220" x2="260" y2="220" stroke="#252c3b" stroke-width="0.8"/>
+            <line x1="20" y1="250" x2="260" y2="250" stroke="#252c3b" stroke-width="0.8"/>
+            <!-- Time labels -->
+            <text x="30" y="284" fill="#474d57" font-size="8" font-family="Inter,sans-serif">9:00</text>
+            <text x="90" y="284" fill="#474d57" font-size="8" font-family="Inter,sans-serif">11:00</text>
+            <text x="150" y="284" fill="#474d57" font-size="8" font-family="Inter,sans-serif">13:00</text>
+            <text x="210" y="284" fill="#474d57" font-size="8" font-family="Inter,sans-serif">15:00</text>
+            <!-- Order form area -->
+            <rect x="20" y="290" width="240" height="100" fill="#12161c"/>
+            <!-- Buy / Sell tabs -->
+            <rect x="30" y="298" width="105" height="28" rx="4" fill="#02c076"/>
+            <text x="82" y="316" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="Inter,sans-serif">Buy</text>
+            <rect x="145" y="298" width="105" height="28" rx="4" fill="#1a1f2b" stroke="#252c3b" stroke-width="1"/>
+            <text x="198" y="316" text-anchor="middle" fill="#848e9c" font-size="12" font-weight="600" font-family="Inter,sans-serif">Sell</text>
+            <!-- Input fields -->
+            <rect x="30" y="334" width="220" height="26" rx="4" fill="#1a1f2b" stroke="#252c3b" stroke-width="1"/>
+            <text x="40" y="351" fill="#474d57" font-size="9" font-family="Inter,sans-serif">Price (USDT)</text>
+            <text x="230" y="351" text-anchor="end" fill="#eaecef" font-size="9" font-weight="600" font-family="Inter,sans-serif">67,432.50</text>
+            <rect x="30" y="366" width="220" height="26" rx="4" fill="#1a1f2b" stroke="#252c3b" stroke-width="1"/>
+            <text x="40" y="383" fill="#474d57" font-size="9" font-family="Inter,sans-serif">Amount (BTC)</text>
+            <text x="230" y="383" text-anchor="end" fill="#eaecef" font-size="9" font-weight="600" font-family="Inter,sans-serif">0.0015</text>
+            <!-- Asset row -->
+            <rect x="20" y="394" width="240" height="76" fill="#0b0e11"/>
+            <text x="35" y="416" fill="#848e9c" font-size="9" font-family="Inter,sans-serif" letter-spacing="0.5">MY ASSETS</text>
+            <!-- Asset items -->
+            <circle cx="42" cy="440" r="10" fill="#F7931A" fill-opacity="0.2" stroke="#F7931A" stroke-opacity="0.5" stroke-width="1"/>
+            <text x="42" y="444" text-anchor="middle" fill="#F7931A" font-size="6" font-weight="800" font-family="Inter,sans-serif">BTC</text>
+            <text x="58" y="438" fill="#eaecef" font-size="9" font-weight="600" font-family="Inter,sans-serif">Bitcoin</text>
+            <text x="58" y="449" fill="#848e9c" font-size="8" font-family="Inter,sans-serif">0.1482 BTC</text>
+            <text x="240" y="438" text-anchor="end" fill="#eaecef" font-size="9" font-weight="700" font-family="Inter,sans-serif">$9,994</text>
+            <text x="240" y="449" text-anchor="end" fill="#02c076" font-size="8" font-weight="600" font-family="Inter,sans-serif">+2.45%</text>
+            <!-- Bottom nav bar -->
+            <rect x="20" y="450" width="240" height="20" fill="#12161c"/>
+          </g>
+          <!-- Side buttons -->
+          <rect x="272" y="120" width="6" height="40" rx="3" fill="#2e3348"/>
+          <rect x="272" y="170" width="6" height="60" rx="3" fill="#2e3348"/>
+          <rect x="2" y="160" width="6" height="40" rx="3" fill="#2e3348"/>
+          <!-- Bottom home indicator -->
+          <rect x="115" y="488" width="50" height="4" rx="2" fill="#3a4155"/>
+        </svg>
+        <!-- Floating stat cards around phone -->
+        <div class="phone-stat-card phone-stat-1">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L4.5 6.5L7 8L10 4" stroke="#02c076" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--green)">+$1,247.80</div>
+            <div style="font-size:9px;color:var(--t3)">Today's Profit</div>
+          </div>
+        </div>
+        <div class="phone-stat-card phone-stat-2">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#f0b90b" stroke-width="1.5"/><path d="M6 3V6.5L8 8" stroke="#f0b90b" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--yellow)">24/7</div>
+            <div style="font-size:9px;color:var(--t3)">Live Trading</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <!-- SVG decorative background elements -->
+  <svg class="cta-svg-bg" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="ctaGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#f0b90b" stop-opacity="0.08"/>
+        <stop offset="100%" stop-color="#f0b90b" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1440" height="400" fill="url(#ctaGlow)"/>
+    <!-- Ring decorations -->
+    <circle cx="720" cy="200" r="280" fill="none" stroke="#f0b90b" stroke-opacity="0.04" stroke-width="80"/>
+    <circle cx="720" cy="200" r="180" fill="none" stroke="#f0b90b" stroke-opacity="0.05" stroke-width="40"/>
+    <circle cx="720" cy="200" r="100" fill="none" stroke="#f0b90b" stroke-opacity="0.06" stroke-width="20"/>
+    <!-- Scattered dots -->
+    <circle cx="200" cy="80" r="2" fill="#f0b90b" opacity="0.3"/>
+    <circle cx="350" cy="320" r="1.5" fill="#02c076" opacity="0.3"/>
+    <circle cx="1100" cy="70" r="2" fill="#f0b90b" opacity="0.3"/>
+    <circle cx="1240" cy="300" r="1.5" fill="#02c076" opacity="0.3"/>
+    <circle cx="150" cy="200" r="1" fill="#3b82f6" opacity="0.4"/>
+    <circle cx="1300" cy="180" r="1" fill="#3b82f6" opacity="0.4"/>
+    <!-- Hexagon accents -->
+    <polygon points="100,50 113,42 126,50 126,66 113,74 100,66" fill="none" stroke="#f0b90b" stroke-width="1" opacity="0.1"/>
+    <polygon points="1320,300 1333,292 1346,300 1346,316 1333,324 1320,316" fill="none" stroke="#02c076" stroke-width="1" opacity="0.1"/>
+  </svg>
+  <div class="container" style="position:relative;z-index:1">
+    <div style="font-size:13px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="vertical-align:-1px;margin-right:4px"><path d="M6.5 1L8 4.8L12 5.2L9.2 7.8L10 12L6.5 10.1L3 12L3.8 7.8L1 5.2L5 4.8L6.5 1Z" fill="#f0b90b"/></svg>
+      Start Today
+    </div>
+    <h2>Start Your Crypto Journey</h2>
+    <p>Join 40 million+ traders worldwide on the most trusted platform.</p>
+    <!-- Mini trust badges in CTA -->
+    <div class="cta-trust-row">
+      <div class="cta-trust-item">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L2 3.5V8C2 11.3 4.7 14.4 8 15.2C11.3 14.4 14 11.3 14 8V3.5L8 1Z" fill="#02c076" fill-opacity="0.2" stroke="#02c076" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 8L7.2 10.2L11 6" stroke="#02c076" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>No Hidden Fees</span>
+      </div>
+      <div class="cta-trust-item">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="9" rx="1.5" fill="#02c076" fill-opacity="0.2" stroke="#02c076" stroke-width="1.2"/><path d="M5 5V4C5 2.34 6.34 1 8 1C9.66 1 11 2.34 11 4V5" stroke="#02c076" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="10" r="1.2" fill="#02c076"/></svg>
+        <span>Funds are Secure</span>
+      </div>
+      <div class="cta-trust-item">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" fill="#02c076" fill-opacity="0.2" stroke="#02c076" stroke-width="1.2"/><path d="M5 8L7 10L11 6" stroke="#02c076" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Regulated &amp; Licensed</span>
+      </div>
+      <div class="cta-trust-item">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" fill="#02c076" fill-opacity="0.2" stroke="#02c076" stroke-width="1.2"/><path d="M8 4V8.5L11 10.5" stroke="#02c076" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>24/7 Live Support</span>
+      </div>
+    </div>
+    <div class="cta-btns">
+      <a href="register.html" class="btn btn-primary btn-lg">Create Free Account</a>
+      <a href="trade.html" class="btn btn-ghost btn-lg">Explore Markets</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo" style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <!-- SVG Logo -->
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="7" fill="#f0b90b"/>
+            <path d="M16 6L22 10V14L16 10L10 14V10L16 6Z" fill="#111" fill-opacity="0.9"/>
+            <path d="M10 14V22L16 26L22 22V14L16 18L10 14Z" fill="#111" fill-opacity="0.7"/>
+            <path d="M16 18L22 14V22L16 26V18Z" fill="#111" fill-opacity="0.5"/>
+          </svg>
+          <span style="font-size:18px;font-weight:800;color:var(--white)">CryptoX</span>
+        </div>
+        <p>The world's leading cryptocurrency exchange platform. Trade with confidence.</p>
+        <div class="social-row">
+          <a href="#" class="soc-btn" title="Twitter/X">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M11.9 1.5H14.1L9.33 6.95L14.93 13.5H10.58L7.17 9.18L3.27 13.5H1.05L6.15 7.67L0.8 1.5H5.25L8.34 5.44L11.9 1.5ZM11.1 12.22H12.3L4.73 2.75H3.43L11.1 12.22Z" fill="currentColor"/></svg>
+          </a>
+          <a href="#" class="soc-btn" title="Telegram">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M1 7.5L13.5 2L10 13L6.5 9.5L1 7.5ZM6.5 9.5L8.5 11.5L10 13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#" class="soc-btn" title="Discord">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 2.5C4 2.8 2.5 3.8 1.5 5C1 6.5 1 8.5 1.5 10C2.3 11 3.3 11.8 4.5 12C4.8 11.5 5 11 5.2 10.5C4.7 10.3 4.2 10 3.8 9.7C4 9.5 4.2 9.4 4.5 9.2C6.4 10.2 8.7 10.2 10.5 9.2C10.8 9.4 11 9.5 11.2 9.7C10.8 10 10.3 10.3 9.8 10.5C10 11 10.2 11.5 10.5 12C11.7 11.8 12.7 11 13.5 10C14 8.5 14 6.5 13.5 5C12.5 3.8 11 2.8 9.5 2.5L9 3.2C8.5 3.1 8 3 7.5 3C7 3 6.5 3.1 6 3.2L5.5 2.5ZM5.5 8.5C5 8.5 4.5 8 4.5 7.5C4.5 7 5 6.5 5.5 6.5C6 6.5 6.5 7 6.5 7.5C6.5 8 6 8.5 5.5 8.5ZM9.5 8.5C9 8.5 8.5 8 8.5 7.5C8.5 7 9 6.5 9.5 6.5C10 6.5 10.5 7 10.5 7.5C10.5 8 10 8.5 9.5 8.5Z" fill="currentColor"/></svg>
+          </a>
+          <a href="#" class="soc-btn" title="YouTube">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="9" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M6 5.5L10 7.5L6 9.5V5.5Z" fill="currentColor"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="trade.html">Spot Trading</a>
+        <a href="futures.html">Futures Trading</a>
+        <a href="p2p.html">P2P Trading</a>
+        <a href="earn.html">Earn</a>
+        <a href="#">Margin Trading</a>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="#">API Access</a>
+        <a href="#">Trading Bot</a>
+        <a href="#">Institutional</a>
+        <a href="#">Referral Program</a>
+        <a href="#">Affiliate</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#">Help Center</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Fee Schedule</a>
+        <a href="#">Bug Bounty</a>
+        <a href="#">Status Page</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Risk Disclosure</a>
+        <a href="#">AML Policy</a>
+      </div>
+    </div>
+    <!-- Security badges row -->
+    <div class="footer-security-row">
+      <div class="footer-sec-badge">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L2 3.5V8C2 11.3 4.7 14.4 8 15.2C11.3 14.4 14 11.3 14 8V3.5L8 1Z" fill="#02c076" fill-opacity="0.2" stroke="#02c076" stroke-width="1.2"/><path d="M5 8L7.2 10.2L11 6" stroke="#02c076" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>SSL Encrypted</span>
+      </div>
+      <div class="footer-sec-badge">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="9" rx="1.5" fill="#f0b90b" fill-opacity="0.15" stroke="#f0b90b" stroke-width="1.2"/><path d="M5 5V4C5 2.34 6.34 1 8 1C9.66 1 11 2.34 11 4V5" stroke="#f0b90b" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span>Cold Storage</span>
+      </div>
+      <div class="footer-sec-badge">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" fill="#3b82f6" fill-opacity="0.15" stroke="#60a5fa" stroke-width="1.2"/><path d="M5.5 8L7.5 10L10.5 6" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>2FA Protected</span>
+      </div>
+      <div class="footer-sec-badge">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2" fill="#02c076" fill-opacity="0.15" stroke="#02c076" stroke-width="1.2"/><path d="M1 6H15" stroke="#02c076" stroke-width="1.2"/><rect x="3.5" y="9" width="3" height="1.5" rx="0.3" fill="#02c076"/></svg>
+        <span>Secure Payments</span>
+      </div>
+      <div class="footer-sec-badge">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" fill="#a78bfa" fill-opacity="0.15" stroke="#a78bfa" stroke-width="1.2"/><path d="M8 4V8.5L10.5 10" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>99.99% Uptime</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 CryptoX Exchange. All rights reserved.</span>
+      <span>Crypto trading involves substantial risk of loss.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script>
+let currentFilter = 'hot';
+const COIN_COLORS = {BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',ADA:'#0D1E2D',AVAX:'#E84142',DOGE:'#C2A633',DOT:'#E6007A',MATIC:'#8247E5',LINK:'#2A5ADA',UNI:'#FF007A',LTC:'#BFBBBB',ATOM:'#6F7390',XLM:'#14B6E7',TRX:'#FF0013',ETC:'#328332',FIL:'#0090FF',NEAR:'#00C1DE',ARB:'#28A0F0'};
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  await initAuthOnLoad();
+  updateNavAuth();
+  renderHeroPrices();
+  renderTickerTape();
+  renderMktTable('hot','');
+  setupMktTabs();
+  // Live updates every 2s
+  setInterval(()=>{
+    COINS.forEach(c=>{
+      c.price=parseFloat((c.price*(1+(Math.random()-.5)*.0008)).toFixed(c.price>100?2:6));
+      c.change=parseFloat((c.change+(Math.random()-.5)*.04).toFixed(2));
+    });
+    renderHeroPrices();
+    renderTickerTape();
+    if(document.visibilityState==='visible') renderMktTable(currentFilter, document.getElementById('mktSearch').value);
+  }, 2000);
+});
+
+function renderHeroPrices(){
+  const el=document.getElementById('heroPriceList'); if(!el)return;
+  el.innerHTML=COINS.slice(0,7).map(c=>`
+    <div class="hpr-row" onclick="location.href='trade.html?pair=${c.id}USDT'">
+      <div class="hpr-left">
+        <div class="coin-icon" style="background:${COIN_COLORS[c.id]||'#888'}22;color:${COIN_COLORS[c.id]||'#888'}">${c.id.slice(0,3)}</div>
+        <div>
+          <div class="hpr-name">${c.id}<span style="font-size:10px;color:var(--t3);font-weight:400">/USDT</span></div>
+          <div class="hpr-vol">Vol: ${c.vol}</div>
+        </div>
+      </div>
+      <div class="hpr-right">
+        <div class="hpr-price">$${fmt(c.price,c.price)}</div>
+        <div class="hpr-chg ${c.change>=0?'positive':'negative'}">${c.change>=0?'+':''}${c.change.toFixed(2)}%</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderTickerTape(){
+  const el=document.getElementById('tickerInner'); if(!el)return;
+  const items=[...COINS,...COINS];
+  el.innerHTML=items.map(c=>`
+    <div class="ti">
+      <span class="ti-sym">${c.id}/USDT</span>
+      <span class="ti-p" style="color:${c.change>=0?'var(--green)':'var(--red)'}">$${fmt(c.price,c.price)}</span>
+      <span class="ti-c ${c.change>=0?'positive':'negative'}">${c.change>=0?'+':''}${c.change.toFixed(2)}%</span>
+    </div>`).join('');
+}
+
+function renderMktTable(f,search=''){
+  currentFilter=f;
+  let list=[...COINS];
+  const s=(search||'').toLowerCase();
+  if(s) list=list.filter(c=>c.id.toLowerCase().includes(s)||c.name.toLowerCase().includes(s));
+  if(f==='gainers') list=list.filter(c=>c.change>0).sort((a,b)=>b.change-a.change);
+  else if(f==='losers') list=list.filter(c=>c.change<0).sort((a,b)=>a.change-b.change);
+  else if(f==='volume') list=[...list].sort((a,b)=>parseFloat(b.vol.replace(/[^0-9.]/g,''))-parseFloat(a.vol.replace(/[^0-9.]/g,'')));
+  const tbody=document.getElementById('mktTbody'); if(!tbody)return;
+  tbody.innerHTML=list.slice(0,16).map((c,i)=>`
+    <tr onclick="location.href='trade.html?pair=${c.id}USDT'" style="cursor:pointer">
+      <td style="color:var(--t3)">${c.rank||i+1}</td>
+      <td>
+        <div class="coin-row">
+          <div class="coin-icon" style="background:${COIN_COLORS[c.id]||'#888'}22;color:${COIN_COLORS[c.id]||'#888'}">${c.id.slice(0,3)}</div>
+          <div><div class="coin-sym">${c.id}<span style="color:var(--t3);font-weight:400">/USDT</span></div><div class="coin-full">${c.name}</div></div>
+        </div>
+      </td>
+      <td style="font-weight:700;color:var(--white)">$${fmt(c.price,c.price)}</td>
+      <td><span class="chg-pill ${c.change>=0?'chg-up':'chg-dn'}">${c.change>=0?'▲ +':'▼ '}${c.change.toFixed(2)}%</span></td>
+      <td style="color:var(--green)">$${fmt(c.price*1.035,c.price)}</td>
+      <td style="color:var(--red)">$${fmt(c.price*0.965,c.price)}</td>
+      <td style="color:var(--t2)">${c.vol}</td>
+      <td><canvas class="sparkline" id="sp_${c.id}" width="72" height="28"></canvas></td>
+      <td><a href="trade.html?pair=${c.id}USDT" class="btn btn-ghost btn-xs" onclick="event.stopPropagation()">Trade</a></td>
+    </tr>`).join('');
+  list.slice(0,16).forEach(c=>{
+    const cv=document.getElementById('sp_'+c.id);
+    if(cv) drawSparkline(cv,Array.from({length:20},()=>c.price*(1+(Math.random()-.48)*.015)),c.change>=0);
+  });
+}
+
+function drawSparkline(cv,data,up){
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const mn=Math.min(...data),mx=Math.max(...data),rng=mx-mn||1;
+  ctx.beginPath();ctx.strokeStyle=up?'#02c076':'#f6465d';ctx.lineWidth=1.5;ctx.lineJoin='round';
+  data.forEach((v,i)=>{const x=(i/(data.length-1))*W,y=H-((v-mn)/rng)*(H*.8)-(H*.1);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+}
+
+function setupMktTabs(){
+  document.querySelectorAll('.mkt-tab').forEach(t=>{
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.mkt-tab').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+      renderMktTable(this.dataset.f, document.getElementById('mktSearch').value);
+    });
+  });
+  document.querySelectorAll('.hct').forEach(b=>{
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.hct').forEach(x=>x.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+function fmt(price,ref){
+  if(ref===undefined) ref=price;
+  return ref>1000?price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):ref>1?price.toFixed(4):price.toFixed(6);
+}
+
+function heroSignup(){
+  const v=document.getElementById('heroEmail').value.trim();
+  window.location.href='register.html'+(v?'?email='+encodeURIComponent(v):'');
+}
+
+function scrollToMarket(){
+  document.getElementById('marketSection').scrollIntoView({behavior:'smooth'});
+}
+
+function updateNavAuth(){
+  const user=getCurrentUser(); if(!user)return;
+  const el=document.getElementById('navAuth'); if(!el)return;
+  el.innerHTML=`
+    <a href="dashboard.html" class="btn btn-dark btn-sm"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="deposit.html" class="btn btn-primary btn-sm">Deposit</a>
+    <div class="user-nav">
+      <div class="avatar">${(user.name||'U').slice(0,2).toUpperCase()}</div>
+      <span style="font-size:13px;font-weight:600;color:var(--t1)">${user.name.split(' ')[0]}</span>
+      <i class="fas fa-chevron-down" style="font-size:9px;color:var(--t3)"></i>
+      <div class="dropdown">
+        <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+        <div class="drop-item" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> Assets</div>
+        <div class="drop-item" onclick="location.href='orders.html'"><i class="fas fa-list"></i> Orders</div>
+        <div class="drop-item" onclick="location.href='profile.html'"><i class="fas fa-user-cog"></i> Profile</div>
+        ${user.role==='admin'?'<div class="drop-item" onclick="location.href=\'admin/dashboard.html\'"><i class="fas fa-shield-halved"></i> Admin</div>':''}
+        <div class="drop-divider"></div>
+        <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+      </div>
+    </div>
+    <div class="nav-divider"></div>
+    <button class="nav-icon-btn" style="position:relative" onclick="location.href='dashboard.html'" title="Notifications">
+      <i class="fas fa-bell"></i><div class="notif-dot"></div>
+    </button>
+    <button class="nav-icon-btn" title="Language"><i class="fas fa-globe"></i></button>`;
+}
+</script>
+</body>
+</html>

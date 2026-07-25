@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>All Orders – CryptoX Admin</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<link rel="stylesheet" href="../css/admin.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><a href="../index.html" style="display:flex;align-items:center;gap:6px;text-decoration:none"><svg width="26" height="26" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg><span style="font-size:15px;font-weight:800;color:var(--white)">CryptoX</span></a><span class="admin-badge">ADMIN</span></div>
+    <nav class="admin-menu">
+      <div class="menu-sec">OVERVIEW</div><a href="dashboard.html" class="a-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+      <div class="menu-sec">USERS</div><a href="users.html" class="a-item"><i class="fas fa-users"></i><span>All Users</span></a><a href="kyc.html" class="a-item"><i class="fas fa-id-card"></i><span>KYC Reviews</span></a>
+      <div class="menu-sec">FINANCE</div><a href="deposits.html" class="a-item"><i class="fas fa-arrow-down"></i><span>Deposits</span></a><a href="withdrawals.html" class="a-item"><i class="fas fa-arrow-up"></i><span>Withdrawals</span></a><a href="fees.html" class="a-item"><i class="fas fa-percent"></i><span>Fees</span></a>
+      <div class="menu-sec">TRADING</div><a href="markets.html" class="a-item"><i class="fas fa-coins"></i><span>Markets</span></a><a href="orders.html" class="a-item active"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+      <div class="menu-sec">SYSTEM</div><a href="announcements.html" class="a-item"><i class="fas fa-bullhorn"></i><span>Announcements</span></a><a href="settings.html" class="a-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+    </nav>
+    <div style="border-top:1px solid var(--border);padding:8px"><a href="../dashboard.html" class="a-item"><i class="fas fa-user"></i><span>User View</span></a><div class="a-item" style="color:var(--red);cursor:pointer" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i><span>Log Out</span></div></div>
+  </aside>
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <div class="flex gap12"><button style="background:none;border:none;color:var(--t2);font-size:18px;cursor:pointer" onclick="document.querySelector('.admin-sidebar').classList.toggle('collapsed')"><i class="fas fa-bars"></i></button><h2>All Orders</h2></div>
+      <button class="btn btn-ghost btn-sm" onclick="exportOrders()"><i class="fas fa-download"></i> Export</button>
+    </div>
+    <div class="admin-content">
+      <div class="admin-card">
+        <div class="admin-card-head"><h3>Order Book</h3><span id="ordCount" style="font-size:12px;color:var(--t3)"></span></div>
+        <div class="tbl-controls">
+          <input type="text" class="tbl-search" id="ordSearch" placeholder="Search pair, user..." oninput="loadOrders()"/>
+          <select class="sel-sm" id="ordPair" onchange="loadOrders()"><option value="">All Pairs</option><option>BTC/USDT</option><option>ETH/USDT</option><option>SOL/USDT</option><option>BNB/USDT</option></select>
+          <select class="sel-sm" id="ordStatus" onchange="loadOrders()"><option value="">All Status</option><option value="open">Open</option><option value="filled">Filled</option><option value="cancelled">Cancelled</option></select>
+          <select class="sel-sm" id="ordSide" onchange="loadOrders()"><option value="">All Sides</option><option value="buy">Buy</option><option value="sell">Sell</option></select>
+        </div>
+        <div class="admin-card-body">
+          <table class="data-table">
+            <thead><tr><th>Order ID</th><th>User</th><th>Pair</th><th>Type</th><th>Side</th><th style="text-align:right">Price</th><th style="text-align:right">Amount</th><th style="text-align:right">Total</th><th>Status</th><th>Time</th></tr></thead>
+            <tbody id="ordTbody"></tbody>
+          </table>
+        </div>
+        <div class="paginator">
+          <span id="ordInfo" style="font-size:12px;color:var(--t3)"></span>
+          <div class="page-btns" id="ordPageBtns"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="../js/data.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+let adminOrders = []; let ordPage = 1; const ORD_PAGE = 50;
+document.addEventListener('DOMContentLoaded', async ()=>{ await initAuthOnLoad(); const user=requireAdmin(); if(!user)return; loadOrders(); });
+
+async function loadOrders() {
+  const pair=document.getElementById('ordPair').value;
+  const status=document.getElementById('ordStatus').value;
+  const side=document.getElementById('ordSide').value;
+  const tbody=document.getElementById('ordTbody'); if(!tbody)return;
+  tbody.innerHTML='<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--t3)"><i class="fas fa-spinner fa-spin"></i></td></tr>';
+  try {
+    const token=localStorage.getItem('cx_token');
+    if (token) {
+      const p=new URLSearchParams({limit:200});
+      if(pair) p.set('pair',pair); if(status) p.set('status',status); if(side) p.set('side',side);
+      const r=await fetch('/api/trading/admin/orders?'+p,{headers:{'Authorization':'Bearer '+token}});
+      const d=await r.json();
+      if(d.success){adminOrders=d.orders;renderOrders();return;}
+    }
+  }catch(e){}
+  adminOrders=[];renderOrders();
+}
+
+function renderOrders() {
+  const search=document.getElementById('ordSearch').value.toLowerCase();
+  let list=[...adminOrders];
+  if(search) list=list.filter(o=>(o.pair+o.user_name+o.user_email).toLowerCase().includes(search));
+  const total=list.length;
+  const paged=list.slice((ordPage-1)*ORD_PAGE,ordPage*ORD_PAGE);
+  document.getElementById('ordCount').textContent=total+' orders';
+  document.getElementById('ordInfo').textContent='Showing '+paged.length+' of '+total;
+  const tbody=document.getElementById('ordTbody');
+  tbody.innerHTML=paged.length?paged.map(o=>`<tr>
+    <td style="font-size:10px;font-family:monospace;color:var(--t3)">${(o.id||'').slice(0,12)}...</td>
+    <td><div style="font-size:12px;font-weight:600">${o.user_name||'User'}</div><div style="font-size:10px;color:var(--t3)">${o.user_email||'-'}</div></td>
+    <td><strong>${o.pair||'-'}</strong></td>
+    <td style="text-transform:capitalize;color:var(--t2)">${o.type||'limit'}</td>
+    <td class="${o.side==='buy'?'positive':'negative'}" style="font-weight:700;text-transform:uppercase">${o.side||'-'}</td>
+    <td style="text-align:right;font-weight:600">$${parseFloat(o.price||0).toFixed(2)}</td>
+    <td style="text-align:right">${parseFloat(o.amount||0).toFixed(6)}</td>
+    <td style="text-align:right;font-weight:600">$${parseFloat(o.total||0).toFixed(2)}</td>
+    <td><span class="status-pill sp-${o.status==='filled'?'filled':o.status==='open'?'open':'cancelled'}">${o.status||'-'}</span></td>
+    <td style="font-size:11px;color:var(--t3)">${new Date(o.created_at||0).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</td>
+  </tr>`).join(''):'<tr><td colspan="10" style="text-align:center;padding:32px;color:var(--t3)">No orders found</td></tr>';
+  const pb=document.getElementById('ordPageBtns');
+  if(pb){const pages=Math.ceil(list.length/ORD_PAGE);pb.innerHTML=Array.from({length:Math.min(pages,7)},(_,i)=>`<button class="pg-btn ${i+1===ordPage?'active':''}" onclick="ordPage=${i+1};renderOrders()">${i+1}</button>`).join('');}
+}
+
+function exportOrders(){const h=['ID','User','Email','Pair','Type','Side','Price','Amount','Total','Status','Time'];const r=adminOrders.map(o=>[o.id,o.user_name,o.user_email,o.pair,o.type,o.side,o.price||0,o.amount||0,o.total||0,o.status,new Date(o.created_at||0).toISOString()]);const csv=[h,...r].map(x=>x.join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='orders.csv';a.click();}
+</script>
+</body>
+</html>

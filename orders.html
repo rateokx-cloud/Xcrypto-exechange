@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Orders – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dash-body">
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg><span class="nav-logo-text">CryptoX</span></a>
+  <div class="nav-links"><button class="nav-tab" onclick="location.href='trade.html'">Trade</button></div>
+  <div class="nav-right">
+    <a href="trade.html" class="btn btn-primary btn-sm"><i class="fas fa-chart-line"></i> Trade</a>
+    <div class="user-nav"><div class="avatar" id="navAv">--</div><div class="dropdown">
+      <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+      <div class="drop-divider"></div>
+      <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+    </div></div>
+  </div>
+</nav>
+<div class="dash-layout">
+  <aside class="dash-sidebar">
+    <div class="ds-section">Overview</div>
+    <a href="dashboard.html" class="ds-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+    <a href="wallet.html" class="ds-item"><i class="fas fa-wallet"></i><span>Assets</span></a>
+    <a href="orders.html" class="ds-item active"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+    <div class="ds-section">Wallet</div>
+    <a href="deposit.html" class="ds-item"><i class="fas fa-arrow-down"></i><span>Deposit</span></a>
+    <a href="withdraw.html" class="ds-item"><i class="fas fa-arrow-up"></i><span>Withdraw</span></a>
+    <div class="ds-section">Account</div>
+    <a href="profile.html" class="ds-item"><i class="fas fa-user-cog"></i><span>Settings</span></a>
+  </aside>
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div class="dash-breadcrumb"><a href="dashboard.html" style="color:var(--t3)">Dashboard</a><i class="fas fa-chevron-right"></i><span class="current">Orders</span></div>
+      <a href="trade.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Place Order</a>
+    </div>
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+      <div class="sum-card yellow"><div class="sum-card-icon"><i class="fas fa-list"></i></div><div class="sum-card-label">Total Orders</div><div class="sum-card-val" id="statTotal">0</div></div>
+      <div class="sum-card green"><div class="sum-card-icon"><i class="fas fa-check"></i></div><div class="sum-card-label">Filled</div><div class="sum-card-val" id="statFilled">0</div></div>
+      <div class="sum-card blue"><div class="sum-card-icon"><i class="fas fa-clock"></i></div><div class="sum-card-label">Open</div><div class="sum-card-val" id="statOpen">0</div></div>
+      <div class="sum-card red"><div class="sum-card-icon"><i class="fas fa-times"></i></div><div class="sum-card-label">Cancelled</div><div class="sum-card-val" id="statCancelled">0</div></div>
+    </div>
+    <!-- Orders table -->
+    <div class="admin-card">
+      <!-- Tabs -->
+      <div style="display:flex;border-bottom:1px solid var(--border);padding:0 20px;background:var(--bg2)">
+        <button class="oo-tab active" data-tab="open" onclick="switchTab(this)">Open Orders <span class="oo-count" id="openCnt">0</span></button>
+        <button class="oo-tab" data-tab="history" onclick="switchTab(this)">Order History</button>
+        <button class="oo-tab" data-tab="trades" onclick="switchTab(this)">Trade History</button>
+      </div>
+      <!-- Filter bar -->
+      <div class="tbl-controls">
+        <select id="fPair" class="sel-sm"><option value="">All Pairs</option><option>BTC/USDT</option><option>ETH/USDT</option><option>BNB/USDT</option><option>SOL/USDT</option><option>XRP/USDT</option></select>
+        <select id="fSide" class="sel-sm"><option value="">All Sides</option><option value="buy">Buy</option><option value="sell">Sell</option></select>
+        <select id="fStatus" class="sel-sm"><option value="">All Status</option><option value="filled">Filled</option><option value="open">Open</option><option value="cancelled">Cancelled</option></select>
+        <input type="date" id="fFrom" class="form-input" style="height:32px;width:140px;font-size:12px"/>
+        <input type="date" id="fTo" class="form-input" style="height:32px;width:140px;font-size:12px"/>
+        <button class="btn btn-primary btn-sm" onclick="applyFilter()"><i class="fas fa-search"></i></button>
+        <button class="btn btn-dark btn-sm" onclick="resetFilter()">Reset</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportCSV()" style="margin-left:auto"><i class="fas fa-download"></i> Export</button>
+      </div>
+      <div class="admin-card-body">
+        <table class="data-table" id="ordersTable">
+          <thead><tr><th>Order ID</th><th>Time</th><th>Pair</th><th>Type</th><th>Side</th><th style="text-align:right">Price</th><th style="text-align:right">Amount</th><th style="text-align:right">Filled</th><th style="text-align:right">Total</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="ordersTbody"></tbody>
+        </table>
+      </div>
+      <div class="paginator">
+        <span id="pageInfo" style="color:var(--t3);font-size:12px">Showing 0 orders</span>
+        <div class="page-btns" id="pageBtns"></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/orders.js"></script>
+</body>
+</html>

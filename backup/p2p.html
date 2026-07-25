@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>P2P Trading – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">C</div><span class="nav-logo-text">CryptoX</span></a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='trade.html'">Spot</button>
+    <button class="nav-tab active">P2P</button>
+    <button class="nav-tab" onclick="location.href='earn.html'">Earn</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="login.html" class="btn btn-ghost btn-sm">Log In</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+  </div>
+</nav>
+
+<!-- P2P Header -->
+<div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:24px 0">
+  <div class="container">
+    <div class="flex-between">
+      <div>
+        <h1 style="font-size:24px;font-weight:800;color:var(--white);margin-bottom:4px">P2P Trading</h1>
+        <p style="font-size:13px;color:var(--t2)">Buy and sell crypto directly with other users. Zero fees.</p>
+      </div>
+      <button class="btn btn-primary" onclick="location.href='register.html'"><i class="fas fa-plus"></i> Post Order</button>
+    </div>
+    <!-- Filters -->
+    <div style="display:flex;gap:10px;margin-top:20px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:3px;gap:2px">
+        <button class="btn btn-primary btn-sm" id="p2pBuyBtn" onclick="switchP2P('buy',this)">Buy</button>
+        <button class="btn btn-dark btn-sm" id="p2pSellBtn" onclick="switchP2P('sell',this)">Sell</button>
+      </div>
+      <select class="sel-sm" id="p2pCoin" onchange="renderP2P()">
+        <option value="USDT">USDT</option><option value="BTC">BTC</option><option value="ETH">ETH</option><option value="BNB">BNB</option>
+      </select>
+      <select class="sel-sm" id="p2pFiat" onchange="renderP2P()">
+        <option value="IDR">IDR</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="SGD">SGD</option>
+      </select>
+      <div class="input-group" style="width:200px">
+        <input type="number" placeholder="Amount" id="p2pAmtFilter" style="font-size:13px"/>
+        <span style="padding:0 10px;font-size:12px;color:var(--t3);border-left:1px solid var(--border);display:flex;align-items:center">IDR</span>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="renderP2P()"><i class="fas fa-search"></i> Search</button>
+    </div>
+    <!-- Payment methods -->
+    <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-dark btn-xs p2p-pay active" onclick="this.classList.toggle('active')">All</button>
+      <button class="btn btn-dark btn-xs p2p-pay" onclick="this.classList.toggle('active')">Bank Transfer</button>
+      <button class="btn btn-dark btn-xs p2p-pay" onclick="this.classList.toggle('active')">GoPay</button>
+      <button class="btn btn-dark btn-xs p2p-pay" onclick="this.classList.toggle('active')">OVO</button>
+      <button class="btn btn-dark btn-xs p2p-pay" onclick="this.classList.toggle('active')">DANA</button>
+      <button class="btn btn-dark btn-xs p2p-pay" onclick="this.classList.toggle('active')">PayPal</button>
+    </div>
+  </div>
+</div>
+
+<!-- P2P TABLE -->
+<section style="padding:24px 0">
+  <div class="container">
+    <div class="mkt-table-wrap">
+      <table class="mkt-table" id="p2pTable">
+        <thead><tr><th>Advertiser</th><th>Price</th><th>Available / Limit</th><th>Payment Methods</th><th style="text-align:center">Action</th></tr></thead>
+        <tbody id="p2pTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section style="background:var(--bg2);border-top:1px solid var(--border);padding:48px 0">
+  <div class="container">
+    <h2 style="font-size:22px;font-weight:800;text-align:center;margin-bottom:32px">How P2P Trading Works</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div style="text-align:center">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--bg3);border:2px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:var(--yellow);margin:0 auto 14px">1</div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px">Find an Offer</h3>
+        <p style="font-size:13px;color:var(--t2);line-height:1.6">Browse buy and sell ads from verified merchants. Filter by price, payment method, and amount.</p>
+      </div>
+      <div style="text-align:center">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--bg3);border:2px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:var(--yellow);margin:0 auto 14px">2</div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px">Place Order & Pay</h3>
+        <p style="font-size:13px;color:var(--t2);line-height:1.6">Initiate the trade. The seller's crypto is held in escrow. Transfer payment via your preferred method.</p>
+      </div>
+      <div style="text-align:center">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--bg3);border:2px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:var(--yellow);margin:0 auto 14px">3</div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px">Receive Crypto</h3>
+        <p style="font-size:13px;color:var(--t2);line-height:1.6">Once payment is confirmed, the escrowed crypto is released directly to your wallet. Zero fees!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script>
+let p2pMode = 'buy';
+const MERCHANTS = ['CryptoKing88','IDRTrader','FastCoinID','SafeSwap','PremiumExchange','TrustedSeller','QuickTrade','TopMerchant'];
+const PAYMENTS = [['Bank Transfer','GoPay'],['OVO','DANA','Bank Transfer'],['Bank Transfer'],['GoPay','OVO'],['DANA','Bank Transfer','PayPal'],['Bank Transfer'],['GoPay','DANA'],['PayPal','Bank Transfer']];
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await initAuthOnLoad();
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById('navAuth').innerHTML = `
+      <a href="dashboard.html" class="btn btn-dark btn-sm">Dashboard</a>
+      <div class="user-nav"><div class="avatar">${(user.name||'U').slice(0,2).toUpperCase()}</div>
+        <div class="dropdown">
+          <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+          <div class="drop-divider"></div>
+          <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+        </div>
+      </div>`;
+  }
+  renderP2P();
+});
+
+function switchP2P(mode, btn) {
+  p2pMode = mode;
+  document.getElementById('p2pBuyBtn').className  = mode==='buy'  ? 'btn btn-primary btn-sm' : 'btn btn-dark btn-sm';
+  document.getElementById('p2pSellBtn').className = mode==='sell' ? 'btn btn-red btn-sm'     : 'btn btn-dark btn-sm';
+  renderP2P();
+}
+
+function renderP2P() {
+  const coin = document.getElementById('p2pCoin').value;
+  const fiat = document.getElementById('p2pFiat').value;
+  const rates = {IDR:15850,USD:1,EUR:0.92,SGD:1.34};
+  const rate  = rates[fiat]||15850;
+  const btcUSD = COINS.find(c=>c.id==='BTC')?.price||67000;
+  const base  = coin==='BTC'?btcUSD:coin==='ETH'?3842:coin==='BNB'?605:1;
+  const tbody = document.getElementById('p2pTbody'); if (!tbody) return;
+  tbody.innerHTML = Array.from({length:8},(_,i)=>{
+    const spread   = p2pMode==='buy' ? 1+(i*0.001+0.001) : 1-(i*0.001);
+    const priceVal = (base*rate*spread).toFixed(fiat==='IDR'?0:2);
+    const available= (Math.random()*10+0.5).toFixed(4);
+    const minAmt   = (Math.random()*200000+50000).toFixed(0);
+    const maxAmt   = (parseFloat(minAmt)*20).toFixed(0);
+    const rating   = (4.7+Math.random()*0.3).toFixed(1);
+    const trades   = Math.floor(Math.random()*5000+100);
+    const pays     = PAYMENTS[i];
+    return `<tr>
+      <td>
+        <div class="flex gap10">
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--yellow),var(--green));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#111;flex-shrink:0">${MERCHANTS[i].slice(0,2).toUpperCase()}</div>
+          <div>
+            <div style="font-weight:700;font-size:13px">${MERCHANTS[i]}</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:1px">
+              <i class="fas fa-star" style="color:var(--yellow);font-size:9px"></i> ${rating} · ${trades} trades
+              <span style="margin-left:6px;color:var(--green)"><i class="fas fa-circle" style="font-size:6px"></i> Online</span>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td><div style="font-size:16px;font-weight:800;color:${p2pMode==='buy'?'var(--green)':'var(--red)'}">${parseFloat(priceVal).toLocaleString()} ${fiat}</div><div style="font-size:11px;color:var(--t3)">per ${coin}</div></td>
+      <td>
+        <div style="font-size:13px;font-weight:600">${available} ${coin}</div>
+        <div style="font-size:11px;color:var(--t3)">${parseFloat(minAmt).toLocaleString()} – ${parseFloat(maxAmt).toLocaleString()} ${fiat}</div>
+      </td>
+      <td><div style="display:flex;gap:4px;flex-wrap:wrap">${pays.map(p=>`<span style="background:var(--bg3);border:1px solid var(--border);padding:2px 7px;border-radius:3px;font-size:10px;white-space:nowrap">${p}</span>`).join('')}</div></td>
+      <td style="text-align:center">
+        <button class="btn ${p2pMode==='buy'?'btn-primary':'btn-red'} btn-sm" onclick="p2pAction('${p2pMode}','${coin}')">${p2pMode==='buy'?'Buy '+coin:'Sell '+coin}</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function p2pAction(mode, coin) {
+  const user = getCurrentUser();
+  if (!user) { window.location.href='login.html'; return; }
+  const msg = mode==='buy' ? `Initiating buy order for ${coin}. Connecting to seller...` : `Initiating sell order for ${coin}. Buyer will be notified.`;
+  showToast(msg,'t-info');
+}
+
+function showToast(msg,type='t-info'){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div'); t.className='toast '+type;
+  t.innerHTML=`<i class="toast-icon fas fa-info-circle"></i><span class="toast-msg">${msg}</span>`;
+  c.appendChild(t); setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},3000);
+}
+</script>
+</body>
+</html>

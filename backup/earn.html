@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Earn – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">C</div><span class="nav-logo-text">CryptoX</span></a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='index.html'">Markets</button>
+    <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab active">Earn</button>
+    <button class="nav-tab" onclick="location.href='p2p.html'">P2P</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="login.html" class="btn btn-ghost btn-sm">Log In</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="background:linear-gradient(135deg,#0a1a0a 0%,#0b0e11 50%,#1a150a 100%);padding:64px 0;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(2,192,118,.07) 0%,transparent 70%);pointer-events:none"></div>
+  <div class="container" style="position:relative">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--green-dim);border:1px solid rgba(2,192,118,.2);color:var(--green);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:16px"><i class="fas fa-seedling"></i> EARN CRYPTO</div>
+    <h1 style="font-size:44px;font-weight:900;color:var(--white);margin-bottom:12px">Put Your Crypto to Work</h1>
+    <p style="font-size:15px;color:var(--t2);margin-bottom:32px;max-width:540px;margin-left:auto;margin-right:auto">Earn up to 25% APY on your idle crypto assets with flexible and locked staking options.</p>
+    <div style="display:flex;justify-content:center;gap:32px;margin-bottom:16px">
+      <div style="text-align:center"><div style="font-size:28px;font-weight:900;color:var(--green)">25%</div><div style="font-size:12px;color:var(--t3)">Max APY</div></div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div style="text-align:center"><div style="font-size:28px;font-weight:900;color:var(--yellow)">$2.4B</div><div style="font-size:12px;color:var(--t3)">Total Value Locked</div></div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div style="text-align:center"><div style="font-size:28px;font-weight:900;color:var(--white)">50+</div><div style="font-size:12px;color:var(--t3)">Products</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TABS -->
+<div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:0">
+  <div class="container">
+    <div style="display:flex;gap:0">
+      <button class="nav-tab active" onclick="showEarnTab(this,'flex')"><i class="fas fa-bolt"></i> Flexible</button>
+      <button class="nav-tab" onclick="showEarnTab(this,'locked')"><i class="fas fa-lock"></i> Locked</button>
+      <button class="nav-tab" onclick="showEarnTab(this,'staking')"><i class="fas fa-layer-group"></i> DeFi Staking</button>
+      <button class="nav-tab" onclick="showEarnTab(this,'savings')"><i class="fas fa-piggy-bank"></i> Auto-Invest</button>
+    </div>
+  </div>
+</div>
+
+<!-- FLEXIBLE TAB -->
+<div id="earnTab-flex">
+  <div class="section">
+    <div class="container">
+      <div class="flex-between" style="margin-bottom:20px">
+        <div><h2 class="sec-title">Flexible Savings</h2><p class="sec-sub">Earn interest anytime — deposit and withdraw with no lock-up period</p></div>
+        <div style="display:flex;gap:8px">
+          <input type="text" placeholder="Search asset..." style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:7px 12px;color:var(--t1);font-size:12px;outline:none;width:180px" oninput="filterEarnTable(this.value)"/>
+        </div>
+      </div>
+      <div class="mkt-table-wrap">
+        <table class="mkt-table">
+          <thead><tr><th>Asset</th><th>Est. APY</th><th>Min Amount</th><th>Duration</th><th>Total Staked</th><th style="text-align:center">Action</th></tr></thead>
+          <tbody id="earnTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOCKED TAB -->
+<div id="earnTab-locked" style="display:none">
+  <div class="section">
+    <div class="container">
+      <h2 class="sec-title" style="margin-bottom:6px">Locked Staking</h2>
+      <p class="sec-sub" style="margin-bottom:24px">Higher APY for committing your assets for a fixed duration</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" id="lockedGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- STAKING TAB -->
+<div id="earnTab-staking" style="display:none">
+  <div class="section">
+    <div class="container">
+      <div style="text-align:center;padding:60px 20px">
+        <i class="fas fa-layer-group" style="font-size:48px;color:var(--t3);margin-bottom:16px;display:block"></i>
+        <h3 style="font-size:20px;color:var(--white);margin-bottom:8px">DeFi Staking Coming Soon</h3>
+        <p style="color:var(--t2);font-size:14px">Access on-chain yields through the safest DeFi protocols</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTO-INVEST TAB -->
+<div id="earnTab-savings" style="display:none">
+  <div class="section">
+    <div class="container">
+      <div style="text-align:center;padding:60px 20px">
+        <i class="fas fa-piggy-bank" style="font-size:48px;color:var(--t3);margin-bottom:16px;display:block"></i>
+        <h3 style="font-size:20px;color:var(--white);margin-bottom:8px">Auto-Invest Plan</h3>
+        <p style="color:var(--t2);font-size:14px;margin-bottom:24px">Set up recurring buys to dollar-cost average into any crypto</p>
+        <a href="register.html" class="btn btn-primary btn-lg">Get Started</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script>
+const EARN_PRODUCTS = [
+  {coin:'USDT',name:'Tether',apy:5.2,min:10,staked:'$428M',color:'#26A17B'},
+  {coin:'BTC', name:'Bitcoin',apy:1.8,min:0.001,staked:'$1.2B',color:'#F7931A'},
+  {coin:'ETH', name:'Ethereum',apy:3.4,min:0.01,staked:'$842M',color:'#627EEA'},
+  {coin:'BNB', name:'BNB',apy:4.1,min:0.01,staked:'$312M',color:'#F0B90B'},
+  {coin:'SOL', name:'Solana',apy:6.8,min:0.1,staked:'$198M',color:'#9945FF'},
+  {coin:'ADA', name:'Cardano',apy:4.5,min:10,staked:'$88M',color:'#3CCAB0'},
+  {coin:'DOT', name:'Polkadot',apy:8.2,min:1,staked:'$76M',color:'#E6007A'},
+  {coin:'DOGE',name:'Dogecoin',apy:2.1,min:100,staked:'$42M',color:'#C2A633'},
+  {coin:'LINK',name:'Chainlink',apy:3.9,min:1,staked:'$64M',color:'#2A5ADA'},
+  {coin:'MATIC',name:'Polygon',apy:5.6,min:10,staked:'$52M',color:'#8247E5'},
+];
+const LOCKED_PRODUCTS = [
+  {coin:'USDT',name:'Tether',days:7,apy:6.5,color:'#26A17B'},{coin:'USDT',name:'Tether',days:30,apy:8.2,color:'#26A17B'},
+  {coin:'BTC', name:'Bitcoin',days:30,apy:2.4,color:'#F7931A'},{coin:'ETH', name:'Ethereum',days:14,apy:4.8,color:'#627EEA'},
+  {coin:'SOL', name:'Solana',days:60,apy:12.5,color:'#9945FF'},{coin:'BNB', name:'BNB',days:90,apy:14.2,color:'#F0B90B'},
+];
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await initAuthOnLoad();
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById('navAuth').innerHTML = `
+      <a href="dashboard.html" class="btn btn-dark btn-sm">Dashboard</a>
+      <div class="user-nav"><div class="avatar">${(user.name||'U').slice(0,2).toUpperCase()}</div>
+        <div class="dropdown">
+          <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+          <div class="drop-divider"></div>
+          <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+        </div>
+      </div>`;
+  }
+  renderEarnTable(EARN_PRODUCTS);
+  renderLockedGrid();
+});
+
+function renderEarnTable(list) {
+  const tbody = document.getElementById('earnTableBody'); if (!tbody) return;
+  tbody.innerHTML = list.map(p=>`<tr>
+    <td><div class="flex gap10">
+      <div class="coin-icon" style="background:${p.color}22;color:${p.color};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">${p.coin.slice(0,3)}</div>
+      <div><div class="coin-sym">${p.coin}</div><div class="coin-full">${p.name}</div></div>
+    </div></td>
+    <td style="color:var(--green);font-weight:800;font-size:16px">${p.apy}%</td>
+    <td style="color:var(--t2)">${p.min} ${p.coin}</td>
+    <td><span style="background:var(--green-dim);color:var(--green);padding:3px 8px;border-radius:var(--radius);font-size:11px;font-weight:600">Flexible</span></td>
+    <td style="color:var(--t2)">${p.staked}</td>
+    <td style="text-align:center"><button class="btn btn-primary btn-sm" onclick="earnNow('${p.coin}',${p.apy},'flex')">Subscribe</button></td>
+  </tr>`).join('');
+}
+
+function renderLockedGrid() {
+  const el = document.getElementById('lockedGrid'); if (!el) return;
+  el.innerHTML = LOCKED_PRODUCTS.map(p=>`
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:20px;transition:border-color .2s" onmouseover="this.style.borderColor='var(--yellow)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="coin-icon" style="background:${p.color}22;color:${p.color};width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800">${p.coin.slice(0,3)}</div>
+        <div><div style="font-weight:700">${p.coin}</div><div style="font-size:11px;color:var(--t3)">${p.days}-Day Lock</div></div>
+        <span style="margin-left:auto;background:rgba(240,185,11,.12);color:var(--yellow);padding:3px 8px;border-radius:var(--radius);font-size:11px;font-weight:700">${p.days}D</span>
+      </div>
+      <div style="font-size:28px;font-weight:900;color:var(--green);margin-bottom:4px">${p.apy}%<span style="font-size:12px;color:var(--t3);font-weight:400"> APY</span></div>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:16px">Fixed term · Auto-renewal available</div>
+      <button class="btn btn-primary btn-sm btn-full" onclick="earnNow('${p.coin}',${p.apy},'locked')">Subscribe Now</button>
+    </div>`).join('');
+}
+
+function showEarnTab(btn, tab) {
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['flex','locked','staking','savings'].forEach(t=>{ const el=document.getElementById('earnTab-'+t); if(el) el.style.display=t===tab?'block':'none'; });
+}
+
+function filterEarnTable(q) {
+  const filtered = EARN_PRODUCTS.filter(p=>p.coin.toLowerCase().includes(q.toLowerCase())||p.name.toLowerCase().includes(q.toLowerCase()));
+  renderEarnTable(filtered);
+}
+
+function earnNow(coin, apy, type) {
+  const user = getCurrentUser();
+  if (!user) { window.location.href='login.html'; return; }
+  showToast(`Subscribe to ${coin} ${type==='locked'?'Locked':'Flexible'} at ${apy}% APY? Check your assets first.`,'t-info');
+}
+
+function showToast(msg,type='t-info'){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div'); t.className='toast '+type;
+  t.innerHTML=`<i class="toast-icon fas fa-info-circle"></i><span class="toast-msg">${msg}</span>`;
+  c.appendChild(t); setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},3000);
+}
+</script>
+</body>
+</html>

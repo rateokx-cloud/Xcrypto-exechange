@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Log In – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="auth-body">
+
+<nav class="auth-navbar">
+  <a href="index.html" class="flex gap8" style="text-decoration:none">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg>
+    <span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+    <button class="nav-icon-btn"><i class="fas fa-globe"></i></button>
+    <a href="register.html" class="btn btn-ghost btn-sm">Sign Up</a>
+  </div>
+</nav>
+
+<div class="auth-layout">
+  <!-- LEFT -->
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <div class="auth-left-tag"><i class="fas fa-lock"></i> SECURE LOGIN</div>
+      <h1 class="auth-left-title">Welcome back<br/>to CryptoX</h1>
+      <p class="auth-left-sub">Your trusted gateway to the world of cryptocurrency trading with industry-leading security.</p>
+      <div class="auth-left-features">
+        <div class="alf-item"><i class="fas fa-shield-halved"></i> 2FA & anti-phishing protection</div>
+        <div class="alf-item"><i class="fas fa-lock"></i> End-to-end encrypted sessions</div>
+        <div class="alf-item"><i class="fas fa-bell"></i> Real-time login notifications</div>
+        <div class="alf-item"><i class="fas fa-globe"></i> Access from 200+ countries</div>
+      </div>
+      <!-- Stats cards -->
+      <div class="auth-left-graphic">
+        <div class="auth-glass-card" style="margin-bottom:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:12px;color:var(--t2)">Your Portfolio</span>
+            <span style="font-size:11px;color:var(--green)">▲ +4.23%</span>
+          </div>
+          <div style="font-size:24px;font-weight:800;color:var(--white)">$12,847.50</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">≈ 0.19087 BTC</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="auth-glass-card" style="text-align:center">
+            <div style="font-size:20px;font-weight:800;color:var(--yellow)">700+</div>
+            <div style="font-size:11px;color:var(--t3)">Tokens</div>
+          </div>
+          <div class="auth-glass-card" style="text-align:center">
+            <div style="font-size:20px;font-weight:800;color:var(--green)">0.1%</div>
+            <div style="font-size:11px;color:var(--t3)">Min Fee</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="auth-right">
+    <div class="auth-box">
+      <h1>Log In</h1>
+      <p class="sub">Enter your credentials to access your account</p>
+
+      <div class="auth-method-tabs">
+        <button class="amt active" data-m="email">Email</button>
+        <button class="amt" data-m="phone">Phone</button>
+        <button class="amt" data-m="qr">QR Code</button>
+      </div>
+
+      <div id="loginAlert" class="alert alert-err" style="display:none"></div>
+
+      <!-- EMAIL METHOD -->
+      <div id="methodEmail">
+        <div class="form-field">
+          <div class="form-label">Email Address</div>
+          <input class="auth-input" type="email" id="loginEmail" placeholder="Enter your email" autocomplete="email"/>
+        </div>
+        <div id="pwdSection" style="display:none">
+          <div class="form-field">
+            <div class="form-label">
+              <span>Password</span>
+              <a href="#">Forgot Password?</a>
+            </div>
+            <div class="pass-wrap">
+              <input class="auth-input" type="password" id="loginPwd" placeholder="Enter password" autocomplete="current-password"/>
+              <button class="pass-eye" onclick="togglePwd('loginPwd',this)"><i class="fas fa-eye"></i></button>
+            </div>
+          </div>
+          <div id="loginAlert2" class="alert alert-err" style="display:none"></div>
+          <button class="auth-submit" id="loginBtn" onclick="doLogin()">Log In</button>
+        </div>
+        <div id="nextSection">
+          <button class="auth-submit" onclick="showPwdSection()">Next →</button>
+        </div>
+      </div>
+
+      <!-- PHONE METHOD -->
+      <div id="methodPhone" style="display:none">
+        <div class="form-field">
+          <div class="form-label">Phone Number</div>
+          <div style="display:flex;gap:8px">
+            <select class="auth-input" style="width:90px;flex-shrink:0"><option>+62</option><option>+1</option><option>+44</option><option>+65</option></select>
+            <input class="auth-input" type="tel" id="loginPhone" placeholder="Phone number"/>
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="form-label">Password</div>
+          <div class="pass-wrap">
+            <input class="auth-input" type="password" id="loginPwdPhone" placeholder="Password"/>
+            <button class="pass-eye" onclick="togglePwd('loginPwdPhone',this)"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <button class="auth-submit">Log In</button>
+      </div>
+
+      <!-- QR METHOD -->
+      <div id="methodQr" style="display:none;text-align:center;padding:20px 0">
+        <div style="width:160px;height:160px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;margin:0 auto 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+          <i class="fas fa-qrcode" style="font-size:48px;color:var(--t3)"></i>
+          <span style="font-size:11px;color:var(--t3)">QR Code</span>
+        </div>
+        <p style="font-size:13px;color:var(--t2)">Open <strong>CryptoX App</strong> and scan to log in</p>
+        <p style="font-size:11px;color:var(--t3);margin-top:6px">QR code expires in 2:00</p>
+      </div>
+
+      <div class="auth-or">Or continue with</div>
+      <div class="auth-social-row">
+        <button class="auth-social-btn"><i class="fab fa-google" style="color:#EA4335"></i> Google</button>
+        <button class="auth-social-btn"><i class="fab fa-apple"></i> Apple</button>
+      </div>
+
+      <p class="auth-foot">New to CryptoX? <a href="register.html">Create an Account</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+// Method tabs
+document.querySelectorAll('.amt').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.amt').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    ['methodEmail','methodPhone','methodQr'].forEach(id=>document.getElementById(id).style.display='none');
+    const m=this.dataset.m;
+    if(m==='email') document.getElementById('methodEmail').style.display='block';
+    else if(m==='phone') document.getElementById('methodPhone').style.display='block';
+    else document.getElementById('methodQr').style.display='block';
+  });
+});
+
+function showPwdSection(){
+  const email=document.getElementById('loginEmail').value.trim();
+  if(!email){showAlert('loginAlert','Please enter your email address.');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showAlert('loginAlert','Please enter a valid email address.');return;}
+  document.getElementById('loginAlert').style.display='none';
+  document.getElementById('nextSection').style.display='none';
+  document.getElementById('pwdSection').style.display='block';
+  document.getElementById('loginPwd').focus();
+}
+
+async function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pwd=document.getElementById('loginPwd').value;
+  if(!email||!pwd){showAlert('loginAlert2','Please fill in all fields.');return;}
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=true; btn.textContent='Signing in...';
+  try{
+    const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pwd})});
+    const data=await res.json();
+    if(data.success){
+      localStorage.setItem('cx_token',data.token);
+      localStorage.setItem('cx_user',JSON.stringify(data.user));
+      window._currentUser=data.user;
+      showAlert('loginAlert2','Login successful! Redirecting...','ok');
+      setTimeout(()=>window.location.href=data.user.role==='admin'?'admin/dashboard.html':'dashboard.html',800);
+    }else{
+      showAlert('loginAlert2',data.message||'Login failed. Check your credentials.');
+      btn.disabled=false; btn.textContent='Log In';
+    }
+  }catch(e){
+    // localStorage fallback
+    const users=JSON.parse(localStorage.getItem('cx_users')||'[]');
+    const user=users.find(u=>u.email&&u.email.toLowerCase()===email.toLowerCase());
+    if(user&&user.password===pwd){
+      localStorage.setItem('cx_session',user.id);
+      localStorage.setItem('cx_user',JSON.stringify(user));
+      window._currentUser=user;
+      setTimeout(()=>window.location.href=user.role==='admin'?'admin/dashboard.html':'dashboard.html',500);
+    }else{
+      showAlert('loginAlert2','Login failed. Please check your credentials.');
+      btn.disabled=false; btn.textContent='Log In';
+    }
+  }
+}
+
+function showAlert(id,msg,type='err'){
+  const el=document.getElementById(id);
+  el.className='alert alert-'+(type==='ok'?'ok':'err');
+  el.textContent=msg; el.style.display='block';
+}
+
+function togglePwd(id,btn){
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+  btn.innerHTML=el.type==='password'?'<i class="fas fa-eye"></i>':'<i class="fas fa-eye-slash"></i>';
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter') return;
+  const pwdSection=document.getElementById('pwdSection');
+  if(!pwdSection.style.display||pwdSection.style.display==='none') showPwdSection();
+  else doLogin();
+});
+
+document.addEventListener('DOMContentLoaded',async()=>{
+  const token=localStorage.getItem('cx_token');
+  if(!token) return;
+  try{
+    const r=await fetch('/api/auth/me',{headers:{'Authorization':'Bearer '+token}});
+    const d=await r.json();
+    if(d.success) window.location.href=d.user.role==='admin'?'admin/dashboard.html':'dashboard.html';
+    else localStorage.removeItem('cx_token');
+  }catch(e){}
+  // Pre-fill from URL
+  const ep=new URLSearchParams(location.search).get('email');
+  if(ep){document.getElementById('loginEmail').value=ep; showPwdSection();}
+});
+</script>
+</body>
+</html>

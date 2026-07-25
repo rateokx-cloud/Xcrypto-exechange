@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CryptoX – Trade Crypto with Confidence</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">C</div>
+    <span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div class="nav-links">
+    <div class="nav-tab-wrap">
+      <button class="nav-tab">Buy Crypto <i class="fas fa-chevron-down" style="font-size:9px"></i></button>
+      <div class="nav-dropdown">
+        <div class="drop-item" onclick="location.href='deposit.html'"><i class="fas fa-credit-card"></i> Buy with Card</div>
+        <div class="drop-item" onclick="location.href='p2p.html'"><i class="fas fa-handshake"></i> P2P Trading</div>
+      </div>
+    </div>
+    <button class="nav-tab" onclick="scrollToMarket()">Markets</button>
+    <div class="nav-tab-wrap">
+      <button class="nav-tab active">Trade <i class="fas fa-chevron-down" style="font-size:9px"></i></button>
+      <div class="nav-dropdown">
+        <div class="drop-item" onclick="location.href='trade.html'"><i class="fas fa-chart-candlestick"></i> Spot Trading</div>
+        <div class="drop-item" onclick="location.href='futures.html'"><i class="fas fa-bolt"></i> Futures</div>
+        <div class="drop-item" onclick="location.href='orders.html'"><i class="fas fa-list"></i> My Orders</div>
+      </div>
+    </div>
+    <button class="nav-tab" onclick="location.href='earn.html'">Earn <span class="nav-tag">APY 25%</span></button>
+    <button class="nav-tab" onclick="location.href='futures.html'">Derivatives</button>
+    <button class="nav-tab" onclick="location.href='p2p.html'">P2P</button>
+    <button class="nav-tab" style="color:var(--yellow)"><i class="fas fa-gift" style="font-size:11px"></i> Rewards</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="login.html" style="color:var(--t2);font-size:13px;font-weight:600;padding:0 12px;transition:color .12s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--t2)'">Log In</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+    <div class="nav-divider"></div>
+    <button class="nav-icon-btn" title="Search"><i class="fas fa-search"></i></button>
+    <button class="nav-icon-btn" title="Language"><i class="fas fa-globe"></i></button>
+    <button class="nav-icon-btn" id="themeBtn" title="Theme"><i class="fas fa-sun"></i></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-wrap">
+    <div class="hero-text">
+      <div class="hero-badge"><i class="fas fa-gift"></i> Welcome Bonus up to 11,000 USDT</div>
+      <h1 class="hero-title">Trade Crypto<br/>with <span class="accent">Confidence</span></h1>
+      <p class="hero-sub">The most trusted platform for buying, selling, and trading<br/>700+ cryptocurrencies globally.</p>
+      <div class="hero-cta">
+        <div class="hero-cta-email">
+          <input type="email" id="heroEmail" placeholder="Enter your email address"/>
+          <button class="btn btn-primary" onclick="heroSignup()">Get Started</button>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--t3);margin-bottom:20px"><i class="fas fa-shield-halved" style="color:var(--green)"></i> No credit card required &nbsp;•&nbsp; Free to sign up</p>
+      <div class="hero-stats">
+        <div class="hstat-item">
+          <span class="hstat-val" id="hstatUsers">40M+</span>
+          <span class="hstat-lbl">Registered Users</span>
+        </div>
+        <div class="hstat-item">
+          <span class="hstat-val" id="hstatVol">$5.2B</span>
+          <span class="hstat-lbl">24H Volume</span>
+        </div>
+        <div class="hstat-item">
+          <span class="hstat-val">700+</span>
+          <span class="hstat-lbl">Listed Tokens</span>
+        </div>
+        <div class="hstat-item">
+          <span class="hstat-val">200+</span>
+          <span class="hstat-lbl">Countries</span>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT HERO CARD -->
+    <div class="hero-card">
+      <div class="hero-card-head">
+        <div class="hero-card-tabs">
+          <button class="hct active" data-tab="hot">🔥 Hot</button>
+          <button class="hct" data-tab="gainers">Top Gainers</button>
+          <button class="hct" data-tab="new">New</button>
+        </div>
+        <a href="trade.html" style="font-size:12px;color:var(--yellow)">View All ›</a>
+      </div>
+      <div id="heroPriceList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER TAPE -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner"></div>
+</div>
+
+<!-- MARKET TABLE -->
+<section class="section" id="marketSection">
+  <div class="container">
+    <div class="flex-between gap16" style="margin-bottom:20px">
+      <div>
+        <h2 class="sec-title">Live Markets</h2>
+        <p class="sec-sub">Real-time prices across all trading pairs</p>
+      </div>
+      <a href="trade.html" class="btn btn-ghost btn-sm">View All Markets <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="mkt-filter-bar">
+      <div class="mkt-tabs">
+        <button class="mkt-tab active" data-f="hot">🔥 Hot</button>
+        <button class="mkt-tab" data-f="gainers">▲ Gainers</button>
+        <button class="mkt-tab" data-f="losers">▼ Losers</button>
+        <button class="mkt-tab" data-f="volume">Volume</button>
+        <button class="mkt-tab" data-f="new">New</button>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <input type="text" id="mktSearch" placeholder="Search..." style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:6px 12px;color:var(--t1);font-size:12px;outline:none;width:160px" oninput="renderMktTable(currentFilter,this.value)"/>
+      </div>
+    </div>
+    <div class="mkt-table-wrap">
+      <table class="mkt-table">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th style="text-align:left">Name</th>
+            <th>Price</th>
+            <th>24H Change</th>
+            <th>24H High</th>
+            <th>24H Low</th>
+            <th>Volume (24H)</th>
+            <th>Chart</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="mktTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="feat-section">
+  <div class="container">
+    <div style="text-align:center">
+      <h2 style="font-size:30px;font-weight:900;color:var(--white);margin-bottom:8px">Why Choose CryptoX?</h2>
+      <p style="color:var(--t2);font-size:14px">Built for traders, trusted by millions worldwide</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon fi-yellow"><i class="fas fa-shield-halved"></i></div>
+        <h3>Bank-Grade Security</h3>
+        <p>Multi-layer security with cold storage, 2FA, anti-phishing codes, and 24/7 monitoring to keep your assets safe.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-green"><i class="fas fa-bolt"></i></div>
+        <h3>Lightning Fast</h3>
+        <p>100,000+ transactions per second with our matching engine. Zero downtime since launch, even during peak trading.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-blue"><i class="fas fa-percent"></i></div>
+        <h3>Lowest Fees</h3>
+        <p>Maker fees as low as 0.02% for VIP traders. Competitive rates with volume discounts and staking incentives.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon fi-purple"><i class="fas fa-coins"></i></div>
+        <h3>700+ Assets</h3>
+        <p>Spot, futures, margin, and earn products across 700+ tokens. The widest selection on any major exchange.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container" style="position:relative">
+    <div style="font-size:13px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px"><i class="fas fa-star"></i> Start Today</div>
+    <h2>Start Your Crypto Journey</h2>
+    <p>Join 40 million+ traders worldwide on the most trusted platform.</p>
+    <div class="cta-btns">
+      <a href="register.html" class="btn btn-primary btn-lg">Create Free Account</a>
+      <a href="trade.html" class="btn btn-ghost btn-lg">Explore Markets</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="nav-logo-icon" style="width:28px;height:28px;font-size:15px">C</div>
+          <span style="font-size:18px;font-weight:800;color:var(--white)">CryptoX</span>
+        </div>
+        <p>The world's leading cryptocurrency exchange platform. Trade with confidence.</p>
+        <div class="social-row">
+          <div class="soc-btn"><i class="fab fa-twitter"></i></div>
+          <div class="soc-btn"><i class="fab fa-telegram"></i></div>
+          <div class="soc-btn"><i class="fab fa-discord"></i></div>
+          <div class="soc-btn"><i class="fab fa-youtube"></i></div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="trade.html">Spot Trading</a>
+        <a href="futures.html">Futures Trading</a>
+        <a href="p2p.html">P2P Trading</a>
+        <a href="earn.html">Earn</a>
+        <a href="#">Margin Trading</a>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="#">API Access</a>
+        <a href="#">Trading Bot</a>
+        <a href="#">Institutional</a>
+        <a href="#">Referral Program</a>
+        <a href="#">Affiliate</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#">Help Center</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Fee Schedule</a>
+        <a href="#">Bug Bounty</a>
+        <a href="#">Status Page</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Risk Disclosure</a>
+        <a href="#">AML Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 CryptoX Exchange. All rights reserved.</span>
+      <span>Crypto trading involves substantial risk of loss.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script>
+let currentFilter = 'hot';
+const COIN_COLORS = {BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',ADA:'#0D1E2D',AVAX:'#E84142',DOGE:'#C2A633',DOT:'#E6007A',MATIC:'#8247E5',LINK:'#2A5ADA',UNI:'#FF007A',LTC:'#BFBBBB',ATOM:'#6F7390',XLM:'#14B6E7',TRX:'#FF0013',ETC:'#328332',FIL:'#0090FF',NEAR:'#00C1DE',ARB:'#28A0F0'};
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  await initAuthOnLoad();
+  updateNavAuth();
+  renderHeroPrices();
+  renderTickerTape();
+  renderMktTable('hot','');
+  setupMktTabs();
+  // Live updates every 2s
+  setInterval(()=>{
+    COINS.forEach(c=>{
+      c.price=parseFloat((c.price*(1+(Math.random()-.5)*.0008)).toFixed(c.price>100?2:6));
+      c.change=parseFloat((c.change+(Math.random()-.5)*.04).toFixed(2));
+    });
+    renderHeroPrices();
+    renderTickerTape();
+    if(document.visibilityState==='visible') renderMktTable(currentFilter, document.getElementById('mktSearch').value);
+  }, 2000);
+});
+
+function renderHeroPrices(){
+  const el=document.getElementById('heroPriceList'); if(!el)return;
+  el.innerHTML=COINS.slice(0,7).map(c=>`
+    <div class="hpr-row" onclick="location.href='trade.html?pair=${c.id}USDT'">
+      <div class="hpr-left">
+        <div class="coin-icon" style="background:${COIN_COLORS[c.id]||'#888'}22;color:${COIN_COLORS[c.id]||'#888'}">${c.id.slice(0,3)}</div>
+        <div>
+          <div class="hpr-name">${c.id}<span style="font-size:10px;color:var(--t3);font-weight:400">/USDT</span></div>
+          <div class="hpr-vol">Vol: ${c.vol}</div>
+        </div>
+      </div>
+      <div class="hpr-right">
+        <div class="hpr-price">$${fmt(c.price,c.price)}</div>
+        <div class="hpr-chg ${c.change>=0?'positive':'negative'}">${c.change>=0?'+':''}${c.change.toFixed(2)}%</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderTickerTape(){
+  const el=document.getElementById('tickerInner'); if(!el)return;
+  const items=[...COINS,...COINS];
+  el.innerHTML=items.map(c=>`
+    <div class="ti">
+      <span class="ti-sym">${c.id}/USDT</span>
+      <span class="ti-p" style="color:${c.change>=0?'var(--green)':'var(--red)'}">$${fmt(c.price,c.price)}</span>
+      <span class="ti-c ${c.change>=0?'positive':'negative'}">${c.change>=0?'+':''}${c.change.toFixed(2)}%</span>
+    </div>`).join('');
+}
+
+function renderMktTable(f,search=''){
+  currentFilter=f;
+  let list=[...COINS];
+  const s=(search||'').toLowerCase();
+  if(s) list=list.filter(c=>c.id.toLowerCase().includes(s)||c.name.toLowerCase().includes(s));
+  if(f==='gainers') list=list.filter(c=>c.change>0).sort((a,b)=>b.change-a.change);
+  else if(f==='losers') list=list.filter(c=>c.change<0).sort((a,b)=>a.change-b.change);
+  else if(f==='volume') list=[...list].sort((a,b)=>parseFloat(b.vol.replace(/[^0-9.]/g,''))-parseFloat(a.vol.replace(/[^0-9.]/g,'')));
+  const tbody=document.getElementById('mktTbody'); if(!tbody)return;
+  tbody.innerHTML=list.slice(0,16).map((c,i)=>`
+    <tr onclick="location.href='trade.html?pair=${c.id}USDT'" style="cursor:pointer">
+      <td style="color:var(--t3)">${c.rank||i+1}</td>
+      <td>
+        <div class="coin-row">
+          <div class="coin-icon" style="background:${COIN_COLORS[c.id]||'#888'}22;color:${COIN_COLORS[c.id]||'#888'}">${c.id.slice(0,3)}</div>
+          <div><div class="coin-sym">${c.id}<span style="color:var(--t3);font-weight:400">/USDT</span></div><div class="coin-full">${c.name}</div></div>
+        </div>
+      </td>
+      <td style="font-weight:700;color:var(--white)">$${fmt(c.price,c.price)}</td>
+      <td><span class="chg-pill ${c.change>=0?'chg-up':'chg-dn'}">${c.change>=0?'▲ +':'▼ '}${c.change.toFixed(2)}%</span></td>
+      <td style="color:var(--green)">$${fmt(c.price*1.035,c.price)}</td>
+      <td style="color:var(--red)">$${fmt(c.price*0.965,c.price)}</td>
+      <td style="color:var(--t2)">${c.vol}</td>
+      <td><canvas class="sparkline" id="sp_${c.id}" width="72" height="28"></canvas></td>
+      <td><a href="trade.html?pair=${c.id}USDT" class="btn btn-ghost btn-xs" onclick="event.stopPropagation()">Trade</a></td>
+    </tr>`).join('');
+  list.slice(0,16).forEach(c=>{
+    const cv=document.getElementById('sp_'+c.id);
+    if(cv) drawSparkline(cv,Array.from({length:20},()=>c.price*(1+(Math.random()-.48)*.015)),c.change>=0);
+  });
+}
+
+function drawSparkline(cv,data,up){
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const mn=Math.min(...data),mx=Math.max(...data),rng=mx-mn||1;
+  ctx.beginPath();ctx.strokeStyle=up?'#02c076':'#f6465d';ctx.lineWidth=1.5;ctx.lineJoin='round';
+  data.forEach((v,i)=>{const x=(i/(data.length-1))*W,y=H-((v-mn)/rng)*(H*.8)-(H*.1);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+}
+
+function setupMktTabs(){
+  document.querySelectorAll('.mkt-tab').forEach(t=>{
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.mkt-tab').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+      renderMktTable(this.dataset.f, document.getElementById('mktSearch').value);
+    });
+  });
+  document.querySelectorAll('.hct').forEach(b=>{
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.hct').forEach(x=>x.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+function fmt(price,ref){
+  if(ref===undefined) ref=price;
+  return ref>1000?price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):ref>1?price.toFixed(4):price.toFixed(6);
+}
+
+function heroSignup(){
+  const v=document.getElementById('heroEmail').value.trim();
+  window.location.href='register.html'+(v?'?email='+encodeURIComponent(v):'');
+}
+
+function scrollToMarket(){
+  document.getElementById('marketSection').scrollIntoView({behavior:'smooth'});
+}
+
+function updateNavAuth(){
+  const user=getCurrentUser(); if(!user)return;
+  const el=document.getElementById('navAuth'); if(!el)return;
+  el.innerHTML=`
+    <a href="dashboard.html" class="btn btn-dark btn-sm"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="deposit.html" class="btn btn-primary btn-sm">Deposit</a>
+    <div class="user-nav">
+      <div class="avatar">${(user.name||'U').slice(0,2).toUpperCase()}</div>
+      <span style="font-size:13px;font-weight:600;color:var(--t1)">${user.name.split(' ')[0]}</span>
+      <i class="fas fa-chevron-down" style="font-size:9px;color:var(--t3)"></i>
+      <div class="dropdown">
+        <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+        <div class="drop-item" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> Assets</div>
+        <div class="drop-item" onclick="location.href='orders.html'"><i class="fas fa-list"></i> Orders</div>
+        <div class="drop-item" onclick="location.href='profile.html'"><i class="fas fa-user-cog"></i> Profile</div>
+        ${user.role==='admin'?'<div class="drop-item" onclick="location.href=\'admin/dashboard.html\'"><i class="fas fa-shield-halved"></i> Admin</div>':''}
+        <div class="drop-divider"></div>
+        <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+      </div>
+    </div>
+    <div class="nav-divider"></div>
+    <button class="nav-icon-btn" style="position:relative" onclick="location.href='dashboard.html'" title="Notifications">
+      <i class="fas fa-bell"></i><div class="notif-dot"></div>
+    </button>
+    <button class="nav-icon-btn" title="Language"><i class="fas fa-globe"></i></button>`;
+}
+</script>
+</body>
+</html>

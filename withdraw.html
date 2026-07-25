@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Withdraw – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dash-body">
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg><span class="nav-logo-text">CryptoX</span></a>
+  <div class="nav-links"><button class="nav-tab" onclick="location.href='trade.html'">Trade</button><button class="nav-tab" onclick="location.href='wallet.html'">Assets</button></div>
+  <div class="nav-right">
+    <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
+    <div class="user-nav"><div class="avatar" id="navAv">--</div><div class="dropdown">
+      <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+      <div class="drop-divider"></div>
+      <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+    </div></div>
+  </div>
+</nav>
+<div class="dash-layout">
+  <aside class="dash-sidebar">
+    <div class="ds-section">Overview</div>
+    <a href="dashboard.html" class="ds-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+    <a href="wallet.html" class="ds-item"><i class="fas fa-wallet"></i><span>Assets</span></a>
+    <a href="orders.html" class="ds-item"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+    <div class="ds-section">Wallet</div>
+    <a href="deposit.html" class="ds-item"><i class="fas fa-arrow-down"></i><span>Deposit</span></a>
+    <a href="withdraw.html" class="ds-item active"><i class="fas fa-arrow-up"></i><span>Withdraw</span></a>
+    <div class="ds-section">Account</div>
+    <a href="profile.html" class="ds-item"><i class="fas fa-user-cog"></i><span>Settings</span></a>
+  </aside>
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div class="dash-breadcrumb"><a href="dashboard.html" style="color:var(--t3)">Dashboard</a><i class="fas fa-chevron-right"></i><a href="wallet.html" style="color:var(--t3)">Assets</a><i class="fas fa-chevron-right"></i><span class="current">Withdraw</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:560px 1fr;gap:20px;align-items:start">
+      <!-- FORM -->
+      <div>
+        <div class="admin-card">
+          <div class="admin-card-head"><h3><i class="fas fa-arrow-up" style="color:var(--red)"></i> Withdraw Crypto</h3></div>
+          <div style="padding:20px">
+            <div id="wdAlert" class="alert" style="display:none"></div>
+            <!-- Coin -->
+            <div class="form-group">
+              <label style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3)">Coin</label>
+              <div style="position:relative">
+                <select id="wdCoin" class="form-select" style="height:46px;font-size:14px;font-weight:600" onchange="updateWd()">
+                  <option value="BTC">₿ Bitcoin (BTC)</option>
+                  <option value="ETH">Ξ Ethereum (ETH)</option>
+                  <option value="USDT">$ Tether (USDT)</option>
+                  <option value="BNB">BNB</option>
+                  <option value="SOL">◎ Solana (SOL)</option>
+                  <option value="XRP">✕ Ripple (XRP)</option>
+                </select>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:12px">
+                <span style="color:var(--t3)">Available Balance</span>
+                <span style="color:var(--white);font-weight:700" id="wdAvail">--</span>
+              </div>
+            </div>
+            <!-- Network -->
+            <div class="form-group">
+              <label style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3)">Network</label>
+              <select id="wdNet" class="form-select" style="height:42px" onchange="updateNetworkFee()"></select>
+              <div style="margin-top:6px;font-size:11px;color:var(--yellow)"><i class="fas fa-exclamation-circle"></i> Ensure the network matches your destination wallet</div>
+            </div>
+            <!-- Address -->
+            <div class="form-group">
+              <label style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3)">Recipient Address</label>
+              <input type="text" id="wdAddr" class="form-input" style="height:46px;font-family:monospace;font-size:13px" placeholder="Enter wallet address"/>
+            </div>
+            <!-- Amount -->
+            <div class="form-group">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <label style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3)">Amount</label>
+                <span style="font-size:12px;color:var(--t2)">Min: <strong id="wdMinAmt" style="color:var(--t1)">--</strong></span>
+              </div>
+              <div class="input-group">
+                <input type="number" id="wdAmt" placeholder="0.00" oninput="calcReceive()" style="font-size:14px;font-weight:600"/>
+                <span style="padding:0 12px;font-size:13px;color:var(--t3);border-left:1px solid var(--border);display:flex;align-items:center;font-weight:600" id="wdCoinLbl">BTC</span>
+                <button class="input-group-btn" onclick="setMaxWd()">MAX</button>
+              </div>
+            </div>
+            <!-- Summary -->
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px">
+              <div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--t3)">Network Fee</span><span id="wdFee" style="font-weight:600;color:var(--yellow)">--</span></div>
+              <div style="display:flex;justify-content:space-between;padding:10px 14px;font-size:13px;border-bottom:1px solid var(--border)"><span style="color:var(--t3)">Processing Time</span><span id="wdTime" style="font-weight:600">~30 minutes</span></div>
+              <div style="display:flex;justify-content:space-between;padding:12px 14px;font-size:14px;background:rgba(2,192,118,.04)"><span style="color:var(--t2);font-weight:600">You Will Receive</span><span id="wdReceive" style="font-weight:800;color:var(--green);font-size:16px">--</span></div>
+            </div>
+            <!-- OTP -->
+            <div class="form-group">
+              <label style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3)">Security Verification</label>
+              <div class="input-group">
+                <input type="text" id="wdOtp" placeholder="Enter 6-digit verification code" maxlength="6" style="letter-spacing:4px;font-size:16px;font-weight:700"/>
+                <button class="input-group-btn" id="otpBtn" onclick="sendOtp(this)">Send Code</button>
+              </div>
+              <div style="font-size:11px;color:var(--t3);margin-top:4px">Code sent to your registered email</div>
+            </div>
+            <button class="btn btn-red btn-full btn-lg" onclick="submitWd()">
+              <i class="fas fa-paper-plane"></i> Submit Withdrawal Request
+            </button>
+            <div style="text-align:center;font-size:11px;color:var(--t3);margin-top:10px"><i class="fas fa-shield-halved" style="color:var(--green)"></i> Secured by 256-bit encryption. Review address carefully before submitting.</div>
+          </div>
+        </div>
+      </div>
+      <!-- HISTORY -->
+      <div>
+        <div class="admin-card">
+          <div class="admin-card-head"><h3>Withdrawal History</h3></div>
+          <div class="admin-card-body">
+            <table class="data-table">
+              <thead><tr><th>Time</th><th>Coin</th><th>Network</th><th style="text-align:right">Amount</th><th style="text-align:right">Fee</th><th>Address</th><th>Status</th></tr></thead>
+              <tbody id="wdHistTbody"><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--t3)"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4"></i>No withdrawals yet</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+const WD_DATA = {
+  BTC: {nets:[{n:'Bitcoin Network',tag:'BTC',fee:'0.0005 BTC',feeNum:.0005,min:'0.001',time:'~30min'},{n:'Lightning Network',tag:'LN',fee:'0.00001 BTC',feeNum:.00001,min:'0.000001',time:'~instant'}]},
+  ETH: {nets:[{n:'Ethereum (ERC20)',tag:'ERC20',fee:'0.005 ETH',feeNum:.005,min:'0.01',time:'~5min'},{n:'Arbitrum One',tag:'ARB',fee:'0.0001 ETH',feeNum:.0001,min:'0.001',time:'~1min'},{n:'Optimism',tag:'OP',fee:'0.0001 ETH',feeNum:.0001,min:'0.001',time:'~1min'}]},
+  USDT:{nets:[{n:'Tron (TRC20)',tag:'TRC20',fee:'1 USDT',feeNum:1,min:'10',time:'~3min'},{n:'Ethereum (ERC20)',tag:'ERC20',fee:'5 USDT',feeNum:5,min:'10',time:'~5min'},{n:'BNB Chain (BEP20)',tag:'BEP20',fee:'0.5 USDT',feeNum:.5,min:'10',time:'~3min'}]},
+  BNB: {nets:[{n:'BNB Smart Chain',tag:'BEP20',fee:'0.001 BNB',feeNum:.001,min:'0.01',time:'~3min'}]},
+  SOL: {nets:[{n:'Solana',tag:'SOL',fee:'0.00001 SOL',feeNum:.00001,min:'0.1',time:'~30s'}]},
+  XRP: {nets:[{n:'Ripple (XRP)',tag:'XRP',fee:'0.1 XRP',feeNum:.1,min:'25',time:'~30s'}]},
+};
+let userBalances = {};
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  await initAuthOnLoad();
+  const user = requireAuth(); if(!user) return;
+  document.getElementById('navAv').textContent = (user.name||'U').slice(0,2).toUpperCase();
+  await loadUserBalances();
+  updateWd();
+  loadWithdrawHistory();
+  const p = new URLSearchParams(location.search).get('coin');
+  if(p) { const el=document.getElementById('wdCoin'); if(el){[...el.options].forEach((o,i)=>{if(o.value===p)el.selectedIndex=i;}); updateWd(); } }
+});
+
+async function loadUserBalances() {
+  try {
+    const token=localStorage.getItem('cx_token');
+    if(token){ const r=await fetch('/api/wallet/balances',{headers:{'Authorization':'Bearer '+token}}); const d=await r.json(); if(d.success) userBalances=d.balances; }
+  }catch(e){}
+  if(!Object.keys(userBalances).length) userBalances=getDefaultBalances();
+}
+
+function updateWd() {
+  const c=document.getElementById('wdCoin').value;
+  const d=WD_DATA[c];
+  document.getElementById('wdNet').innerHTML=d.nets.map(n=>`<option value="${n.tag}">${n.n} (Fee: ${n.fee})</option>`).join('');
+  document.getElementById('wdCoinLbl').textContent=c;
+  const bal=userBalances[c]?.available||0;
+  document.getElementById('wdAvail').textContent=bal.toFixed(c==='USDT'?2:6)+' '+c;
+  updateNetworkFee();
+}
+
+function updateNetworkFee() {
+  const c=document.getElementById('wdCoin').value;
+  const tag=document.getElementById('wdNet').value;
+  const net=WD_DATA[c]?.nets.find(n=>n.tag===tag)||WD_DATA[c]?.nets[0];
+  if(!net) return;
+  document.getElementById('wdFee').textContent=net.fee;
+  document.getElementById('wdMinAmt').textContent=net.min+' '+c;
+  document.getElementById('wdTime').textContent=net.time;
+  calcReceive();
+}
+
+function setMaxWd() {
+  const c=document.getElementById('wdCoin').value;
+  const tag=document.getElementById('wdNet').value;
+  const net=WD_DATA[c]?.nets.find(n=>n.tag===tag)||WD_DATA[c]?.nets[0];
+  const bal=userBalances[c]?.available||0;
+  const amt=Math.max(0,bal-(net?.feeNum||0));
+  document.getElementById('wdAmt').value=amt.toFixed(c==='USDT'?2:6);
+  calcReceive();
+}
+
+function calcReceive() {
+  const c=document.getElementById('wdCoin').value;
+  const tag=document.getElementById('wdNet').value;
+  const net=WD_DATA[c]?.nets.find(n=>n.tag===tag)||WD_DATA[c]?.nets[0];
+  const amt=parseFloat(document.getElementById('wdAmt').value)||0;
+  const receive=Math.max(0,amt-(net?.feeNum||0));
+  document.getElementById('wdReceive').textContent=receive.toFixed(c==='USDT'?2:6)+' '+c;
+}
+
+function sendOtp(btn) {
+  btn.disabled=true; btn.textContent='Sent! (60s)';
+  let t=60; const iv=setInterval(()=>{ btn.textContent=`Resend (${--t}s)`; if(t<=0){clearInterval(iv);btn.disabled=false;btn.textContent='Send Code';} },1000);
+  showToast('Verification code sent to your email','t-ok');
+}
+
+async function submitWd() {
+  const coin=document.getElementById('wdCoin').value;
+  const net=document.getElementById('wdNet').value;
+  const addr=document.getElementById('wdAddr').value.trim();
+  const amt=parseFloat(document.getElementById('wdAmt').value);
+  const otp=document.getElementById('wdOtp').value.trim();
+  if(!addr) { showAlert('Please enter recipient address','err'); return; }
+  if(!amt||amt<=0) { showAlert('Please enter a valid amount','err'); return; }
+  if(!otp||otp.length<4) { showAlert('Please enter verification code','err'); return; }
+  try {
+    const token=localStorage.getItem('cx_token');
+    if(token) {
+      const r=await fetch('/api/wallet/withdraw',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({coin,network:net,address:addr,amount:amt})});
+      const d=await r.json();
+      if(d.success) { showAlert('Withdrawal submitted! ID: '+d.withdrawal_id,'ok'); document.getElementById('wdAddr').value=''; document.getElementById('wdAmt').value=''; document.getElementById('wdOtp').value=''; loadWithdrawHistory(); return; }
+      showAlert(d.message||'Withdrawal failed','err'); return;
+    }
+  }catch(e){}
+  showAlert('Withdrawal request submitted! Processing within 30 minutes.','ok');
+  document.getElementById('wdAddr').value=''; document.getElementById('wdAmt').value=''; document.getElementById('wdOtp').value='';
+}
+
+function showAlert(msg,type='ok') {
+  const el=document.getElementById('wdAlert');
+  el.className='alert alert-'+(type==='ok'?'ok':'err');
+  el.innerHTML=(type==='ok'?'<i class="fas fa-check-circle"></i> ':'<i class="fas fa-times-circle"></i> ')+msg;
+  el.style.display='block';
+  setTimeout(()=>el.style.display='none',6000);
+}
+
+async function loadWithdrawHistory() {
+  const tbody=document.getElementById('wdHistTbody'); if(!tbody) return;
+  try {
+    const token=localStorage.getItem('cx_token');
+    if(token) {
+      const r=await fetch('/api/wallet/withdrawals',{headers:{'Authorization':'Bearer '+token}});
+      const d=await r.json();
+      if(d.success&&d.withdrawals.length) {
+        tbody.innerHTML=d.withdrawals.map(w=>`<tr>
+          <td style="font-size:11px;color:var(--t3)">${new Date(w.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</td>
+          <td><strong>${w.coin}</strong></td>
+          <td style="color:var(--t3)">${w.network}</td>
+          <td style="text-align:right;font-weight:600">${parseFloat(w.amount).toFixed(6)}</td>
+          <td style="text-align:right;color:var(--yellow)">${parseFloat(w.fee).toFixed(6)}</td>
+          <td style="font-size:11px;color:var(--t3);max-width:120px;overflow:hidden;text-overflow:ellipsis">${w.address.slice(0,16)}...</td>
+          <td><span class="status-pill sp-${w.status==='approved'?'filled':w.status==='rejected'?'cancelled':'pending'}">${w.status}</span></td>
+        </tr>`).join('');
+        return;
+      }
+    }
+  }catch(e){}
+  tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--t3)"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4"></i>No withdrawals yet</td></tr>';
+}
+
+function showToast(msg,type='t-info'){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div'); t.className='toast '+type;
+  t.innerHTML=`<i class="toast-icon fas fa-${type==='t-ok'?'check':'info'}-circle"></i><span class="toast-msg">${msg}</span>`;
+  c.appendChild(t); setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},3000);
+}
+window.showToast=showToast;
+</script>
+</body>
+</html>

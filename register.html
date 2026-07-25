@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Sign Up – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="auth-body">
+
+<nav class="auth-navbar">
+  <a href="index.html" class="flex gap8" style="text-decoration:none">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg>
+    <span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+    <button class="nav-icon-btn"><i class="fas fa-globe"></i></button>
+    <span style="font-size:13px;color:var(--t2)">Already have an account?</span>
+    <a href="login.html" class="btn btn-ghost btn-sm">Log In</a>
+  </div>
+</nav>
+
+<div class="auth-layout">
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <div class="auth-left-tag"><i class="fas fa-gift"></i> WELCOME BONUS</div>
+      <h1 class="auth-left-title">Start Trading<br/>in Minutes</h1>
+      <p class="auth-left-sub">Join 40 million+ traders on the world's most trusted crypto exchange. Get up to 11,000 USDT in welcome rewards.</p>
+      <div class="auth-left-features">
+        <div class="alf-item"><i class="fas fa-check-circle"></i> 700+ cryptocurrencies to trade</div>
+        <div class="alf-item"><i class="fas fa-check-circle"></i> Up to 11,000 USDT welcome bonus</div>
+        <div class="alf-item"><i class="fas fa-check-circle"></i> Industry-leading security</div>
+        <div class="alf-item"><i class="fas fa-check-circle"></i> Instant account activation</div>
+        <div class="alf-item"><i class="fas fa-check-circle"></i> 24/7 customer support</div>
+      </div>
+      <div class="auth-left-graphic">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:24px">
+          <div class="auth-glass-card" style="text-align:center">
+            <div style="font-size:18px;font-weight:800;color:var(--yellow)">40M+</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:2px">Users</div>
+          </div>
+          <div class="auth-glass-card" style="text-align:center">
+            <div style="font-size:18px;font-weight:800;color:var(--green)">$5.2B</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:2px">Daily Volume</div>
+          </div>
+          <div class="auth-glass-card" style="text-align:center">
+            <div style="font-size:18px;font-weight:800;color:#60a5fa">200+</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:2px">Countries</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-right" style="padding:40px 60px;align-items:flex-start;padding-top:48px;overflow-y:auto">
+    <div class="auth-box" style="max-width:420px">
+      <h1>Create Account</h1>
+      <p class="sub">Sign up free and start trading in minutes</p>
+
+      <div class="auth-method-tabs">
+        <button class="amt active" data-m="email">Email</button>
+        <button class="amt" data-m="phone">Phone</button>
+      </div>
+
+      <div id="regAlert" class="alert alert-err" style="display:none"></div>
+
+      <div class="form-field">
+        <div class="form-label">Full Name</div>
+        <input class="auth-input" type="text" id="regName" placeholder="Your full name"/>
+      </div>
+
+      <div class="form-field" id="emailField">
+        <div class="form-label">Email Address</div>
+        <input class="auth-input" type="email" id="regEmail" placeholder="Enter your email"/>
+      </div>
+      <div class="form-field" id="phoneField" style="display:none">
+        <div class="form-label">Phone Number</div>
+        <div style="display:flex;gap:8px">
+          <select class="auth-input" style="width:90px;flex-shrink:0"><option>+62</option><option>+1</option><option>+44</option></select>
+          <input class="auth-input" type="tel" id="regPhone" placeholder="Phone number"/>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <div class="form-label">Password</div>
+        <div class="pass-wrap">
+          <input class="auth-input" type="password" id="regPwd" placeholder="Min. 8 characters" oninput="checkStrength(this.value)"/>
+          <button class="pass-eye" onclick="togglePwd('regPwd',this)"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="pwd-strength"><div class="pwd-bar" id="pwdBar"></div></div>
+        <div id="pwdHint" style="font-size:11px;color:var(--t3);margin-top:3px"></div>
+      </div>
+
+      <div class="form-field">
+        <div class="form-label">Confirm Password</div>
+        <div class="pass-wrap">
+          <input class="auth-input" type="password" id="regConfirm" placeholder="Re-enter password"/>
+          <button class="pass-eye" onclick="togglePwd('regConfirm',this)"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <div class="form-label">Referral Code <span style="color:var(--t3)">(Optional)</span></div>
+        <input class="auth-input" type="text" id="regRef" placeholder="Enter referral code" style="text-transform:uppercase"/>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:8px;margin:14px 0;font-size:12px;color:var(--t2)">
+        <input type="checkbox" id="agreeTerms" style="margin-top:3px;accent-color:var(--yellow);flex-shrink:0"/>
+        <label for="agreeTerms">I have read and agree to CryptoX's <a href="#" style="color:var(--yellow)">Terms of Service</a> and <a href="#" style="color:var(--yellow)">Privacy Policy</a></label>
+      </div>
+
+      <button class="auth-submit" id="regBtn" onclick="doRegister()">Create Account</button>
+
+      <div class="auth-or">Or sign up with</div>
+      <div class="auth-social-row">
+        <button class="auth-social-btn"><i class="fab fa-google" style="color:#EA4335"></i> Google</button>
+        <button class="auth-social-btn"><i class="fab fa-apple"></i> Apple</button>
+      </div>
+
+      <p class="auth-foot">Already have an account? <a href="login.html">Log In</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+document.querySelectorAll('.amt').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.amt').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById('emailField').style.display=this.dataset.m==='email'?'block':'none';
+    document.getElementById('phoneField').style.display=this.dataset.m==='phone'?'block':'none';
+  });
+});
+
+function checkStrength(v){
+  let s=0;
+  if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  const bar=document.getElementById('pwdBar');
+  const hint=document.getElementById('pwdHint');
+  const classes=['','pwd-weak','pwd-fair','pwd-good','pwd-strong'];
+  const msgs=['','Weak — too short','Fair — add uppercase or numbers','Good — add special characters','Strong password ✓'];
+  bar.className='pwd-bar '+(classes[s]||'');
+  hint.textContent=v.length?msgs[s]:'';
+  hint.style.color=s>=3?'var(--green)':s>=2?'var(--yellow)':'var(--red)';
+}
+
+async function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pwd=document.getElementById('regPwd').value;
+  const confirm=document.getElementById('regConfirm').value;
+  const agree=document.getElementById('agreeTerms').checked;
+  const ref=document.getElementById('regRef').value.trim();
+  const alertEl=document.getElementById('regAlert');
+  const btn=document.getElementById('regBtn');
+  alertEl.style.display='none';
+  if(!name){show('Full name is required.');return;}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){show('Valid email is required.');return;}
+  if(pwd.length<8){show('Password must be at least 8 characters.');return;}
+  if(pwd!==confirm){show('Passwords do not match.');return;}
+  if(!agree){show('Please accept the Terms of Service.');return;}
+  btn.disabled=true; btn.textContent='Creating account...';
+  try{
+    const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pwd,referral_code:ref||undefined})});
+    const data=await res.json();
+    if(data.success){
+      localStorage.setItem('cx_token',data.token);
+      localStorage.setItem('cx_user',JSON.stringify(data.user));
+      window._currentUser=data.user;
+      show('Account created! Redirecting...','ok');
+      setTimeout(()=>window.location.href='dashboard.html',1000);
+    }else{
+      show(data.message||'Registration failed.');
+      btn.disabled=false; btn.textContent='Create Account';
+    }
+  }catch(e){
+    const r=await authRegister(name,email,pwd);
+    if(r.success){ show('Account created!','ok'); setTimeout(()=>window.location.href='dashboard.html',800); }
+    else{ show(r.message||'Registration failed.'); btn.disabled=false; btn.textContent='Create Account'; }
+  }
+}
+
+function show(msg,type='err'){
+  const el=document.getElementById('regAlert');
+  el.className='alert alert-'+(type==='ok'?'ok':'err');
+  el.textContent=msg; el.style.display='block';
+}
+
+function togglePwd(id,btn){
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+  btn.innerHTML=el.type==='password'?'<i class="fas fa-eye"></i>':'<i class="fas fa-eye-slash"></i>';
+}
+
+const ep=new URLSearchParams(location.search).get('email');
+if(ep) document.getElementById('regEmail').value=ep;
+</script>
+</body>
+</html>

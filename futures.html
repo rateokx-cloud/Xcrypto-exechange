@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Futures – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg><span class="nav-logo-text">CryptoX</span></a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='trade.html'">Spot</button>
+    <button class="nav-tab active">Futures</button>
+    <button class="nav-tab" onclick="location.href='p2p.html'">P2P</button>
+    <button class="nav-tab" onclick="location.href='earn.html'">Earn</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="login.html" class="btn btn-ghost btn-sm">Log In</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="background:linear-gradient(135deg,#0a0e1a 0%,#0b0e11 60%,#1a0e0a 100%);padding:80px 0;text-align:center;border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(246,70,93,.1);border:1px solid rgba(246,70,93,.2);color:var(--red);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:16px"><i class="fas fa-bolt"></i> PERPETUAL FUTURES</div>
+    <h1 style="font-size:44px;font-weight:900;color:var(--white);margin-bottom:12px">Trade with up to <span style="color:var(--yellow)">125x</span> Leverage</h1>
+    <p style="font-size:15px;color:var(--t2);margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto">Access perpetual futures contracts on 100+ pairs with deep liquidity and low fees.</p>
+    <div style="display:flex;justify-content:center;gap:12px;margin-bottom:32px">
+      <a href="register.html" class="btn btn-primary btn-lg">Trade Now</a>
+      <a href="#" class="btn btn-ghost btn-lg">Learn More</a>
+    </div>
+    <div style="display:flex;justify-content:center;gap:40px">
+      <div><div style="font-size:22px;font-weight:800;color:var(--white)">$8.2B</div><div style="font-size:12px;color:var(--t3)">24H Volume</div></div>
+      <div><div style="font-size:22px;font-weight:800;color:var(--white)">0.02%</div><div style="font-size:12px;color:var(--t3)">Maker Fee</div></div>
+      <div><div style="font-size:22px;font-weight:800;color:var(--white)">125x</div><div style="font-size:12px;color:var(--t3)">Max Leverage</div></div>
+      <div><div style="font-size:22px;font-weight:800;color:var(--white)">100+</div><div style="font-size:12px;color:var(--t3)">Contracts</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRACTS TABLE -->
+<section class="section">
+  <div class="container">
+    <h2 class="sec-title">Perpetual Contracts</h2>
+    <p class="sec-sub" style="margin-bottom:20px">All prices are in USDT</p>
+    <div class="mkt-table-wrap">
+      <table class="mkt-table">
+        <thead><tr><th>Contract</th><th>Mark Price</th><th>Index Price</th><th>24H Change</th><th>24H Volume</th><th>Funding Rate</th><th>Open Interest</th><th>Action</th></tr></thead>
+        <tbody id="futuresTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:48px 0">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+      <div style="text-align:center;padding:24px">
+        <div style="width:56px;height:56px;border-radius:12px;background:rgba(246,70,93,.12);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px"><i class="fas fa-bolt"></i></div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Up to 125x Leverage</h3>
+        <p style="font-size:13px;color:var(--t2);line-height:1.6">Amplify your trading positions with flexible leverage options</p>
+      </div>
+      <div style="text-align:center;padding:24px">
+        <div style="width:56px;height:56px;border-radius:12px;background:var(--green-dim);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px"><i class="fas fa-shield-halved"></i></div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Risk Management</h3>
+        <p style="font-size:13px;color:var(--t2);line-height:1.6">Advanced stop-loss and take-profit orders to protect your capital</p>
+      </div>
+      <div style="text-align:center;padding:24px">
+        <div style="width:56px;height:56px;border-radius:12px;background:rgba(240,185,11,.12);color:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px"><i class="fas fa-chart-line"></i></div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Deep Liquidity</h3>
+        <p style="font-size:13px;color:var(--t2);line-height:1.6">Tight spreads and large order books ensure best execution prices</p>
+      </div>
+      <div style="text-align:center;padding:24px">
+        <div style="width:56px;height:56px;border-radius:12px;background:rgba(59,130,246,.12);color:#60a5fa;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px"><i class="fas fa-percent"></i></div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Low Fees</h3>
+        <p style="font-size:13px;color:var(--t2);line-height:1.6">Maker fee as low as 0.02% with VIP tiers for high-volume traders</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  await initAuthOnLoad();
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById('navAuth').innerHTML = `
+      <a href="dashboard.html" class="btn btn-dark btn-sm">Dashboard</a>
+      <div class="user-nav"><div class="avatar">${(user.name||'U').slice(0,2).toUpperCase()}</div>
+        <div class="dropdown">
+          <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+          <div class="drop-divider"></div>
+          <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+        </div>
+      </div>`;
+  }
+  renderFuturesTable();
+  setInterval(renderFuturesTable, 2000);
+});
+
+function renderFuturesTable() {
+  const tbody = document.getElementById('futuresTbody'); if (!tbody) return;
+  const pairs = COINS.slice(0,12);
+  tbody.innerHTML = pairs.map(c => {
+    const mark    = c.price;
+    const idx     = c.price * (1 - 0.0001 * (Math.random()-0.5));
+    const funding = ((Math.random()-0.4)*0.02).toFixed(4);
+    const oi      = '$' + (Math.random()*500+50).toFixed(0) + 'M';
+    const vol     = '$' + (Math.random()*2000+100).toFixed(0) + 'M';
+    return `<tr onclick="location.href='trade.html?pair=${c.id}USDT'" style="cursor:pointer">
+      <td><div class="flex gap8">
+        <div class="coin-icon" style="background:#F7931A22;color:#F7931A;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0">${c.id.slice(0,3)}</div>
+        <div><div style="font-weight:700">${c.id}USDT</div><div style="font-size:11px;color:var(--t3)">Perpetual</div></div>
+      </div></td>
+      <td style="font-weight:700;color:${c.change>=0?'var(--green)':'var(--red)'}">${mark>100?'$'+mark.toFixed(2):'$'+mark.toFixed(4)}</td>
+      <td style="color:var(--t2)">${idx>100?'$'+idx.toFixed(2):'$'+idx.toFixed(4)}</td>
+      <td><span class="chg-pill ${c.change>=0?'chg-up':'chg-dn'}">${c.change>=0?'+':''}${c.change.toFixed(2)}%</span></td>
+      <td style="color:var(--t2)">${vol}</td>
+      <td style="color:${parseFloat(funding)>=0?'var(--green)':'var(--red)'};font-weight:600">${parseFloat(funding)>=0?'+':''}${funding}%</td>
+      <td style="color:var(--t2)">${oi}</td>
+      <td><button class="btn btn-primary btn-xs" onclick="event.stopPropagation();location.href='register.html'">Trade</button></td>
+    </tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

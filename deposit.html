@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Deposit – CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dash-body">
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg><span class="nav-logo-text">CryptoX</span></a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab" onclick="location.href='wallet.html'">Assets</button>
+  </div>
+  <div class="nav-right">
+    <a href="withdraw.html" class="btn btn-dark btn-sm"><i class="fas fa-arrow-up"></i> Withdraw</a>
+    <div class="user-nav">
+      <div class="avatar" id="navAv">--</div>
+      <div class="dropdown">
+        <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+        <div class="drop-item" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> Assets</div>
+        <div class="drop-divider"></div>
+        <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="dash-layout">
+  <aside class="dash-sidebar">
+    <div class="ds-section">Overview</div>
+    <a href="dashboard.html" class="ds-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+    <a href="wallet.html" class="ds-item"><i class="fas fa-wallet"></i><span>Assets</span></a>
+    <a href="orders.html" class="ds-item"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+    <div class="ds-section">Wallet</div>
+    <a href="deposit.html" class="ds-item active"><i class="fas fa-arrow-down"></i><span>Deposit</span></a>
+    <a href="withdraw.html" class="ds-item"><i class="fas fa-arrow-up"></i><span>Withdraw</span></a>
+    <div class="ds-section">Account</div>
+    <a href="profile.html" class="ds-item"><i class="fas fa-user-cog"></i><span>Settings</span></a>
+  </aside>
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div class="dash-breadcrumb"><a href="dashboard.html" style="color:var(--t3)">Dashboard</a><i class="fas fa-chevron-right"></i><a href="wallet.html" style="color:var(--t3)">Assets</a><i class="fas fa-chevron-right"></i><span class="current">Deposit</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:560px 1fr;gap:20px;align-items:start">
+      <!-- LEFT: Deposit Form -->
+      <div>
+        <div class="admin-card" style="margin-bottom:16px">
+          <div class="admin-card-head"><h3><i class="fas fa-arrow-down" style="color:var(--green)"></i> Deposit Crypto</h3></div>
+          <div style="padding:20px">
+            <!-- Step 1: Select Coin -->
+            <div style="margin-bottom:20px">
+              <div style="font-size:12px;color:var(--t3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:600">1. Select Coin</div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px" id="coinGrid"></div>
+              <div style="margin-top:10px;position:relative">
+                <input type="text" class="form-input" id="coinSearch" placeholder="Search other coins..." oninput="filterCoins(this.value)" style="height:36px"/>
+              </div>
+            </div>
+            <!-- Step 2: Select Network -->
+            <div style="margin-bottom:20px" id="networkSection">
+              <div style="font-size:12px;color:var(--t3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:600">2. Select Network</div>
+              <div id="networkList" class="network-list"></div>
+            </div>
+            <!-- Step 3: Address -->
+            <div id="addressSection">
+              <div style="font-size:12px;color:var(--t3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:600">3. Deposit Address</div>
+              <div class="qr-box">
+                <div class="qr-placeholder"><canvas id="qrCanvas" width="140" height="140"></canvas></div>
+                <div class="qr-addr" id="depAddr">Select a coin and network above</div>
+                <div class="addr-copy-bar">
+                  <span style="font-size:11px;color:var(--t3);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1" id="depAddrShort">--</span>
+                  <button onclick="copyAddr()" style="background:none;border:none;color:var(--yellow);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;margin-left:12px"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+              </div>
+              <div class="warn-box">
+                <div style="font-weight:700;margin-bottom:6px"><i class="fas fa-exclamation-triangle"></i> Important</div>
+                <ul>
+                  <li>Only send <span id="warnCoin" style="color:var(--yellow);font-weight:700">--</span> on the selected network to this address</li>
+                  <li>Minimum deposit: <span id="minDep" style="font-weight:600">--</span></li>
+                  <li>Network confirmations required: <span id="confReq" style="font-weight:600">--</span></li>
+                  <li>Sending other assets may result in permanent loss</li>
+                </ul>
+              </div>
+              <!-- Info grid -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px">
+                  <div style="font-size:11px;color:var(--t3);margin-bottom:4px">Deposit Fee</div>
+                  <div style="font-size:14px;font-weight:700;color:var(--green)">Free</div>
+                </div>
+                <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px">
+                  <div style="font-size:11px;color:var(--t3);margin-bottom:4px">Expected Arrival</div>
+                  <div style="font-size:14px;font-weight:700;color:var(--white)" id="expectedArrival">~30 min</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Buy with Fiat -->
+        <div class="admin-card">
+          <div style="padding:16px;display:flex;align-items:center;gap:14px">
+            <div style="width:44px;height:44px;border-radius:var(--radius2);background:rgba(240,185,11,.12);color:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0"><i class="fas fa-credit-card"></i></div>
+            <div>
+              <div style="font-size:14px;font-weight:700">Buy Crypto with Card</div>
+              <div style="font-size:12px;color:var(--t2);margin-top:2px">Instant purchase via Visa, Mastercard, or bank transfer</div>
+            </div>
+            <a href="p2p.html" class="btn btn-primary btn-sm" style="margin-left:auto;flex-shrink:0">Buy Now</a>
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT: History -->
+      <div>
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <h3>Deposit History</h3>
+            <button class="btn btn-ghost btn-xs" onclick="loadDepositHistory()"><i class="fas fa-refresh"></i></button>
+          </div>
+          <div class="admin-card-body">
+            <table class="data-table">
+              <thead><tr><th>Time</th><th>Coin</th><th>Network</th><th style="text-align:right">Amount</th><th>Confirmations</th><th>Status</th></tr></thead>
+              <tbody id="depHistTbody"><tr><td colspan="6" style="text-align:center;padding:32px;color:var(--t3)"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4"></i>No deposits yet</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+const COINS_DEP = [
+  {id:'BTC',name:'Bitcoin',color:'#F7931A',nets:[{name:'Bitcoin',tag:'BTC',conf:3,time:'~30min',min:'0.0001'},{name:'Lightning',tag:'LN',conf:1,time:'~instant',min:'0.000001'}]},
+  {id:'ETH',name:'Ethereum',color:'#627EEA',nets:[{name:'Ethereum (ERC20)',tag:'ERC20',conf:12,time:'~5min',min:'0.01'},{name:'Arbitrum One',tag:'ARB',conf:1,time:'~1min',min:'0.001'},{name:'Optimism',tag:'OP',conf:1,time:'~1min',min:'0.001'}]},
+  {id:'USDT',name:'Tether',color:'#26A17B',nets:[{name:'Tron (TRC20)',tag:'TRC20',conf:15,time:'~3min',min:'10'},{name:'Ethereum (ERC20)',tag:'ERC20',conf:12,time:'~5min',min:'10'},{name:'BNB Chain (BEP20)',tag:'BEP20',conf:15,time:'~3min',min:'10'}]},
+  {id:'BNB',name:'BNB',color:'#F0B90B',nets:[{name:'BNB Smart Chain',tag:'BEP20',conf:15,time:'~3min',min:'0.01'}]},
+  {id:'SOL',name:'Solana',color:'#9945FF',nets:[{name:'Solana',tag:'SOL',conf:1,time:'~30s',min:'0.1'}]},
+  {id:'XRP',name:'Ripple',color:'#00AAE4',nets:[{name:'Ripple (XRP)',tag:'XRP',conf:1,time:'~30s',min:'25'}]},
+  {id:'ADA',name:'Cardano',color:'#3CCAB0',nets:[{name:'Cardano',tag:'ADA',conf:15,time:'~10min',min:'10'}]},
+  {id:'DOGE',name:'Dogecoin',color:'#C2A633',nets:[{name:'Dogecoin',tag:'DOGE',conf:6,time:'~10min',min:'5'}]},
+];
+let selCoin = COINS_DEP[0];
+let selNet  = COINS_DEP[0].nets[0];
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await initAuthOnLoad();
+  const user = requireAuth(); if (!user) return;
+  document.getElementById('navAv').textContent = (user.name||'U').slice(0,2).toUpperCase();
+  renderCoinGrid();
+  selectCoin(COINS_DEP.find(c=>c.id===(new URLSearchParams(location.search).get('coin')||'BTC'))||COINS_DEP[0]);
+  loadDepositHistory();
+});
+
+function renderCoinGrid(filter='') {
+  const el = document.getElementById('coinGrid');
+  const list = filter ? COINS_DEP.filter(c=>c.id.toLowerCase().includes(filter)||c.name.toLowerCase().includes(filter)) : COINS_DEP.slice(0,8);
+  el.innerHTML = list.map(c=>`
+    <div onclick="selectCoin(COINS_DEP.find(x=>x.id==='${c.id}'))" style="background:var(--bg3);border:1px solid ${selCoin.id===c.id?'var(--yellow)':'var(--border)'};border-radius:var(--radius);padding:8px;cursor:pointer;text-align:center;transition:all .12s;${selCoin.id===c.id?'background:rgba(240,185,11,.06)':''}">
+      <div style="width:28px;height:28px;border-radius:50%;background:${c.color}22;color:${c.color};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;margin:0 auto 4px">${c.id.slice(0,3)}</div>
+      <div style="font-size:11px;font-weight:700">${c.id}</div>
+    </div>`).join('');
+}
+
+function filterCoins(v) { renderCoinGrid(v.toLowerCase()); }
+
+function selectCoin(coin) {
+  selCoin = coin;
+  renderCoinGrid();
+  document.getElementById('networkList').innerHTML = coin.nets.map((n,i)=>`
+    <div onclick="selectNet(${i})" class="network-item ${i===0?'active':''}" id="net_${i}">
+      <div>
+        <div class="network-name">${n.name}</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px">~${n.conf} confirmations · ${n.time}</div>
+      </div>
+      <span class="network-tag">${n.tag}</span>
+    </div>`).join('');
+  selectNet(0);
+}
+
+function selectNet(idx) {
+  selNet = selCoin.nets[idx];
+  document.querySelectorAll('.network-item').forEach((el,i) => el.classList.toggle('active', i===idx));
+  const seed = 'CX'+selCoin.id+selNet.tag+'USER';
+  let addr = '';
+  if(selCoin.id==='BTC') addr='1'+btoa(seed).replace(/[^A-Za-z0-9]/g,'').slice(0,33);
+  else if(selCoin.id==='SOL') addr=btoa(seed).replace(/[^A-Za-z0-9]/g,'').slice(0,44);
+  else if(selCoin.id==='XRP') addr='r'+btoa(seed).replace(/[^A-Za-z0-9]/g,'').slice(0,33);
+  else addr='0x'+btoa(seed).replace(/[^A-Za-z0-9]/g,'').slice(0,40).toLowerCase();
+  document.getElementById('depAddr').textContent = addr;
+  document.getElementById('depAddrShort').textContent = addr;
+  document.getElementById('warnCoin').textContent = selCoin.id;
+  document.getElementById('minDep').textContent = selNet.min+' '+selCoin.id;
+  document.getElementById('confReq').textContent = selNet.conf+' confirmations';
+  document.getElementById('expectedArrival').textContent = selNet.time;
+  drawQRPattern(addr);
+}
+
+function drawQRPattern(data) {
+  const cv = document.getElementById('qrCanvas'); if(!cv) return;
+  const ctx = cv.getContext('2d'); const S = 140; const cells = 20; const cs = S/cells;
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,S,S);
+  ctx.fillStyle='#000';
+  // Generate pseudo-random pattern from data
+  for(let r=0;r<cells;r++) for(let c=0;c<cells;c++){
+    const h = data.charCodeAt((r*cells+c)%data.length);
+    const edge = (r<4&&c<4)||(r<4&&c>cells-5)||(r>cells-5&&c<4);
+    if(edge||((h+r+c)%3===0)) ctx.fillRect(c*cs,r*cs,cs,cs);
+  }
+  // Corner squares
+  [[0,0],[0,cells-7],[cells-7,0]].forEach(([r,c])=>{
+    const x=c*cs, y=r*cs, sz=7*cs;
+    ctx.fillStyle='#fff'; ctx.fillRect(x+cs,y+cs,sz-2*cs,sz-2*cs);
+    ctx.strokeStyle='#000'; ctx.lineWidth=cs; ctx.strokeRect(x+cs/2,y+cs/2,sz-cs,sz-cs);
+    ctx.fillStyle='#000'; ctx.fillRect(x+2*cs,y+2*cs,3*cs,3*cs);
+  });
+}
+
+function copyAddr(){
+  const a = document.getElementById('depAddr').textContent;
+  navigator.clipboard.writeText(a).then(()=>showToast('Address copied to clipboard!','t-ok'));
+}
+
+async function loadDepositHistory() {
+  const tbody = document.getElementById('depHistTbody'); if(!tbody) return;
+  try {
+    const token = localStorage.getItem('cx_token');
+    if(token){
+      const r = await fetch('/api/wallet/deposits',{headers:{'Authorization':'Bearer '+token}});
+      const d = await r.json();
+      if(d.success&&d.deposits.length){
+        tbody.innerHTML = d.deposits.map(dep=>`<tr>
+          <td style="font-size:11px;color:var(--t3)">${new Date(dep.created_at).toLocaleString()}</td>
+          <td><strong>${dep.coin}</strong></td>
+          <td style="color:var(--t3)">${dep.network}</td>
+          <td style="text-align:right;font-weight:600">${dep.amount}</td>
+          <td style="text-align:right">${dep.confirmations||0}/${dep.required_conf||3}</td>
+          <td><span class="status-pill sp-${dep.status==='confirmed'?'filled':dep.status==='pending'?'pending':'cancelled'}">${dep.status}</span></td>
+        </tr>`).join('');
+        return;
+      }
+    }
+  }catch(e){}
+  tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--t3)"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:.4"></i>No deposits yet</td></tr>';
+}
+
+function showToast(msg,type='t-info'){
+  const c=document.getElementById('toastContainer');
+  const icons={'t-ok':'fa-check-circle','t-err':'fa-times-circle','t-warn':'fa-exclamation-triangle','t-info':'fa-info-circle'};
+  const t=document.createElement('div'); t.className='toast '+type;
+  t.innerHTML=`<i class="toast-icon fas ${icons[type.replace('t-','fa-')]||'fa-info-circle'}"></i><span class="toast-msg">${msg}</span>`;
+  c.appendChild(t); setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},3000);
+}
+window.showToast=showToast;
+</script>
+</body>
+</html>
