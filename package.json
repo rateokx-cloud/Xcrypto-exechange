@@ -1,31 +1,30 @@
 {
   "name": "cryptox-exchange",
   "version": "2.0.0",
-  "description": "CryptoX Exchange Platform - Full Stack",
+  "description": "CryptoX Exchange Platform",
   "main": "server/app.js",
   "scripts": {
     "start": "node server/app.js",
     "dev": "node server/app.js"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "node": "20.x"
   },
-  "keywords": ["crypto", "exchange", "trading"],
+  "keywords": ["crypto", "exchange"],
   "author": "CryptoX",
   "license": "MIT",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^9.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.18.3",
-    "express-rate-limit": "^7.2.0",
-    "helmet": "^7.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.12",
-    "uuid": "^9.0.1",
-    "ws": "^8.16.0"
+    "bcryptjs": "2.4.3",
+    "better-sqlite3": "9.6.0",
+    "cors": "2.8.5",
+    "dotenv": "16.4.5",
+    "express": "4.19.2",
+    "express-rate-limit": "7.3.1",
+    "helmet": "7.1.0",
+    "jsonwebtoken": "9.0.2",
+    "multer": "1.4.5-lts.1",
+    "nodemailer": "6.9.12",
+    "uuid": "9.0.1",
+    "ws": "8.17.0"
   }
 }
