@@ -1,9 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Dashboard – CryptoX</title>
+<meta name="theme-color" content="#0b0e11"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="CryptoX"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+<title>Dashboard � CryptoX</title>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -92,7 +99,7 @@
         <div class="sum-card-icon"><i class="fas fa-wallet"></i></div>
         <div class="sum-card-label"><i class="fas fa-wallet"></i> Total Balance</div>
         <div class="sum-card-val" id="totalBalance">$0.00</div>
-        <div class="sum-card-sub" id="totalBtcEq">≈ 0 BTC</div>
+        <div class="sum-card-sub" id="totalBtcEq">� 0 BTC</div>
       </div>
       <div class="sum-card green" onclick="location.href='deposit.html'">
         <div class="sum-card-icon"><i class="fas fa-arrow-down"></i></div>
@@ -123,7 +130,7 @@
             <button onclick="toggleHide()" style="background:none;border:none;color:var(--t3);cursor:pointer;margin-left:6px" title="Toggle visibility">
               <i class="fas fa-eye" id="hideIcon"></i>
             </button>
-            <a href="wallet.html" style="font-size:12px;color:var(--yellow);margin-left:auto">Asset Summary ›</a>
+            <a href="wallet.html" style="font-size:12px;color:var(--yellow);margin-left:auto">Asset Summary �</a>
           </div>
 
           <!-- Balance + Currency Selector row -->
@@ -135,7 +142,7 @@
             <!-- Currency selector -->
             <div class="currency-selector" id="dashCurrencySelector">
               <button class="cur-sel-btn" onclick="toggleDashCurDrop(event)">
-                <span id="dashCurFlag">🇺🇸</span>
+                <span id="dashCurFlag">????</span>
                 <span id="dashCurLabel">USD</span>
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none" id="dashCurArrow">
                   <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -143,16 +150,16 @@
               </button>
               <div class="cur-drop" id="dashCurDrop">
                 <div class="cur-drop-section-label">Fiat Currency</div>
-                <div class="cur-drop-item active" data-cur="USD" data-flag="🇺🇸" onclick="selectDashCurrency(this)">
-                  <span class="cur-flag">🇺🇸</span>
+                <div class="cur-drop-item active" data-cur="USD" data-flag="????" onclick="selectDashCurrency(this)">
+                  <span class="cur-flag">????</span>
                   <div class="cur-info">
                     <span class="cur-code">USD</span>
                     <span class="cur-name">US Dollar</span>
                   </div>
                   <span class="cur-rate" id="dash-rate-USD">1.00</span>
                 </div>
-                <div class="cur-drop-item" data-cur="IDR" data-flag="🇮🇩" onclick="selectDashCurrency(this)">
-                  <span class="cur-flag">🇮🇩</span>
+                <div class="cur-drop-item" data-cur="IDR" data-flag="????" onclick="selectDashCurrency(this)">
+                  <span class="cur-flag">????</span>
                   <div class="cur-info">
                     <span class="cur-code">IDR</span>
                     <span class="cur-name">Indonesian Rupiah</span>
@@ -161,27 +168,27 @@
                 </div>
                 <div class="cur-drop-divider"></div>
                 <div class="cur-drop-section-label">Crypto</div>
-                <div class="cur-drop-item" data-cur="BTC" data-flag="₿" onclick="selectDashCurrency(this)">
-                  <span class="cur-flag" style="font-size:15px;font-weight:900;color:#F7931A">₿</span>
+                <div class="cur-drop-item" data-cur="BTC" data-flag="?" onclick="selectDashCurrency(this)">
+                  <span class="cur-flag" style="font-size:15px;font-weight:900;color:#F7931A">?</span>
                   <div class="cur-info">
                     <span class="cur-code" style="color:#F7931A">BTC</span>
                     <span class="cur-name">Bitcoin</span>
                   </div>
-                  <span class="cur-rate" id="dash-rate-BTC">≈ $67,000</span>
+                  <span class="cur-rate" id="dash-rate-BTC">� $67,000</span>
                 </div>
-                <div class="cur-drop-item" data-cur="ETH" data-flag="Ξ" onclick="selectDashCurrency(this)">
-                  <span class="cur-flag" style="font-size:15px;font-weight:900;color:#627EEA">Ξ</span>
+                <div class="cur-drop-item" data-cur="ETH" data-flag="?" onclick="selectDashCurrency(this)">
+                  <span class="cur-flag" style="font-size:15px;font-weight:900;color:#627EEA">?</span>
                   <div class="cur-info">
                     <span class="cur-code" style="color:#627EEA">ETH</span>
                     <span class="cur-name">Ethereum</span>
                   </div>
-                  <span class="cur-rate" id="dash-rate-ETH">≈ $3,840</span>
+                  <span class="cur-rate" id="dash-rate-ETH">� $3,840</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="ab-btc" id="totalBtcEquiv">≈ 0.00000000 BTC</div>
+          <div class="ab-btc" id="totalBtcEquiv">� 0.00000000 BTC</div>
           <div class="ab-actions">
             <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
             <a href="withdraw.html" class="btn btn-dark btn-sm"><i class="fas fa-arrow-up"></i> Withdraw</a>
@@ -194,7 +201,7 @@
         <div class="dash-card">
           <div class="dash-card-head">
             <h3>Asset Holdings</h3>
-            <a href="wallet.html" style="font-size:12px;color:var(--yellow)">View All ›</a>
+            <a href="wallet.html" style="font-size:12px;color:var(--yellow)">View All �</a>
           </div>
           <table class="data-table">
             <thead><tr>
@@ -282,10 +289,10 @@
 <script src="js/api.js"></script>
 <script src="js/auth.js"></script>
 <script>
-// ── Constants ─────────────────────────────────────────────────────────────
+// -- Constants -------------------------------------------------------------
 const COIN_COLORS={BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',ADA:'#3CCAB0',AVAX:'#E84142',DOGE:'#C2A633',USDT:'#26A17B',DOT:'#E6007A',MATIC:'#8247E5',LINK:'#2A5ADA'};
 
-// ── Currency State ────────────────────────────────────────────────────────
+// -- Currency State --------------------------------------------------------
 let dashCurrency     = 'USD';
 let dashTotalUSD     = 0;
 let hideBalances     = false;
@@ -357,7 +364,7 @@ function renderDashBalance(totalUSD){
   });
 }
 
-// ── Currency Dropdown ─────────────────────────────────────────────────────
+// -- Currency Dropdown -----------------------------------------------------
 function toggleDashCurDrop(e){
   e.stopPropagation();
   const drop=document.getElementById('dashCurDrop');
@@ -390,7 +397,7 @@ document.addEventListener('click', e=>{
   }
 });
 
-// ── Page Init ─────────────────────────────────────────────────────────────
+// -- Page Init -------------------------------------------------------------
 document.addEventListener('DOMContentLoaded',async()=>{
   await initAuthOnLoad();
   const user=getCurrentUser();
@@ -428,7 +435,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
   },3000);
 });
 
-// ── Load Balances ─────────────────────────────────────────────────────────
+// -- Load Balances ---------------------------------------------------------
 async function loadBalances(user){
   let balances={};
   try{
@@ -463,14 +470,14 @@ async function loadBalances(user){
         <div><div style="font-weight:700">${r.coin}</div><div style="font-size:11px;color:var(--t3)">${r.name}</div></div>
       </div></td>
       <td style="text-align:right;font-weight:600">${hideBalances?'****':r.available.toFixed(r.available>100?2:6)}</td>
-      <td style="text-align:right;color:var(--t2)">${r.in_order>0?r.in_order.toFixed(4):'—'}</td>
+      <td style="text-align:right;color:var(--t2)">${r.in_order>0?r.in_order.toFixed(4):'�'}</td>
       <td style="text-align:right;font-weight:600">${dashConvertShort(r.usdVal)}</td>
       <td style="text-align:right" class="${r.change>=0?'positive':'negative'}">${r.change>=0?'+':''}${r.change.toFixed(2)}%</td>
       <td style="text-align:right"><a href="trade.html?pair=${r.coin}USDT" class="btn btn-ghost btn-xs">Trade</a></td>
     </tr>`).join('');
 }
 
-// ── Order Stats ───────────────────────────────────────────────────────────
+// -- Order Stats -----------------------------------------------------------
 async function loadOrderStats(){
   try{
     const token=localStorage.getItem('cx_token');
@@ -484,7 +491,7 @@ async function loadOrderStats(){
   }catch(e){}
 }
 
-// ── Toggle Hide ───────────────────────────────────────────────────────────
+// -- Toggle Hide -----------------------------------------------------------
 function toggleHide(){
   hideBalances=!hideBalances;
   const icon=document.getElementById('hideIcon');
@@ -496,7 +503,7 @@ function toggleHide(){
   if(user) loadBalances(user);
 }
 
-// ── Market Table ──────────────────────────────────────────────────────────
+// -- Market Table ----------------------------------------------------------
 function renderDashMkt(f){
   const el=document.getElementById('dashMktRows'); if(!el)return;
   let list=[...COINS];
@@ -535,7 +542,7 @@ function switchMktTab(btn,f){
   renderDashMkt(f);
 }
 
-// ── News ──────────────────────────────────────────────────────────────────
+// -- News ------------------------------------------------------------------
 const NEWS=[
   {title:'Bitcoin Breaks $68K Resistance as Institutional Demand Surges',time:'5m',cat:'Analysis'},
   {title:'Ethereum ETF Sees Record $500M Inflows in Single Session',time:'32m',cat:'ETF'},
@@ -552,7 +559,7 @@ function renderNews(){
     </div>`).join('');
 }
 
-// ── Utility ───────────────────────────────────────────────────────────────
+// -- Utility ---------------------------------------------------------------
 function copyUID(){const u=getCurrentUser();if(!u)return;navigator.clipboard.writeText(u.id).then(()=>showToast('UID copied!','t-ok'));}
 function copyRef(){const el=document.getElementById('refCode');if(!el)return;navigator.clipboard.writeText(el.textContent).then(()=>showToast('Referral code copied!','t-ok'));}
 

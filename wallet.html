@@ -1,9 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>My Assets – CryptoX</title>
+<meta name="theme-color" content="#0b0e11"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="CryptoX"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+<title>My Assets � CryptoX</title>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -51,9 +58,9 @@
       <div class="ab-title"><i class="fas fa-coins"></i> Estimated Total Balance
         <button onclick="toggleHide()" style="background:none;border:none;color:var(--t3);cursor:pointer;margin-left:6px"><i id="hideIcon" class="fas fa-eye"></i></button>
         <span style="margin-left:auto;display:flex;gap:16px;font-size:12px">
-          <a href="wallet.html" style="color:var(--yellow)">Spot Wallet ›</a>
-          <a href="#" style="color:var(--t3)">Earn Wallet ›</a>
-          <a href="#" style="color:var(--t3)">Futures Wallet ›</a>
+          <a href="wallet.html" style="color:var(--yellow)">Spot Wallet �</a>
+          <a href="#" style="color:var(--t3)">Earn Wallet �</a>
+          <a href="#" style="color:var(--t3)">Futures Wallet �</a>
         </span>
       </div>
       <!-- Currency Selector -->
@@ -61,22 +68,22 @@
         <div class="ab-value"><span id="walletTotal">$0.00</span><span class="unit" id="walletUnit">USD</span></div>
         <div class="currency-selector" id="currencySelector">
           <button class="cur-sel-btn" onclick="toggleCurrencyDrop(event)">
-            <span id="curSelFlag">🇺🇸</span>
+            <span id="curSelFlag">????</span>
             <span id="curSelLabel">USD</span>
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" id="curSelArrow"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <div class="cur-drop" id="curDrop">
             <div class="cur-drop-section-label">Fiat Currency</div>
-            <div class="cur-drop-item active" data-cur="USD" data-flag="🇺🇸" onclick="selectCurrency(this)">
-              <span class="cur-flag">🇺🇸</span>
+            <div class="cur-drop-item active" data-cur="USD" data-flag="????" onclick="selectCurrency(this)">
+              <span class="cur-flag">????</span>
               <div class="cur-info">
                 <span class="cur-code">USD</span>
                 <span class="cur-name">US Dollar</span>
               </div>
               <span class="cur-rate" id="rate-USD">1.00</span>
             </div>
-            <div class="cur-drop-item" data-cur="IDR" data-flag="🇮🇩" onclick="selectCurrency(this)">
-              <span class="cur-flag">🇮🇩</span>
+            <div class="cur-drop-item" data-cur="IDR" data-flag="????" onclick="selectCurrency(this)">
+              <span class="cur-flag">????</span>
               <div class="cur-info">
                 <span class="cur-code">IDR</span>
                 <span class="cur-name">Indonesian Rupiah</span>
@@ -85,26 +92,26 @@
             </div>
             <div class="cur-drop-divider"></div>
             <div class="cur-drop-section-label">Crypto</div>
-            <div class="cur-drop-item" data-cur="BTC" data-flag="₿" onclick="selectCurrency(this)">
-              <span class="cur-flag" style="font-size:15px;font-weight:900;color:#F7931A">₿</span>
+            <div class="cur-drop-item" data-cur="BTC" data-flag="?" onclick="selectCurrency(this)">
+              <span class="cur-flag" style="font-size:15px;font-weight:900;color:#F7931A">?</span>
               <div class="cur-info">
                 <span class="cur-code" style="color:#F7931A">BTC</span>
                 <span class="cur-name">Bitcoin</span>
               </div>
-              <span class="cur-rate" id="rate-BTC">≈ $67,000</span>
+              <span class="cur-rate" id="rate-BTC">� $67,000</span>
             </div>
-            <div class="cur-drop-item" data-cur="ETH" data-flag="Ξ" onclick="selectCurrency(this)">
-              <span class="cur-flag" style="font-size:15px;font-weight:900;color:#627EEA">Ξ</span>
+            <div class="cur-drop-item" data-cur="ETH" data-flag="?" onclick="selectCurrency(this)">
+              <span class="cur-flag" style="font-size:15px;font-weight:900;color:#627EEA">?</span>
               <div class="cur-info">
                 <span class="cur-code" style="color:#627EEA">ETH</span>
                 <span class="cur-name">Ethereum</span>
               </div>
-              <span class="cur-rate" id="rate-ETH">≈ $3,840</span>
+              <span class="cur-rate" id="rate-ETH">� $3,840</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="ab-btc" id="walletBtcEq">≈ 0.00000000 BTC</div>
+      <div class="ab-btc" id="walletBtcEq">� 0.00000000 BTC</div>
       <div class="ab-actions">
         <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
         <a href="withdraw.html" class="btn btn-dark btn-sm"><i class="fas fa-arrow-up"></i> Withdraw</a>

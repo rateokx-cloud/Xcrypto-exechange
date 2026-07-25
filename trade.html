@@ -1,9 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Spot Trading – CryptoX</title>
+<meta name="theme-color" content="#0b0e11"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="CryptoX"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+<title>Spot Trading � CryptoX</title>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -192,7 +199,7 @@
 <!-- ===== MAIN TRADE LAYOUT ===== -->
 <div class="trade-wrap">
 
-  <!-- ══════ LEFT: PAIRS LIST ══════ -->
+  <!-- ------ LEFT: PAIRS LIST ------ -->
   <div class="trade-panel">
     <div class="pairs-wrap">
       <div class="pairs-search">
@@ -213,7 +220,7 @@
     </div>
   </div>
 
-  <!-- ══════ CENTER: CHART + ORDER FORM + BOTTOM PANEL ══════ -->
+  <!-- ------ CENTER: CHART + ORDER FORM + BOTTOM PANEL ------ -->
   <div class="trade-panel" style="border-right:none;overflow:hidden">
     <!-- Chart Toolbar -->
     <div class="ct-bar">
@@ -244,7 +251,7 @@
       <div id="chartPriceTag" style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:2px 6px;border-radius:3px 0 0 3px;pointer-events:none"></div>
     </div>
 
-    <!-- ══ ORDER FORM (Buy Left / Sell Right) ══ -->
+    <!-- -- ORDER FORM (Buy Left / Sell Right) -- -->
     <div class="order-area">
       <!-- BUY FORM -->
       <div class="order-side">
@@ -341,7 +348,7 @@
       </div>
     </div><!-- /order-area -->
 
-    <!-- ══ BOTTOM: OPEN ORDERS ══ -->
+    <!-- -- BOTTOM: OPEN ORDERS -- -->
     <div class="oo-wrap">
       <div class="oo-tab-bar">
         <button class="oo-t active" data-oo="open" onclick="switchOoTab(this)">Open Orders<span class="oo-cnt" id="ooCount">0</span></button>
@@ -351,7 +358,7 @@
           <label style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3);cursor:pointer">
             <input type="checkbox" id="filterCurrentPair" onchange="loadOpenOrders()" style="accent-color:var(--yellow)"/> Current Pair Only
           </label>
-          <a href="orders.html" style="font-size:11px;color:var(--yellow)">All Orders ›</a>
+          <a href="orders.html" style="font-size:11px;color:var(--yellow)">All Orders �</a>
         </div>
       </div>
       <div style="overflow-x:auto;flex:1">
@@ -376,7 +383,7 @@
     </div>
   </div><!-- /center panel -->
 
-  <!-- ══════ RIGHT: ORDER BOOK + RECENT TRADES ══════ -->
+  <!-- ------ RIGHT: ORDER BOOK + RECENT TRADES ------ -->
   <div class="trade-panel">
     <div class="ob-container" style="height:100%;overflow:hidden;display:flex;flex-direction:column">
 
@@ -410,7 +417,7 @@
         <span style="text-align:right">Total</span>
       </div>
 
-      <!-- ASKS (sell orders — red) -->
+      <!-- ASKS (sell orders � red) -->
       <div class="ob-asks-wrap" id="obAsksWrap" style="flex:1;overflow:hidden;display:flex;flex-direction:column-reverse">
         <div id="obAsks"></div>
       </div>
@@ -420,7 +427,7 @@
         <div>
           <div class="ob-mid-price positive" id="obMidPrice">--</div>
           <div class="ob-mid-usd">
-            <span style="color:var(--t3)">≈ $</span><span id="obMidUsd">--</span>
+            <span style="color:var(--t3)">� $</span><span id="obMidUsd">--</span>
             <span style="color:var(--t3);margin-left:4px" id="obSpread"></span>
           </div>
         </div>
@@ -430,7 +437,7 @@
         </div>
       </div>
 
-      <!-- BIDS (buy orders — green) -->
+      <!-- BIDS (buy orders � green) -->
       <div class="ob-bids-wrap" id="obBidsWrap" style="flex:1;overflow:hidden">
         <div id="obBids"></div>
       </div>
