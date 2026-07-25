@@ -929,3 +929,236 @@ img{display:block}
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================
+   MOBILE RESPONSIVE — Android/iOS Fix
+   ============================================ */
+@media (max-width: 768px) {
+
+  /* ── NAVBAR ── */
+  .navbar {
+    height: 52px;
+    padding: 0 12px;
+  }
+  .nav-logo-text { font-size: 16px; }
+  .nav-links { display: none !important; }
+  .nav-right { gap: 4px; }
+  .btn-sm { height: 28px; padding: 0 10px; font-size: 11px; }
+  .nav-icon-btn { width: 30px; height: 30px; }
+  .user-nav { padding: 4px 6px; }
+  .user-nav .avatar { width: 26px; height: 26px; font-size: 10px; }
+  /* Show hamburger menu on mobile */
+  .nav-mobile-menu { display: flex !important; }
+
+  /* ── HERO ── */
+  .hero-wrap {
+    grid-template-columns: 1fr !important;
+    padding: 28px 16px 24px !important;
+    gap: 24px !important;
+  }
+  .hero-title { font-size: 28px !important; line-height: 1.2; }
+  .hero-sub { font-size: 13px !important; }
+  .hero-cta { flex-direction: column; gap: 10px; }
+  .hero-cta-email { max-width: 100% !important; }
+  .hero-stats { gap: 16px !important; flex-wrap: wrap; }
+  .hstat-val { font-size: 16px !important; }
+  /* Hide hero right card on mobile */
+  .hero-card { display: none; }
+
+  /* ── TICKER ── */
+  .ticker-wrap { height: 32px; }
+
+  /* ── MARKET TABLE ── */
+  .mkt-table-wrap { overflow-x: auto; }
+  .mkt-table th:nth-child(5),
+  .mkt-table th:nth-child(6),
+  .mkt-table th:nth-child(8),
+  .mkt-table td:nth-child(5),
+  .mkt-table td:nth-child(6),
+  .mkt-table td:nth-child(8) { display: none; }
+  .mkt-table th, .mkt-table td { padding: 8px 10px; font-size: 12px; }
+  .coin-sym { font-size: 12px; }
+  .coin-full { font-size: 10px; }
+  .coin-icon { width: 26px !important; height: 26px !important; font-size: 9px !important; }
+
+  /* ── FEATURES ── */
+  .feat-section { padding: 36px 0; }
+  .feat-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+  }
+  .feat-card { padding: 16px; }
+  .feat-icon { width: 40px; height: 40px; font-size: 18px; }
+  .feat-card h3 { font-size: 13px; }
+  .feat-card p { font-size: 12px; }
+
+  /* ── FOOTER ── */
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+  }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+
+  /* ── DASHBOARD LAYOUT ── */
+  .dash-layout { flex-direction: column; }
+  .dash-sidebar {
+    width: 100% !important;
+    height: auto !important;
+    position: static !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding: 6px 8px !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    flex-wrap: nowrap;
+    gap: 2px;
+  }
+  .ds-section { display: none; }
+  .ds-item {
+    flex-direction: column !important;
+    padding: 6px 10px !important;
+    font-size: 10px !important;
+    min-width: 56px;
+    border-left: none !important;
+    border-bottom: 2px solid transparent;
+    border-radius: var(--radius) !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .ds-item.active {
+    border-bottom-color: var(--yellow) !important;
+    border-left-color: transparent !important;
+  }
+  .ds-item i { font-size: 16px !important; }
+  .dash-main { padding: 12px; }
+
+  /* ── DASHBOARD SUMMARY CARDS ── */
+  .summary-cards {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .sum-card { padding: 12px; }
+  .sum-card-val { font-size: 18px !important; }
+  .sum-card-icon { font-size: 20px; right: 10px; top: 10px; }
+
+  /* ── ASSET BLOCK ── */
+  .asset-block { padding: 16px; }
+  .ab-value { font-size: 24px !important; }
+  .ab-actions { flex-wrap: wrap; gap: 6px; }
+  .ab-actions .btn { flex: 1; min-width: 80px; font-size: 11px; height: 32px; }
+
+  /* ── DASH GRID (1fr 300px) → single column ── */
+  .dash-main > div[style*="grid-template-columns"] {
+    display: block !important;
+  }
+
+  /* ── DATA TABLES ── */
+  .data-table { font-size: 11px; }
+  .data-table th, .data-table td { padding: 8px 10px; }
+  /* Hide less important columns */
+  .data-table th:nth-child(n+5):not(:last-child),
+  .data-table td:nth-child(n+5):not(:last-child) {
+    display: none;
+  }
+
+  /* ── WALLET ── */
+  .admin-card { border-radius: var(--radius); }
+  .admin-card-head { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
+  .tbl-controls { padding: 8px 12px; flex-wrap: wrap; gap: 6px; }
+  .tbl-search { width: 100% !important; }
+
+  /* ── AUTH PAGES ── */
+  .auth-layout { grid-template-columns: 1fr !important; }
+  .auth-left { display: none !important; }
+  .auth-right { padding: 24px 20px !important; }
+  .auth-box { max-width: 100% !important; }
+  .auth-box h1 { font-size: 22px; }
+
+  /* ── DEPOSIT / WITHDRAW ── */
+  .dash-main > div[style*="520px"],
+  .dash-main > div[style*="grid-template-columns:560px"] {
+    display: block !important;
+  }
+  .dash-main > div > div { margin-bottom: 16px; }
+  .coin-select-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  /* ── PROFILE ── */
+  .profile-layout,
+  .dash-main > div[style*="240px"] {
+    grid-template-columns: 1fr !important;
+    display: block !important;
+  }
+
+  /* ── ORDERS ── */
+  .tbl-controls { gap: 6px; }
+
+  /* ── P2P ── */
+  .mkt-table th:nth-child(4),
+  .mkt-table td:nth-child(4) { display: none; }
+
+  /* ── EARN ── */
+  .feat-grid { grid-template-columns: 1fr !important; }
+
+  /* ── FUTURES TABLE ── */
+  .mkt-table th:nth-child(7),
+  .mkt-table td:nth-child(7) { display: none; }
+
+  /* ── CTA ── */
+  .cta-section h2 { font-size: 24px !important; }
+  .cta-btns { flex-direction: column; align-items: center; }
+  .btn-lg { width: 100%; max-width: 280px; }
+
+  /* ── ADMIN ── */
+  .admin-layout { flex-direction: column; }
+  .admin-sidebar { display: none !important; }
+  .astat-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  .admin-charts-row,
+  .admin-tables-row { grid-template-columns: 1fr !important; }
+  .admin-content { padding: 12px; }
+  .admin-topbar { padding: 0 12px; }
+  .astat-val { font-size: 20px !important; }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+  .hero-title { font-size: 24px !important; }
+  .summary-cards { grid-template-columns: 1fr !important; }
+  .feat-grid { grid-template-columns: 1fr !important; }
+  .footer-grid { grid-template-columns: 1fr !important; }
+  .astat-grid { grid-template-columns: 1fr !important; }
+  .coin-select-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+
+/* ── TRADE PAGE MOBILE ── */
+@media (max-width: 768px) {
+  .trade-wrap {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+  /* Hide pairs sidebar and order book on mobile */
+  .trade-panel:first-child { display: none !important; }
+  .trade-panel:last-child {
+    border-left: none !important;
+    border-top: 1px solid var(--border);
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .trade-nav { flex-wrap: nowrap; overflow-x: auto; }
+  .price-strip { gap: 0; }
+  .pstat { padding: 0 8px; }
+  .pstat-lbl { font-size: 9px; }
+  .pstat-val { font-size: 11px; }
+  /* Show only High/Low/Change on mobile */
+  .pstat:nth-child(4),
+  .pstat:nth-child(5) { display: none; }
+  #tradeChart { height: 220px !important; }
+  .order-area { grid-template-columns: 1fr !important; }
+  .order-side:last-child { border-top: 1px solid var(--border); }
+  .oo-wrap { min-height: 150px; }
+  .trade-body { height: auto !important; overflow-y: auto !important; }
+}
