@@ -1,11 +1,8 @@
 [phases.setup]
-nixPkgs = ["python3", "gcc", "gnumake"]
+nixPkgs = ["nodejs_20", "python3", "gcc", "gnumake"]
 
 [phases.install]
-cmds = ["npm ci --prefer-offline || npm install"]
-
-[phases.build]
-cmds = []
+cmds = ["npm install --build-from-source"]
 
 [start]
 cmd = "node server/app.js"
