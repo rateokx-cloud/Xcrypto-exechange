@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#0b0e11"/>
+<title>Crypto News | CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+.news-body { min-height: 100vh; background: var(--bg); }
+.news-page { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+.news-header { margin-bottom: 28px; }
+.news-header h1 { font-size: 26px; font-weight: 900; color: var(--white); margin-bottom: 6px; }
+.news-header p { color: var(--t2); font-size: 13px; }
+.load-more-wrap { text-align: center; margin-top: 32px; }
+.news-card-link { text-decoration: none; color: inherit; }
+.news-card-link:hover .news-title { color: var(--yellow); }
+.skeleton { background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.skel-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius2); padding: 18px; }
+</style>
+</head>
+<body class="news-body">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg>
+    <span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='index.html'">Markets</button>
+    <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab" onclick="location.href='converter.html'">Converter</button>
+    <button class="nav-tab active"><i class="fas fa-newspaper" style="font-size:11px"></i> News</button>
+    <button class="nav-tab" onclick="location.href='alerts.html'">Alerts</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="login.html" style="color:var(--t2);font-size:13px;font-weight:600;padding:0 12px">Log In</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+    <div class="nav-divider"></div>
+    <button class="nav-icon-btn" id="themeBtn" title="Theme"><i class="fas fa-sun"></i></button>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="news-page">
+  <div class="news-header">
+    <h1><i class="fas fa-newspaper" style="color:var(--yellow);margin-right:10px"></i>Crypto News</h1>
+    <p>Latest news and market updates from the crypto world</p>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="news-filter-bar" id="newsFilters">
+    <button class="news-filter-btn active" data-cat="all" onclick="filterNews('all',this)">All</button>
+    <button class="news-filter-btn" data-cat="bitcoin" onclick="filterNews('bitcoin',this)">Bitcoin</button>
+    <button class="news-filter-btn" data-cat="ethereum" onclick="filterNews('ethereum',this)">Ethereum</button>
+    <button class="news-filter-btn" data-cat="altcoins" onclick="filterNews('altcoins',this)">Altcoins</button>
+    <button class="news-filter-btn" data-cat="defi" onclick="filterNews('defi',this)">DeFi</button>
+    <button class="news-filter-btn" data-cat="nft" onclick="filterNews('nft',this)">NFT</button>
+  </div>
+
+  <!-- API status notice -->
+  <div id="newsApiNotice" style="display:none;background:rgba(240,185,11,0.08);border:1px solid rgba(240,185,11,0.2);border-radius:var(--radius2);padding:10px 16px;margin-bottom:16px;font-size:12px;color:var(--t2)">
+    <i class="fas fa-info-circle" style="color:var(--yellow);margin-right:6px"></i>
+    Showing sample news. Live feed requires CryptoPanic API token.
+  </div>
+
+  <!-- News Grid -->
+  <div class="news-grid" id="newsGrid"></div>
+
+  <!-- Load More -->
+  <div class="load-more-wrap">
+    <button class="btn btn-dark" id="loadMoreBtn" onclick="loadMoreNews()" style="padding:0 32px;height:42px">
+      <i class="fas fa-chevron-down"></i> Load More
+    </button>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+const STATIC_NEWS = [
+  { id:1, title:'Bitcoin Surges Past $70,000 as ETF Inflows Reach Record High', summary:'Bitcoin reached a new milestone as institutional investors continued to pour funds into spot ETF products, driving total inflows to an all-time high of $2.1 billion in a single week.', source:'CoinDesk', time: Date.now() - 3600000, category:'bitcoin', sentiment:'bullish', url:'#' },
+  { id:2, title:'Ethereum Dencun Upgrade Reduces L2 Transaction Fees by 90%', summary:'The Ethereum Dencun hard fork successfully implemented EIP-4844, introducing proto-danksharding that has dramatically lowered fees on Layer 2 networks like Arbitrum and Optimism.', source:'The Block', time: Date.now() - 7200000, category:'ethereum', sentiment:'bullish', url:'#' },
+  { id:3, title:'Solana Ecosystem Sees Explosive Growth in DeFi TVL', summary:'Total value locked in Solana DeFi protocols surpassed $5 billion for the first time, with decentralized exchanges and lending protocols driving the majority of growth.', source:'CryptoSlate', time: Date.now() - 10800000, category:'altcoins', sentiment:'bullish', url:'#' },
+  { id:4, title:'SEC Delays Decision on Spot Ethereum ETF Applications', summary:'The US Securities and Exchange Commission has extended its review period for multiple spot Ethereum ETF applications, citing concerns about market manipulation and investor protection.', source:'Reuters', time: Date.now() - 14400000, category:'ethereum', sentiment:'bearish', url:'#' },
+  { id:5, title:'DeFi Protocol Aave Launches New Stablecoin GHO on Mainnet', summary:'Aave, one of the largest decentralized lending protocols, has officially launched its native stablecoin GHO on Ethereum mainnet, offering users a new borrowing mechanism within the ecosystem.', source:'Decrypt', time: Date.now() - 18000000, category:'defi', sentiment:'bullish', url:'#' },
+  { id:6, title:'NFT Market Volume Rebounds 40% in Q1 2024', summary:'After a prolonged bear market, NFT trading volumes have rebounded significantly in the first quarter of 2024, with Blur and OpenSea leading the recovery alongside new Bitcoin Ordinals activity.', source:'Nansen', time: Date.now() - 21600000, category:'nft', sentiment:'bullish', url:'#' },
+  { id:7, title:'Binance Pays $4.3B Fine, Crypto Market Absorbs Impact', summary:'Following Binance\'s landmark settlement with US authorities, cryptocurrency markets showed resilience, with most major assets recovering within 48 hours of the announcement.', source:'Bloomberg', time: Date.now() - 25200000, category:'bitcoin', sentiment:'neutral', url:'#' },
+  { id:8, title:'Chainlink Staking v0.2 Goes Live with Enhanced Security', summary:'Chainlink has launched the second version of its staking program, allowing LINK token holders to stake up to 75 million tokens and earn rewards while contributing to oracle network security.', source:'CoinTelegraph', time: Date.now() - 28800000, category:'altcoins', sentiment:'bullish', url:'#' },
+  { id:9, title:'Uniswap Labs Launches Cross-Chain Swap Feature', summary:'Uniswap has introduced native cross-chain swapping capabilities, enabling users to seamlessly exchange tokens across Ethereum, Polygon, Arbitrum, and Optimism without bridging manually.', source:'The Defiant', time: Date.now() - 32400000, category:'defi', sentiment:'bullish', url:'#' },
+  { id:10, title:'Bitcoin Halving Countdown: Miners Prepare for Revenue Impact', summary:'With the Bitcoin halving less than 30 days away, mining companies are adjusting their operations and balance sheets in preparation for the scheduled reduction in block rewards from 6.25 to 3.125 BTC.', source:'CoinDesk', time: Date.now() - 36000000, category:'bitcoin', sentiment:'neutral', url:'#' },
+  { id:11, title:'Crypto Market Faces Regulatory Headwinds in Europe', summary:'Several European Union member states are implementing the MiCA framework ahead of schedule, creating new compliance requirements for crypto exchanges and token issuers operating in the region.', source:'Financial Times', time: Date.now() - 39600000, category:'altcoins', sentiment:'bearish', url:'#' },
+  { id:12, title:'NFT Gaming Tokens Surge as Web3 Games Launch Beta Access', summary:'Multiple blockchain gaming projects released beta versions this week, driving significant price appreciation in their native tokens as players compete for limited early access slots.', source:'GameFi Weekly', time: Date.now() - 43200000, category:'nft', sentiment:'bullish', url:'#' },
+];
+
+let visibleCount = 8;
+let currentCat = 'all';
+let allNews = [...STATIC_NEWS];
+
+function timeSince(ms) {
+  const s = Math.floor((Date.now() - ms) / 1000);
+  if (s < 60) return s + 's ago';
+  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  if (s < 86400) return Math.floor(s/3600) + 'h ago';
+  return Math.floor(s/86400) + 'd ago';
+}
+
+function renderNewsCard(item) {
+  const sentBadge = item.sentiment === 'bullish' ? 'badge-bullish' : item.sentiment === 'bearish' ? 'badge-bearish' : 'badge-neutral';
+  const sentIcon = item.sentiment === 'bullish' ? '&#9650;' : item.sentiment === 'bearish' ? '&#9660;' : '&#9679;';
+  const sentLabel = item.sentiment.charAt(0).toUpperCase() + item.sentiment.slice(1);
+  const catLabel = item.category.charAt(0).toUpperCase() + item.category.slice(1);
+
+  return `<a class="news-card-link" href="${item.url}" target="_blank" rel="noopener">
+    <div class="news-card">
+      <div class="news-source">
+        <div class="news-source-dot"></div>
+        <span>${item.source}</span>
+        <span style="margin-left:auto;font-size:11px">${timeSince(item.time)}</span>
+      </div>
+      <div class="news-title">${item.title}</div>
+      <div class="news-summary">${item.summary}</div>
+      <div class="news-footer">
+        <span class="news-category">${catLabel}</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="news-badge ${sentBadge}">${sentIcon} ${sentLabel}</span>
+          <i class="fas fa-external-link-alt" style="font-size:10px;color:var(--t3)"></i>
+        </div>
+      </div>
+    </div>
+  </a>`;
+}
+
+function renderNews() {
+  const grid = document.getElementById('newsGrid');
+  let filtered = currentCat === 'all' ? allNews : allNews.filter(n => n.category === currentCat);
+  const slice = filtered.slice(0, visibleCount);
+
+  if (!slice.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--t3)">
+      <i class="fas fa-newspaper" style="font-size:36px;opacity:.3;margin-bottom:12px;display:block"></i>
+      No news found in this category.
+    </div>`;
+    document.getElementById('loadMoreBtn').style.display = 'none';
+    return;
+  }
+
+  grid.innerHTML = slice.map(renderNewsCard).join('');
+  document.getElementById('loadMoreBtn').style.display = filtered.length > visibleCount ? 'inline-flex' : 'none';
+}
+
+function filterNews(cat, btn) {
+  currentCat = cat;
+  visibleCount = 8;
+  document.querySelectorAll('.news-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNews();
+}
+
+function loadMoreNews() {
+  visibleCount += 4;
+  renderNews();
+}
+
+async function fetchLiveNews() {
+  try {
+    const res = await fetch('https://cryptopanic.com/api/v1/posts/?auth_token=pub_free&public=true', {
+      signal: AbortSignal.timeout(5000)
+    });
+    const data = await res.json();
+    if (data && data.results && data.results.length) {
+      allNews = data.results.map((item, i) => ({
+        id: i,
+        title: item.title,
+        summary: item.title,
+        source: item.source ? item.source.title : 'CryptoPanic',
+        time: new Date(item.created_at).getTime(),
+        category: item.currencies && item.currencies.length ? (item.currencies[0].code === 'BTC' ? 'bitcoin' : item.currencies[0].code === 'ETH' ? 'ethereum' : 'altcoins') : 'altcoins',
+        sentiment: item.votes ? (item.votes.positive > item.votes.negative ? 'bullish' : item.votes.negative > item.votes.positive ? 'bearish' : 'neutral') : 'neutral',
+        url: item.url || '#'
+      }));
+      renderNews();
+    }
+  } catch(e) {
+    document.getElementById('newsApiNotice').style.display = 'block';
+    console.log('[News] Using static fallback:', e.message);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderNews();
+  fetchLiveNews();
+});
+</script>
+</body>
+</html>

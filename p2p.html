@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -10,10 +10,18 @@
 <meta name="apple-mobile-web-app-title" content="CryptoX"/>
 <link rel="manifest" href="/manifest.json"/>
 <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
-<title>P2P Trading – CryptoX</title>
+<title>P2P Trading | CryptoX</title>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+@media(max-width:768px){
+  [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr!important}
+  .container>[style*="grid"]{grid-template-columns:1fr!important}
+  [style*="display:flex"][style*="gap:32px"]{flex-wrap:wrap!important;gap:8px!important}
+  .mkt-table-wrap{overflow-x:auto!important}
+}
+</style>
 </head>
 <body>
 <nav class="navbar">
@@ -161,7 +169,7 @@ function renderP2P() {
           <div>
             <div style="font-weight:700;font-size:13px">${MERCHANTS[i]}</div>
             <div style="font-size:11px;color:var(--t3);margin-top:1px">
-              <i class="fas fa-star" style="color:var(--yellow);font-size:9px"></i> ${rating} · ${trades} trades
+              <i class="fas fa-star" style="color:var(--yellow);font-size:9px"></i> ${rating} &rsaquo; ${trades} trades
               <span style="margin-left:6px;color:var(--green)"><i class="fas fa-circle" style="font-size:6px"></i> Online</span>
             </div>
           </div>
@@ -170,7 +178,7 @@ function renderP2P() {
       <td><div style="font-size:16px;font-weight:800;color:${p2pMode==='buy'?'var(--green)':'var(--red)'}">${parseFloat(priceVal).toLocaleString()} ${fiat}</div><div style="font-size:11px;color:var(--t3)">per ${coin}</div></td>
       <td>
         <div style="font-size:13px;font-weight:600">${available} ${coin}</div>
-        <div style="font-size:11px;color:var(--t3)">${parseFloat(minAmt).toLocaleString()} – ${parseFloat(maxAmt).toLocaleString()} ${fiat}</div>
+        <div style="font-size:11px;color:var(--t3)">${parseFloat(minAmt).toLocaleString()} &rsaquo; ${parseFloat(maxAmt).toLocaleString()} ${fiat}</div>
       </td>
       <td><div style="display:flex;gap:4px;flex-wrap:wrap">${pays.map(p=>`<span style="background:var(--bg3);border:1px solid var(--border);padding:2px 7px;border-radius:3px;font-size:10px;white-space:nowrap">${p}</span>`).join('')}</div></td>
       <td style="text-align:center">

@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 // CRYPTOX — TRADE PAGE JS (Binance-Style)
 // ============================================
 const COIN_COLORS_T = {BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',ADA:'#3CCAB0',AVAX:'#E84142',DOGE:'#C2A633',USDT:'#26A17B',DOT:'#E6007A',MATIC:'#8247E5',LINK:'#2A5ADA',TRX:'#FF0013',NEAR:'#00C1DE',ARB:'#28A0F0',UNI:'#FF007A',LTC:'#BFBBBB',ATOM:'#6F7390',XLM:'#14B6E7',FIL:'#0090FF'};
@@ -12,6 +12,103 @@ let psTab         = 'USDT';
 let obLayout      = 'both';
 let chart;
 let liveTimer, obTimer, tradeTimer;
+
+// ── Binance Integration ──────────────────────────────────────────────────
+// BINANCE_SYMBOL_MAP sudah di data.js — jangan redeclare, tambah saja coin baru
+// yang belum ada di data.js (jika ada)
+const INTERVAL_MAP = {'1m':'1m','5m':'5m','15m':'15m','1h':'1h','4h':'4h','1d':'1d','1w':'1w'};
+
+let _binWS = null, _tickerWS = null, _currentInterval = '1h', _pollInterval = null;
+
+async function fetchBinanceKlines(symbol, interval, limit) {
+  const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit||200}`;
+  const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const raw = await res.json();
+  return raw.map(k => ({ time: k[0], open: +k[1], high: +k[2], low: +k[3], close: +k[4], vol: +k[5] }));
+}
+
+function startBinanceWS(symbol, interval) {
+  if (_binWS)    { try{_binWS.close();}catch(e){} _binWS = null; }
+  if (_tickerWS) { try{_tickerWS.close();}catch(e){} _tickerWS = null; }
+  const sym = symbol.toLowerCase();
+
+  // Kline stream
+  try {
+    _binWS = new WebSocket(`wss://stream.binance.com:9443/ws/${sym}@kline_${interval}`);
+    _binWS.onmessage = function(e) {
+      try {
+        const k = JSON.parse(e.data).k;
+        if (!k) return;
+        currentPrice = +k.c;
+        const coin = COINS.find(c => c.id === currentBase);
+        if (coin) coin.price = currentPrice;
+        // Update canvas chart last candle
+        if (chart && chart.candles && chart.candles.length) {
+          const last = chart.candles[chart.candles.length - 1];
+          last.close = +k.c; last.high = Math.max(last.high, +k.h);
+          last.low   = Math.min(last.low,  +k.l);
+          chart.draw();
+        }
+        updateChartPriceTag();
+      } catch(err) {}
+    };
+    _binWS.onerror = () => _startPollingFallback();
+    console.log('[WS] Kline connected:', sym, interval);
+  } catch(e) { _startPollingFallback(); }
+
+  // Mini ticker stream (price + stats)
+  try {
+    _tickerWS = new WebSocket(`wss://stream.binance.com:9443/ws/${sym}@miniTicker`);
+    _tickerWS.onmessage = function(e) {
+      try {
+        const d = JSON.parse(e.data);
+        if (!d || !d.c) return;
+        const price = +d.c, change = ((+d.c - +d.o) / +d.o * 100);
+        currentPrice = price;
+        const coin = COINS.find(c => c.id === currentBase);
+        if (coin) { coin.price = price; coin.change = +change.toFixed(2); }
+        _updatePriceUI(price, change, +d.h, +d.l, +d.v);
+      } catch(err) {}
+    };
+  } catch(e) {}
+}
+
+function _updatePriceUI(price, change, high, low, vol) {
+  const isUp = change >= 0;
+  const fp = p => p >= 1000 ? p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : p >= 1 ? p.toFixed(4) : p.toFixed(6);
+  const pnav = document.getElementById('pairPriceNav');
+  if (pnav) { pnav.textContent = '$'+fp(price); pnav.className = 'ps-live-price '+(isUp?'positive':'negative'); }
+  const cnav = document.getElementById('pairChangeNav');
+  if (cnav) { cnav.textContent = (isUp?'+':'')+change.toFixed(2)+'%'; cnav.className = 'ps-live-chg '+(isUp?'positive':'negative'); }
+  setEl('navChange', (isUp?'+':'')+change.toFixed(2)+'%', isUp?'pstat-val positive':'pstat-val negative');
+  setEl('navHigh',   '$'+fp(high));
+  setEl('navLow',    '$'+fp(low));
+  const mp = document.getElementById('obMidPrice');
+  if (mp) { mp.textContent = '$'+fp(price); mp.className = 'ob-mid-price '+(isUp?'positive':'negative'); }
+  const mu = document.getElementById('obMidUsd');
+  if (mu) mu.textContent = fp(price);
+  updateChartPriceTag();
+}
+
+function _startPollingFallback() {
+  if (_pollInterval) return;
+  _pollInterval = setInterval(async () => {
+    try {
+      const sym = BINANCE_SYMBOL_MAP[currentBase];
+      if (!sym) return;
+      const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${sym}`,{signal:AbortSignal.timeout(3000)});
+      const d = await res.json();
+      if (d && d.lastPrice) {
+        const p = +d.lastPrice, ch = +d.priceChangePercent;
+        currentPrice = p;
+        const coin = COINS.find(c => c.id === currentBase);
+        if (coin) { coin.price = p; coin.change = ch; }
+        _updatePriceUI(p, ch, +d.highPrice, +d.lowPrice, +d.volume);
+      }
+    } catch(e) {}
+  }, 2000);
+}
 
 // ─── INIT ───────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
@@ -32,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const user = getCurrentUser();
   updateNavAuth(user);
 
-  // Init chart
+  // Init canvas chart
   chart = new CryptoChart('tradeChart', { type: 'candle' });
 
   // Use ResizeObserver to draw as soon as container has a real size
@@ -41,9 +138,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ro = new ResizeObserver(entries => {
       const w = entries[0].contentRect.width;
       if (w > 50) {
-        ro.disconnect(); // only need first time
+        ro.disconnect();
         loadChartData();
-        // Also set up resize handler for later
         window.addEventListener('resize', resizeChart);
       }
     });
@@ -97,49 +193,105 @@ function updateNavAuth(user) {
   if (user) {
     el.innerHTML = `
       <a href="dashboard.html" class="btn btn-dark btn-sm" style="height:30px;font-size:12px">Dashboard</a>
-      <a href="deposit.html" class="btn btn-primary btn-sm" style="height:30px;font-size:12px">Deposit</a>
+      <a href="deposit.html" class="btn btn-primary btn-sm" style="height:30px;font-size:12px"><i class="fas fa-arrow-down"></i> Deposit</a>
       <div class="user-nav" style="padding:2px 8px">
         <div class="avatar" style="width:26px;height:26px;font-size:10px">${(user.name||'U').slice(0,2).toUpperCase()}</div>
+        <i class="fas fa-chevron-down" style="font-size:9px;color:var(--t3);margin-left:2px"></i>
         <div class="dropdown" style="right:0;top:calc(100%+4px)">
+          <div style="padding:10px 14px;border-bottom:1px solid var(--border)">
+            <div style="font-size:13px;font-weight:700;color:var(--white)">${user.name||user.email||'User'}</div>
+            <div style="font-size:11px;color:var(--t3)">${user.email||''}</div>
+          </div>
           <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+          <div class="drop-item" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> Assets</div>
           <div class="drop-item" onclick="location.href='orders.html'"><i class="fas fa-list"></i> My Orders</div>
           <div class="drop-divider"></div>
           <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
         </div>
       </div>`;
+  } else {
+    el.innerHTML = `
+      <a href="login.html" class="btn btn-ghost btn-sm" style="height:30px;font-size:12px">Log In</a>
+      <a href="register.html" class="btn btn-primary btn-sm" style="height:30px;font-size:12px">Sign Up</a>`;
   }
 }
 
 // ─── CHART ──────────────────────────────────────────
-function loadChartData() {
+async function loadChartData() {
   const cv = document.getElementById('tradeChart');
-  if (!cv) return;
+  if (!cv) { console.error('[Chart] tradeChart not found'); return; }
 
-  // Get real rendered width
+  // Calculate width from multiple sources
+  let w = 0;
   const parent = cv.parentElement;
-  let w = parent ? parent.getBoundingClientRect().width : 0;
-  if (w < 50) w = window.innerWidth - 490; // fallback
-  w = Math.floor(Math.max(w, 300));
+  if (parent) {
+    const rect = parent.getBoundingClientRect();
+    w = rect.width || parent.clientWidth || parent.offsetWidth;
+  }
+  // If still 0, compute from window
+  if (w < 10) {
+    const sidebar = 200;   // left panel
+    const orderbook = 280; // right panel
+    w = window.innerWidth - sidebar - orderbook - 8;
+  }
+  w = Math.max(Math.floor(w), 300);
 
   cv.width  = w;
-  cv.height = 310;
+  cv.height = 340;
+  cv.style.display  = 'block';
+  cv.style.width    = w + 'px';
+  cv.style.height   = '340px';
+  console.log('[Chart] loadChartData w=' + w);
 
+  // Get interval from toolbar
+  const activeBtn = document.querySelector('.ct-b[data-i].active');
+  const interval  = INTERVAL_MAP ? (INTERVAL_MAP[activeBtn?.dataset?.i || '1h'] || '1h') : '1h';
+  _currentInterval = interval;
+
+  // Try fetch real Binance data
+  const binSym = BINANCE_SYMBOL_MAP ? BINANCE_SYMBOL_MAP[currentBase] : null;
+  let candles = null;
+
+  if (binSym) {
+    try {
+      candles = await fetchBinanceKlines(binSym, interval, 200);
+      // Update price from latest candle
+      const last = candles[candles.length - 1];
+      if (last && last.close > 0) {
+        currentPrice = last.close;
+        const coin = COINS.find(c => c.id === currentBase);
+        if (coin) coin.price = currentPrice;
+        updatePairHeader();
+      }
+      // Start WebSocket for live updates
+      startBinanceWS(binSym, interval);
+      console.log('[Chart] Binance:', candles.length, 'candles,', binSym, interval);
+    } catch(e) {
+      console.warn('[Chart] Binance failed:', e.message);
+      candles = null;
+      if (typeof _startPollingFallback === 'function') _startPollingFallback();
+    }
+  }
+
+  // Fallback to simulated
+  if (!candles || !candles.length) candles = generateCandles(currentPrice, 200);
+
+  // Draw on canvas
   if (chart) {
     chart.canvas  = cv;
     chart.ctx     = cv.getContext('2d');
-    chart.candles = generateCandles(currentPrice, 130);
+    chart.candles = candles;
     chart.draw();
   }
   updateChartPriceTag();
+  console.log('[Chart] Canvas drawn, w:', w, 'candles:', candles.length);
 }
 
 function setChartType(type, btn) {
-  // Update active button
   document.querySelectorAll('.ct-b[id^="chartType"]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   if (chart) {
     chart.options.type = type;
-    // Redraw with existing candles
     if (chart.candles && chart.candles.length) chart.draw();
   }
 }
@@ -260,8 +412,10 @@ function switchPair(base) {
   currentPrice = coin.price;
   closePairDrop();
   renderPairsList(document.getElementById('psSearch')?.value || '');
-  // Reload chart with new pair data
-  requestAnimationFrame(() => loadChartData());
+  // Stop existing polling
+  if (_pollInterval) { clearInterval(_pollInterval); _pollInterval = null; }
+  // Reload chart with new pair (fetches Binance + starts WS)
+  loadChartData();
   renderOrderBook();
   renderRecentTradesList();
   updatePairHeader();
@@ -625,61 +779,25 @@ async function cancelOrder(id) {
 
 // ─── LIVE UPDATES ────────────────────────────────────
 function startLiveUpdates() {
-  // Price ticker — every 800ms
-  liveTimer = setInterval(() => {
-    const coin = COINS.find(c => c.id === currentBase);
-    if (!coin) return;
-    const fluctuation = (Math.random() - 0.5) * 0.0008;
-    coin.price = parseFloat((coin.price * (1 + fluctuation)).toFixed(coin.price > 100 ? 2 : 6));
-    currentPrice = coin.price;
+  // Price updates now handled by Binance WebSocket (started in loadChartData)
+  // Keep only order book + trades simulation, and pairs list update
 
-    // Update pair in TRADING_PAIRS too
-    const tp = TRADING_PAIRS.find(p => p.base === currentBase);
-    if (tp) tp.price = currentPrice;
-
-    // Update live price in navbar
-    const pnav = document.getElementById('pairPriceNav');
-    if (pnav) {
-      pnav.textContent = '$' + fmt(currentPrice, currentPrice);
-      pnav.className = 'ps-live-price ' + (coin.change >= 0 ? 'positive' : 'negative');
-    }
-
-    // Update chart price tag
-    updateChartPriceTag();
-
-    // Update ob mid
-    const mp = document.getElementById('obMidPrice');
-    if (mp) mp.textContent = '$' + fmt(currentPrice, currentPrice);
-    const mu = document.getElementById('obMidUsd');
-    if (mu) mu.textContent = fmt(currentPrice, currentPrice);
-
-    // Update buy/sell price fields if empty or showing old market price
-    const user = getCurrentUser();
-    if (user) {
-      const bp = document.getElementById('buyPrice');
-      const sp = document.getElementById('sellPrice');
-      if (buyOrderType === 'market'  && bp) bp.placeholder = '$' + fmt(currentPrice, currentPrice);
-      if (sellOrderType === 'market' && sp) sp.placeholder = '$' + fmt(currentPrice, currentPrice);
-    }
-  }, 800);
-
-  // Order book — every 1.5s
+  // Order book — every 1.5s (simulated depth)
   obTimer = setInterval(renderOrderBook, 1500);
 
-  // Recent trades — every 2.5s
+  // Recent trades — every 2.5s (simulated)
   tradeTimer = setInterval(renderRecentTradesList, 2500);
 
-  // Pairs list — every 3s (update all prices)
+  // Pairs list — every 3s (only update non-current pairs with micro fluctuation)
   setInterval(() => {
     COINS.forEach(c => {
-      c.price = parseFloat((c.price * (1 + (Math.random() - 0.5) * 0.0006)).toFixed(c.price > 100 ? 2 : 6));
-      c.change = parseFloat((c.change + (Math.random() - 0.5) * 0.04).toFixed(2));
+      if (c.id === currentBase) return; // current pair handled by Binance WS
+      c.price  = parseFloat((c.price  * (1 + (Math.random() - 0.5) * 0.0004)).toFixed(c.price > 100 ? 2 : 6));
+      c.change = parseFloat((c.change + (Math.random() - 0.5) * 0.02).toFixed(2));
       const tp = TRADING_PAIRS.find(p => p.base === c.id);
       if (tp) { tp.price = c.price; tp.change = c.change; }
     });
-    // Re-render pairs list without losing scroll
-    const filterVal = document.getElementById('psSearch')?.value || '';
-    renderPairsList(filterVal);
+    renderPairsList(document.getElementById('psSearch')?.value || '');
   }, 3000);
 }
 

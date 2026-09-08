@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -10,10 +10,37 @@
 <meta name="apple-mobile-web-app-title" content="CryptoX"/>
 <link rel="manifest" href="/manifest.json"/>
 <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
-<title>Dashboard – CryptoX</title>
+<title>Dashboard | CryptoX</title>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+@media(max-width:768px){
+  /* User bar */
+  .dash-main>div[style*="flex"][style*="space-between"]:first-of-type{
+    flex-direction:column!important;align-items:flex-start!important;gap:12px!important;padding:12px!important
+  }
+  .dash-main>div[style*="flex"][style*="space-between"]:first-of-type>div[style*="gap:24px"]{
+    flex-wrap:wrap!important;gap:10px!important
+  }
+  .dash-main>div[style*="flex"][style*="space-between"]:first-of-type>.btn{
+    width:100%!important
+  }
+  /* Market mini header */
+  [style*="grid-template-columns:1.2fr 1fr 1fr 72px 72px"]{
+    grid-template-columns:1fr 1fr 1fr!important
+  }
+  /* Quick actions grid */
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr 1fr!important}
+  /* General inline grids */
+  .dash-main>div[style*="grid-template-columns"]{
+    display:block!important;width:100%!important
+  }
+  .dash-main>div[style*="grid-template-columns"]>div{
+    width:100%!important;margin-bottom:12px!important
+  }
+}
+</style>
 </head>
 <body class="dash-body">
 <nav class="navbar">
@@ -23,9 +50,11 @@
   <div class="nav-links">
     <button class="nav-tab" onclick="location.href='index.html'">Markets</button>
     <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab" onclick="location.href='converter.html'">Converter</button>
     <button class="nav-tab" onclick="location.href='futures.html'">Derivatives</button>
     <button class="nav-tab" onclick="location.href='earn.html'">Earn</button>
-    <button class="nav-tab" onclick="location.href='p2p.html'">P2P</button>
+    <button class="nav-tab" onclick="location.href='news.html'">News</button>
+    <button class="nav-tab" onclick="location.href='alerts.html'">Alerts</button>
   </div>
   <div class="nav-right">
     <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
@@ -53,7 +82,12 @@
     <div class="ds-section">Overview</div>
     <a href="dashboard.html" class="ds-item active"><i class="fas fa-home"></i><span>Dashboard</span></a>
     <a href="wallet.html" class="ds-item"><i class="fas fa-wallet"></i><span>Assets</span></a>
+    <a href="portfolio.html" class="ds-item"><i class="fas fa-chart-pie"></i><span>Portfolio</span></a>
     <a href="orders.html" class="ds-item"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+    <div class="ds-section">Tools</div>
+    <a href="alerts.html" class="ds-item"><i class="fas fa-bell"></i><span>Alerts</span></a>
+    <a href="news.html" class="ds-item"><i class="fas fa-newspaper"></i><span>News</span></a>
+    <a href="converter.html" class="ds-item"><i class="fas fa-exchange-alt"></i><span>Converter</span></a>
     <div class="ds-section">Account</div>
     <a href="profile.html" class="ds-item"><i class="fas fa-user"></i><span>Profile</span></a>
     <a href="profile.html#security" class="ds-item"><i class="fas fa-shield-alt"></i><span>Security</span></a>
@@ -99,7 +133,7 @@
         <div class="sum-card-icon"><i class="fas fa-wallet"></i></div>
         <div class="sum-card-label"><i class="fas fa-wallet"></i> Total Balance</div>
         <div class="sum-card-val" id="totalBalance">$0.00</div>
-        <div class="sum-card-sub" id="totalBtcEq">˜ 0 BTC</div>
+        <div class="sum-card-sub" id="totalBtcEq">&rsaquo; 0 BTC</div>
       </div>
       <div class="sum-card green" onclick="location.href='deposit.html'">
         <div class="sum-card-icon"><i class="fas fa-arrow-down"></i></div>
@@ -130,7 +164,7 @@
             <button onclick="toggleHide()" style="background:none;border:none;color:var(--t3);cursor:pointer;margin-left:6px" title="Toggle visibility">
               <i class="fas fa-eye" id="hideIcon"></i>
             </button>
-            <a href="wallet.html" style="font-size:12px;color:var(--yellow);margin-left:auto">Asset Summary ›</a>
+            <a href="wallet.html" style="font-size:12px;color:var(--yellow);margin-left:auto">Asset Summary &rsaquo;</a>
           </div>
 
           <!-- Balance + Currency Selector row -->
@@ -139,10 +173,10 @@
               <span id="totalAsset">$0.00</span>
               <span class="unit" id="dashBalUnit">USD</span>
             </div>
-            <!-- Currency selector -->
+                        <!-- Currency selector -->
             <div class="currency-selector" id="dashCurrencySelector">
               <button class="cur-sel-btn" onclick="toggleDashCurDrop(event)">
-                <span id="dashCurFlag">????</span>
+                <span id="dashCurFlag" class="cur-flag-icon cur-flag-usd"></span>
                 <span id="dashCurLabel">USD</span>
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none" id="dashCurArrow">
                   <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -150,16 +184,16 @@
               </button>
               <div class="cur-drop" id="dashCurDrop">
                 <div class="cur-drop-section-label">Fiat Currency</div>
-                <div class="cur-drop-item active" data-cur="USD" data-flag="????" onclick="selectDashCurrency(this)">
-                  <span class="cur-flag">????</span>
+                <div class="cur-drop-item active" data-cur="USD" data-flag="usd" onclick="selectDashCurrency(this)">
+                  <span class="cur-flag cur-flag-icon cur-flag-usd"></span>
                   <div class="cur-info">
                     <span class="cur-code">USD</span>
                     <span class="cur-name">US Dollar</span>
                   </div>
                   <span class="cur-rate" id="dash-rate-USD">1.00</span>
                 </div>
-                <div class="cur-drop-item" data-cur="IDR" data-flag="????" onclick="selectDashCurrency(this)">
-                  <span class="cur-flag">????</span>
+                <div class="cur-drop-item" data-cur="IDR" data-flag="idr" onclick="selectDashCurrency(this)">
+                  <span class="cur-flag cur-flag-icon cur-flag-idr"></span>
                   <div class="cur-info">
                     <span class="cur-code">IDR</span>
                     <span class="cur-name">Indonesian Rupiah</span>
@@ -168,27 +202,25 @@
                 </div>
                 <div class="cur-drop-divider"></div>
                 <div class="cur-drop-section-label">Crypto</div>
-                <div class="cur-drop-item" data-cur="BTC" data-flag="?" onclick="selectDashCurrency(this)">
-                  <span class="cur-flag" style="font-size:15px;font-weight:900;color:#F7931A">?</span>
+                <div class="cur-drop-item" data-cur="BTC" data-flag="btc" onclick="selectDashCurrency(this)">
+                  <span class="cur-flag cur-flag-icon cur-flag-btc"></span>
                   <div class="cur-info">
                     <span class="cur-code" style="color:#F7931A">BTC</span>
                     <span class="cur-name">Bitcoin</span>
                   </div>
-                  <span class="cur-rate" id="dash-rate-BTC">˜ $67,000</span>
+                  <span class="cur-rate" id="dash-rate-BTC">~ $67,000</span>
                 </div>
-                <div class="cur-drop-item" data-cur="ETH" data-flag="?" onclick="selectDashCurrency(this)">
-                  <span class="cur-flag" style="font-size:15px;font-weight:900;color:#627EEA">?</span>
+                <div class="cur-drop-item" data-cur="ETH" data-flag="eth" onclick="selectDashCurrency(this)">
+                  <span class="cur-flag cur-flag-icon cur-flag-eth"></span>
                   <div class="cur-info">
                     <span class="cur-code" style="color:#627EEA">ETH</span>
                     <span class="cur-name">Ethereum</span>
                   </div>
-                  <span class="cur-rate" id="dash-rate-ETH">˜ $3,840</span>
+                  <span class="cur-rate" id="dash-rate-ETH">~ $3,840</span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div class="ab-btc" id="totalBtcEquiv">˜ 0.00000000 BTC</div>
+            </div>          </div>
+          <div class="ab-btc" id="totalBtcEquiv">&rsaquo; 0.00000000 BTC</div>
           <div class="ab-actions">
             <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
             <a href="withdraw.html" class="btn btn-dark btn-sm"><i class="fas fa-arrow-up"></i> Withdraw</a>
@@ -201,7 +233,7 @@
         <div class="dash-card">
           <div class="dash-card-head">
             <h3>Asset Holdings</h3>
-            <a href="wallet.html" style="font-size:12px;color:var(--yellow)">View All ›</a>
+            <a href="wallet.html" style="font-size:12px;color:var(--yellow)">View All &rsaquo;</a>
           </div>
           <table class="data-table">
             <thead><tr>
@@ -354,6 +386,9 @@ function renderDashBalance(totalUSD){
 
   // Rate labels in dropdown
   if(e('dash-rate-USD')) e('dash-rate-USD').textContent = '1.00';
+  // Update button flag class
+  const _flagEl = document.getElementById('dashCurFlag');
+  if(_flagEl) _flagEl.className = 'cur-flag-icon cur-flag-' + dashCurrency.toLowerCase();
   if(e('dash-rate-IDR')) e('dash-rate-IDR').textContent = fmtIDR(IDR_RATE)+' / $1';
   if(e('dash-rate-BTC')) e('dash-rate-BTC').textContent = '\u2248 $'+fmtUSDn(dashBtcPrice());
   if(e('dash-rate-ETH')) e('dash-rate-ETH').textContent = '\u2248 $'+fmtUSDn(dashEthPrice());
@@ -376,7 +411,7 @@ function toggleDashCurDrop(e){
 
 function selectDashCurrency(el){
   dashCurrency=el.dataset.cur;
-  document.getElementById('dashCurFlag').textContent  = el.dataset.flag;
+  const dashFlagEl = document.getElementById('dashCurFlag'); if(dashFlagEl){ dashFlagEl.className = 'cur-flag-icon cur-flag-' + el.dataset.flag; }
   document.getElementById('dashCurLabel').textContent = dashCurrency;
   const drop=document.getElementById('dashCurDrop');
   const arrow=document.getElementById('dashCurArrow');
@@ -470,7 +505,7 @@ async function loadBalances(user){
         <div><div style="font-weight:700">${r.coin}</div><div style="font-size:11px;color:var(--t3)">${r.name}</div></div>
       </div></td>
       <td style="text-align:right;font-weight:600">${hideBalances?'****':r.available.toFixed(r.available>100?2:6)}</td>
-      <td style="text-align:right;color:var(--t2)">${r.in_order>0?r.in_order.toFixed(4):'—'}</td>
+      <td style="text-align:right;color:var(--t2)">${r.in_order>0?r.in_order.toFixed(4):'&rsaquo;'}</td>
       <td style="text-align:right;font-weight:600">${dashConvertShort(r.usdVal)}</td>
       <td style="text-align:right" class="${r.change>=0?'positive':'negative'}">${r.change>=0?'+':''}${r.change.toFixed(2)}%</td>
       <td style="text-align:right"><a href="trade.html?pair=${r.coin}USDT" class="btn btn-ghost btn-xs">Trade</a></td>

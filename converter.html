@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#0b0e11"/>
+<title>Crypto Converter | CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+.conv-body { min-height: 100vh; background: var(--bg); }
+.conv-page { max-width: 860px; margin: 0 auto; padding: 48px 20px; }
+.conv-heading { text-align: center; margin-bottom: 36px; }
+.conv-heading h1 { font-size: 32px; font-weight: 900; color: var(--white); margin-bottom: 8px; }
+.conv-heading p { color: var(--t2); font-size: 15px; }
+.conv-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+.conv-row { display: flex; align-items: stretch; gap: 0; position: relative; }
+.conv-side { flex: 1; }
+.conv-side-label { font-size: 11px; color: var(--t3); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px; }
+.conv-input-wrap { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius2); overflow: hidden; transition: border 0.15s; }
+.conv-input-wrap:focus-within { border-color: var(--yellow); }
+.conv-select-row { display: flex; align-items: center; gap: 8px; padding: 10px 14px 0; border-bottom: 1px solid var(--border); }
+.conv-select { background: transparent; border: none; outline: none; font-size: 13px; font-weight: 700; color: var(--white); cursor: pointer; flex: 1; min-width: 0; }
+.conv-select option { background: #1a1f2b; color: #eaecef; }
+.conv-amount-row { display: flex; align-items: center; padding: 10px 14px 10px; }
+.conv-amount { background: transparent; border: none; outline: none; font-size: 22px; font-weight: 700; color: var(--white); flex: 1; min-width: 0; text-align: right; width: 100%; }
+.conv-amount::placeholder { color: var(--t4); }
+.conv-amount:read-only { cursor: default; }
+.conv-divider { display: flex; align-items: center; justify-content: center; padding: 0 16px; }
+.swap-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--bg4); border: 2px solid var(--border2); color: var(--yellow); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+.swap-btn:hover { background: var(--yellow); color: #111; border-color: var(--yellow); transform: rotate(180deg); }
+.rate-display { text-align: center; margin: 16px 0 0; padding: 12px; background: var(--bg3); border-radius: var(--radius); font-size: 13px; color: var(--t2); }
+.rate-display strong { color: var(--white); font-weight: 700; }
+.quick-pairs { margin-bottom: 24px; }
+.quick-pairs h3 { font-size: 13px; font-weight: 700; color: var(--t2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.qp-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.qp-btn { padding: 7px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--t2); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+.qp-btn:hover { border-color: var(--yellow); color: var(--yellow); background: rgba(240,185,11,0.06); }
+.qp-btn.active { border-color: var(--yellow); color: var(--yellow); background: rgba(240,185,11,0.1); }
+.mini-chart-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+.mini-chart-section h3 { font-size: 13px; font-weight: 700; color: var(--t2); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.mini-chart-wrap { position: relative; }
+canvas#miniChart { width: 100%; height: 120px; display: block; border-radius: var(--radius); }
+.chart-labels { display: flex; justify-content: space-between; margin-top: 4px; font-size: 10px; color: var(--t3); }
+.conv-info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.conv-info-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius2); padding: 14px; text-align: center; }
+.conv-info-label { font-size: 11px; color: var(--t3); margin-bottom: 4px; }
+.conv-info-val { font-size: 15px; font-weight: 700; color: var(--white); }
+.coin-flag { display: inline-flex; align-items: center; gap: 6px; }
+.coin-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+@media(max-width:600px){
+  .conv-row { flex-direction: column; gap: 12px; }
+  .conv-divider { padding: 4px 0; }
+  .conv-divider .swap-btn { transform: rotate(90deg); }
+  .conv-info-grid { grid-template-columns: 1fr 1fr; }
+  .conv-card { padding: 16px; }
+  .conv-amount { font-size: 18px; }
+}
+</style>
+</head>
+<body class="conv-body">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg>
+    <span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='index.html'">Markets</button>
+    <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab active"><i class="fas fa-exchange-alt" style="font-size:11px"></i> Converter</button>
+    <button class="nav-tab" onclick="location.href='news.html'">News</button>
+    <button class="nav-tab" onclick="location.href='alerts.html'">Alerts</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="login.html" style="color:var(--t2);font-size:13px;font-weight:600;padding:0 12px">Log In</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+    <div class="nav-divider"></div>
+    <button class="nav-icon-btn" id="themeBtn" title="Theme"><i class="fas fa-sun"></i></button>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="conv-page">
+  <div class="conv-heading">
+    <h1>Crypto Converter</h1>
+    <p>Instantly convert between 20+ cryptocurrencies, USD and IDR</p>
+  </div>
+
+  <!-- Quick Pair Buttons -->
+  <div class="quick-pairs">
+    <h3>Popular Pairs</h3>
+    <div class="qp-grid">
+      <button class="qp-btn active" onclick="quickPair('BTC','USD')">BTC &rarr; USD</button>
+      <button class="qp-btn" onclick="quickPair('ETH','USD')">ETH &rarr; USD</button>
+      <button class="qp-btn" onclick="quickPair('BTC','ETH')">BTC &rarr; ETH</button>
+      <button class="qp-btn" onclick="quickPair('SOL','USDT')">SOL &rarr; USDT</button>
+      <button class="qp-btn" onclick="quickPair('BTC','IDR')">BTC &rarr; IDR</button>
+      <button class="qp-btn" onclick="quickPair('ETH','IDR')">ETH &rarr; IDR</button>
+    </div>
+  </div>
+
+  <!-- Converter Card -->
+  <div class="conv-card">
+    <div class="conv-row">
+      <div class="conv-side">
+        <div class="conv-side-label">From</div>
+        <div class="conv-input-wrap">
+          <div class="conv-select-row">
+            <i class="fas fa-coins" style="color:var(--t3);font-size:12px;flex-shrink:0"></i>
+            <select class="conv-select" id="fromAsset" onchange="onFromChange()"></select>
+            <i class="fas fa-chevron-down" style="color:var(--t3);font-size:10px;flex-shrink:0"></i>
+          </div>
+          <div class="conv-amount-row">
+            <input type="number" class="conv-amount" id="fromAmount" value="1" placeholder="0.00" oninput="calculate()" step="any" min="0"/>
+          </div>
+        </div>
+      </div>
+      <div class="conv-divider">
+        <button class="swap-btn" onclick="swapAssets()" title="Swap assets">
+          <i class="fas fa-exchange-alt"></i>
+        </button>
+      </div>
+      <div class="conv-side">
+        <div class="conv-side-label">To</div>
+        <div class="conv-input-wrap">
+          <div class="conv-select-row">
+            <i class="fas fa-coins" style="color:var(--t3);font-size:12px;flex-shrink:0"></i>
+            <select class="conv-select" id="toAsset" onchange="onToChange()"></select>
+            <i class="fas fa-chevron-down" style="color:var(--t3);font-size:10px;flex-shrink:0"></i>
+          </div>
+          <div class="conv-amount-row">
+            <input type="number" class="conv-amount" id="toAmount" placeholder="0.00" readonly style="color:var(--green)"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rate-display" id="rateDisplay">Select assets to see conversion rate</div>
+  </div>
+
+  <!-- 7-Day Chart -->
+  <div class="mini-chart-section">
+    <h3><i class="fas fa-chart-line" style="color:var(--yellow)"></i> 7-Day Trend <span id="chartPairLabel" style="color:var(--t3);font-weight:400"></span></h3>
+    <div class="mini-chart-wrap">
+      <canvas id="miniChart"></canvas>
+    </div>
+    <div class="chart-labels" id="chartLabels"></div>
+  </div>
+
+  <!-- Info Grid -->
+  <div class="conv-info-grid">
+    <div class="conv-info-card">
+      <div class="conv-info-label">1 <span id="infoFrom1">--</span> =</div>
+      <div class="conv-info-val" id="info1to1">--</div>
+    </div>
+    <div class="conv-info-card">
+      <div class="conv-info-label">IDR Rate (1 USD)</div>
+      <div class="conv-info-val">Rp 16,250</div>
+    </div>
+    <div class="conv-info-card">
+      <div class="conv-info-label">24H Change</div>
+      <div class="conv-info-val" id="info24hChange">--</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+const IDR_RATE = 16250;
+const COIN_COLORS_C = {BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',ADA:'#3CCAB0',AVAX:'#E84142',DOGE:'#C2A633',DOT:'#E6007A',MATIC:'#8247E5',LINK:'#2A5ADA',UNI:'#FF007A',LTC:'#BFBBBB',ATOM:'#6F7390',XLM:'#14B6E7',TRX:'#FF0013',ETC:'#328332',FIL:'#0090FF',NEAR:'#00C1DE',ARB:'#28A0F0'};
+
+function getUSDPrice(assetId) {
+  if (assetId === 'USD' || assetId === 'USDT') return 1;
+  if (assetId === 'IDR') return 1 / IDR_RATE;
+  const coin = COINS.find(c => c.id === assetId);
+  return coin ? coin.price : 0;
+}
+
+function populateSelects() {
+  const opts = [
+    { id: 'USD',  name: 'US Dollar',          sym: 'USD' },
+    { id: 'IDR',  name: 'Indonesian Rupiah',   sym: 'IDR' },
+    ...COINS.map(c => ({ id: c.id, name: c.name, sym: c.id }))
+  ];
+  ['fromAsset','toAsset'].forEach(selId => {
+    const sel = document.getElementById(selId);
+    sel.innerHTML = opts.map(o =>
+      `<option value="${o.id}">${o.sym} - ${o.name}</option>`
+    ).join('');
+  });
+  document.getElementById('fromAsset').value = 'BTC';
+  document.getElementById('toAsset').value = 'USD';
+}
+
+function fmtResult(n) {
+  // Always use en-US locale to avoid comma-as-decimal (Indonesian browser default)
+  if (n === 0) return '0';
+  if (n >= 1000000000) return n.toLocaleString('en-US', {maximumFractionDigits: 2});
+  if (n >= 1000)       return n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  if (n >= 1)          return n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4});
+  if (n >= 0.0001)     return n.toFixed(6);
+  return n.toFixed(10);
+}
+
+function fmtRate(n) {
+  if (n >= 1000000) return n.toLocaleString('en-US', {maximumFractionDigits: 2});
+  if (n >= 1)       return n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4});
+  return n.toFixed(8);
+}
+
+function calculate() {
+  const fromId = document.getElementById('fromAsset').value;
+  const toId = document.getElementById('toAsset').value;
+  const fromAmt = parseFloat(document.getElementById('fromAmount').value) || 0;
+
+  const fromUSD = getUSDPrice(fromId);
+  const toUSD = getUSDPrice(toId);
+
+  if (!fromUSD || !toUSD) return;
+
+  const result = (fromAmt * fromUSD) / toUSD;
+  document.getElementById('toAmount').value = fmtResult(result);
+
+  updateRateDisplay(fromId, toId, fromUSD, toUSD);
+  update1to1(fromId, toId, fromUSD, toUSD);
+  update24hChange(fromId, toId);
+}
+
+function updateRateDisplay(fromId, toId, fromUSD, toUSD) {
+  const rate = fromUSD / toUSD;
+  const rateStr = fmtRate(rate);
+  document.getElementById('rateDisplay').innerHTML = `<strong>1 ${fromId} = ${rateStr} ${toId}</strong> &nbsp;&nbsp; <span style="color:var(--green);font-size:11px"><i class="fas fa-circle" style="font-size:7px"></i> Live rate</span>`;
+  document.getElementById('chartPairLabel').textContent = fromId + ' / ' + toId;
+}
+
+function update1to1(fromId, toId, fromUSD, toUSD) {
+  const rate = fromUSD / toUSD;
+  document.getElementById('infoFrom1').textContent = fromId;
+  document.getElementById('info1to1').textContent = fmtRate(rate) + ' ' + toId;
+}
+
+function update24hChange(fromId, toId) {
+  const fromCoin = COINS.find(c => c.id === fromId);
+  const toCoin = COINS.find(c => c.id === toId);
+  let change = 0;
+  if (fromCoin) change += fromCoin.change;
+  if (toCoin) change -= toCoin.change;
+  const el = document.getElementById('info24hChange');
+  el.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
+  el.style.color = change >= 0 ? 'var(--green)' : 'var(--red)';
+}
+
+function onFromChange() { calculate(); drawMiniChart(); }
+function onToChange() { calculate(); drawMiniChart(); }
+
+function swapAssets() {
+  const fromSel = document.getElementById('fromAsset');
+  const toSel = document.getElementById('toAsset');
+  const fromVal = fromSel.value;
+  fromSel.value = toSel.value;
+  toSel.value = fromVal;
+  calculate();
+  drawMiniChart();
+  updateQuickBtns();
+}
+
+function quickPair(from, to) {
+  document.getElementById('fromAsset').value = from;
+  document.getElementById('toAsset').value = to;
+  document.getElementById('fromAmount').value = 1;
+  calculate();
+  drawMiniChart();
+  updateQuickBtns();
+}
+
+function updateQuickBtns() {
+  const from = document.getElementById('fromAsset').value;
+  const to = document.getElementById('toAsset').value;
+  document.querySelectorAll('.qp-btn').forEach(btn => {
+    const txt = btn.textContent.replace(/\s+/g,'');
+    const match = txt.replace('→','→') === (from + '→' + to);
+    btn.classList.toggle('active', match);
+  });
+}
+
+function drawMiniChart() {
+  const fromId = document.getElementById('fromAsset').value;
+  const toId = document.getElementById('toAsset').value;
+  const fromCoin = COINS.find(c => c.id === fromId);
+  const basePrice = fromCoin ? fromCoin.price : 1;
+
+  const fromUSD = getUSDPrice(fromId);
+  const toUSD = getUSDPrice(toId);
+
+  // Generate 7 days of candles
+  const candles = generateCandles(basePrice, 7);
+  const ratios = candles.map(c => (c.close * fromUSD) / toUSD);
+
+  const cv = document.getElementById('miniChart');
+  cv.width = cv.parentElement.clientWidth || 800;
+  cv.height = 120;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+
+  const W = cv.width, H = cv.height;
+  const pad = { top: 10, right: 10, bottom: 10, left: 10 };
+  const mn = Math.min(...ratios), mx = Math.max(...ratios);
+  const rng = mx - mn || 1;
+  const isUp = ratios[ratios.length-1] >= ratios[0];
+
+  const points = ratios.map((v, i) => ({
+    x: pad.left + (i / (ratios.length-1)) * (W - pad.left - pad.right),
+    y: pad.top + (1 - (v - mn) / rng) * (H - pad.top - pad.bottom)
+  }));
+
+  // Gradient fill
+  const grad = ctx.createLinearGradient(0, pad.top, 0, H - pad.bottom);
+  grad.addColorStop(0, isUp ? 'rgba(2,192,118,0.3)' : 'rgba(246,70,93,0.3)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+  ctx.beginPath();
+  points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+  ctx.lineTo(points[points.length-1].x, H - pad.bottom);
+  ctx.lineTo(points[0].x, H - pad.bottom);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = isUp ? '#02c076' : '#f6465d';
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+  ctx.stroke();
+
+  // Labels
+  const days = ['7d ago','6d','5d','4d','3d','2d','Today'];
+  const labelEl = document.getElementById('chartLabels');
+  labelEl.innerHTML = days.map(d => `<span>${d}</span>`).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  populateSelects();
+  calculate();
+  drawMiniChart();
+
+  setInterval(() => {
+    calculate();
+    if (document.visibilityState === 'visible') drawMiniChart();
+  }, 5000);
+});
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -10,10 +10,21 @@
 <meta name="apple-mobile-web-app-title" content="CryptoX"/>
 <link rel="manifest" href="/manifest.json"/>
 <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
-<title>Deposit – CryptoX</title>
+<title>Deposit | CryptoX</title>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+@media(max-width:768px){
+  .dash-main>div[style]{display:block!important;width:100%!important}
+  .dash-main>div[style]>div{width:100%!important;margin-bottom:16px!important;min-width:0!important}
+  #coinGrid{grid-template-columns:repeat(3,1fr)!important}
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+}
+@media(max-width:480px){
+  #coinGrid{grid-template-columns:repeat(2,1fr)!important}
+}
+</style>
 </head>
 <body class="dash-body">
 <nav class="navbar">
@@ -180,7 +191,7 @@ function selectCoin(coin) {
     <div onclick="selectNet(${i})" class="network-item ${i===0?'active':''}" id="net_${i}">
       <div>
         <div class="network-name">${n.name}</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:2px">~${n.conf} confirmations · ${n.time}</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px">~${n.conf} confirmations &rsaquo; ${n.time}</div>
       </div>
       <span class="network-tag">${n.tag}</span>
     </div>`).join('');

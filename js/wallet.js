@@ -87,20 +87,19 @@ function updateRateDisplay() {
   const el = id => document.getElementById(id);
   if (el('rate-USD')) el('rate-USD').textContent = '1.00';
   if (el('rate-IDR')) el('rate-IDR').textContent = fmtIDR(IDR_RATE) + ' / $1';
-  if (el('rate-BTC')) el('rate-BTC').textContent = (1 / getBtcPrice()).toFixed(8);
-  if (el('rate-ETH')) el('rate-ETH').textContent = (1 / getEthPrice()).toFixed(6);
+  if (el('rate-BTC')) el('rate-BTC').textContent = '~ $' + getBtcPrice().toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+  if (el('rate-ETH')) el('rate-ETH').textContent = '~ $' + getEthPrice().toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
   // Highlight active item
   document.querySelectorAll('.cur-drop-item').forEach(item => {
     item.classList.toggle('active', item.dataset.cur === activeCurrency);
   });
-  // Update button label
-  const activeItem = document.querySelector(`.cur-drop-item[data-cur="${activeCurrency}"]`);
-  if (activeItem) {
-    const flagEl = document.getElementById('curSelFlag');
-    const lblEl  = document.getElementById('curSelLabel');
-    if (flagEl) flagEl.textContent = activeItem.dataset.flag;
-    if (lblEl)  lblEl.textContent  = activeCurrency;
+  // Update button flag icon & label (class-based, no emoji)
+  const flagEl = document.getElementById('curSelFlag');
+  const lblEl  = document.getElementById('curSelLabel');
+  if (flagEl) {
+    flagEl.className = 'cur-flag-icon cur-flag-' + activeCurrency.toLowerCase();
   }
+  if (lblEl) lblEl.textContent = activeCurrency;
 }
 
 // ── Dropdown Handlers ─────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -10,10 +10,20 @@
 <meta name="apple-mobile-web-app-title" content="CryptoX"/>
 <link rel="manifest" href="/manifest.json"/>
 <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
-<title>Account Settings – CryptoX</title>
+<title>Profile | CryptoX</title>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+@media(max-width:768px){
+  .dash-main>div[style*="grid-template-columns"]{display:block!important;width:100%!important}
+  .dash-main>div[style*="grid-template-columns"]>div{width:100%!important;margin-bottom:16px!important}
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr 1fr!important}
+  [style*="grid-template-columns:220px 1fr"]{display:block!important}
+  [style*="grid-template-columns:220px 1fr"]>div{width:100%!important;margin-bottom:16px!important}
+}
+</style>
 </head>
 <body class="dash-body">
 <nav class="navbar">
@@ -132,7 +142,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
                   <div style="display:flex;align-items:center;gap:10px">
                     <div style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">1</div>
-                    <div><div style="font-weight:700">Basic Verification</div><div style="font-size:12px;color:var(--t2);margin-top:2px">Email • Phone</div></div>
+                    <div><div style="font-weight:700">Basic Verification</div><div style="font-size:12px;color:var(--t2);margin-top:2px">Email &rsaquo; Phone</div></div>
                   </div>
                   <span class="status-pill sp-filled"><i class="fas fa-check"></i> Complete</span>
                 </div>
@@ -146,12 +156,12 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
                   <div style="display:flex;align-items:center;gap:10px">
                     <div style="width:30px;height:30px;border-radius:50%;background:var(--bg5);color:var(--t2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">2</div>
-                    <div><div style="font-weight:700">Identity Verification</div><div style="font-size:12px;color:var(--t2);margin-top:2px">Government ID • Selfie</div></div>
+                    <div><div style="font-weight:700">Identity Verification</div><div style="font-size:12px;color:var(--t2);margin-top:2px">Government ID &rsaquo; Selfie</div></div>
                   </div>
                   <span class="status-pill sp-pending" id="kyc2Status">Not Started</span>
                 </div>
                 <div style="font-size:12px;color:var(--t3);display:flex;gap:16px;margin-bottom:14px">
-                  <span>• Fiat on/off ramp</span><span>• P2P trading</span><span>• Daily withdraw: 100 BTC</span>
+                  <span>&rsaquo; Fiat on/off ramp</span><span>&rsaquo; P2P trading</span><span>&rsaquo; Daily withdraw: 100 BTC</span>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
                   <div class="form-group" style="margin-bottom:0"><label>Document Type</label><select class="form-select" id="kycDocType"><option value="passport">Passport</option><option value="national_id">National ID</option><option value="driver_license">Driver's License</option></select></div>

@@ -60,4 +60,14 @@
 @media(max-width:768px) {
   .admin-sidebar { display: none; }
   .astat-grid { grid-template-columns: repeat(2,1fr); }
+  .admin-content { padding: 12px !important; overflow-x: hidden; }
+  .admin-topbar { padding: 0 12px !important; }
+  .user-detail-grid { grid-template-columns: 1fr 1fr; }
+  .admin-charts-row, .admin-tables-row { grid-template-columns: 1fr; }
+  .admin-card-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+@media(max-width:480px) {
+  .astat-grid { grid-template-columns: 1fr 1fr; }
+  .user-detail-grid { grid-template-columns: 1fr; }
+  .astat-val { font-size: 18px !important; }
 }

@@ -4,5 +4,8 @@ nixPkgs = ["python3", "gcc", "gnumake"]
 [phases.install]
 cmds = ["npm ci --prefer-offline || npm install"]
 
+[phases.build]
+cmds = []
+
 [start]
 cmd = "node server/app.js"

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -10,10 +10,12 @@
 <meta name="apple-mobile-web-app-title" content="CryptoX"/>
 <link rel="manifest" href="/manifest.json"/>
 <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
-<title>Spot Trading – CryptoX</title>
+<title>Trade | CryptoX</title>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<!-- TradingView Lightweight Charts -->
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <style>
 /* ===== TRADE PAGE SPECIFIC ===== */
 .trade-body{margin:0;padding:0;overflow:hidden;height:100vh;display:flex;flex-direction:column;background:var(--bg)}
@@ -37,7 +39,7 @@
 .trade-panel{overflow-y:auto;border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0}
 .trade-panel:last-child{border-right:none;border-left:1px solid var(--border)}
 /* Center layout */
-.chart-area{flex-shrink:0}
+.chart-area{height:340px;min-height:340px;flex-shrink:0;position:relative;width:100%;display:block;overflow:visible}
 .order-area{display:grid;grid-template-columns:1fr 1fr;flex-shrink:0;border-top:1px solid var(--border)}
 .order-side{padding:12px 14px;border-right:1px solid var(--border)}
 .order-side:last-child{border-right:none}
@@ -221,7 +223,7 @@
   </div>
 
   <!-- ------ CENTER: CHART + ORDER FORM + BOTTOM PANEL ------ -->
-  <div class="trade-panel" style="border-right:none;overflow:hidden">
+  <div class="trade-panel" style="border-right:none;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;min-width:0;min-height:0;">
     <!-- Chart Toolbar -->
     <div class="ct-bar">
       <button class="ct-b" data-i="1m">1m</button>
@@ -245,9 +247,8 @@
     </div>
 
     <!-- Chart Canvas -->
-    <div class="chart-area" style="background:var(--bg);position:relative;flex-shrink:0">
-      <canvas id="tradeChart" style="display:block;height:310px"></canvas>
-      <!-- Live price overlay -->
+    <div class="chart-area" style="background:#0b0e11;position:relative;flex-shrink:0;height:340px;min-height:340px;width:100%;display:block;">
+      <canvas id="tradeChart" style="display:block;width:100%;height:340px;" width="800" height="340"></canvas><div id="tvChart" style="display:none;height:340px;width:100%;position:absolute;top:0;left:0;"></div>
       <div id="chartPriceTag" style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:2px 6px;border-radius:3px 0 0 3px;pointer-events:none"></div>
     </div>
 
@@ -358,7 +359,7 @@
           <label style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3);cursor:pointer">
             <input type="checkbox" id="filterCurrentPair" onchange="loadOpenOrders()" style="accent-color:var(--yellow)"/> Current Pair Only
           </label>
-          <a href="orders.html" style="font-size:11px;color:var(--yellow)">All Orders ›</a>
+          <a href="orders.html" style="font-size:11px;color:var(--yellow)">All Orders &rsaquo;</a>
         </div>
       </div>
       <div style="overflow-x:auto;flex:1">
@@ -417,7 +418,7 @@
         <span style="text-align:right">Total</span>
       </div>
 
-      <!-- ASKS (sell orders — red) -->
+      <!-- ASKS (sell orders &rsaquo; red) -->
       <div class="ob-asks-wrap" id="obAsksWrap" style="flex:1;overflow:hidden;display:flex;flex-direction:column-reverse">
         <div id="obAsks"></div>
       </div>
@@ -427,7 +428,7 @@
         <div>
           <div class="ob-mid-price positive" id="obMidPrice">--</div>
           <div class="ob-mid-usd">
-            <span style="color:var(--t3)">˜ $</span><span id="obMidUsd">--</span>
+            <span style="color:var(--t3)">&rsaquo; $</span><span id="obMidUsd">--</span>
             <span style="color:var(--t3);margin-left:4px" id="obSpread"></span>
           </div>
         </div>
@@ -437,7 +438,7 @@
         </div>
       </div>
 
-      <!-- BIDS (buy orders — green) -->
+      <!-- BIDS (buy orders &rsaquo; green) -->
       <div class="ob-bids-wrap" id="obBidsWrap" style="flex:1;overflow:hidden">
         <div id="obBids"></div>
       </div>
@@ -469,12 +470,34 @@
 <script src="js/chart.js"></script>
 <script src="js/trade.js"></script>
 <script>
-// Backup: redraw chart at multiple intervals
+// Direct canvas chart init â€” no dependency on tvChart
 window.addEventListener('load', function() {
-  [100, 400, 800].forEach(function(ms) {
-    setTimeout(function() {
-      if (typeof loadChartData === 'function') loadChartData();
-    }, ms);
+  function drawChart() {
+    var cv = document.getElementById('tradeChart');
+    if (!cv) { console.error('[Chart] tradeChart canvas not found'); return; }
+    var parent = cv.parentElement;
+    var w = 0;
+    if (parent) {
+      w = parent.getBoundingClientRect().width || parent.clientWidth || parent.offsetWidth;
+    }
+    if (w < 10) {
+      // Force width from trade-wrap layout
+      w = window.innerWidth - 490;
+    }
+    w = Math.max(Math.floor(w), 300);
+    cv.width  = w;
+    cv.height = 340;
+    cv.style.display = 'block';
+    cv.style.width   = w + 'px';
+    cv.style.height  = '340px';
+    console.log('[Chart] Drawing canvas, w=' + w);
+    if (typeof loadChartData === 'function') {
+      loadChartData();
+    }
+  }
+  // Multiple retries
+  [50, 200, 500, 1000, 2000].forEach(function(ms) {
+    setTimeout(drawChart, ms);
   });
 });
 </script>

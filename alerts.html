@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#0b0e11"/>
+<title>Price Alerts | CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+.alerts-body { min-height: 100vh; background: var(--bg); }
+.alerts-container { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+.alerts-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.alerts-title { font-size: 24px; font-weight: 800; color: var(--white); }
+.alerts-stats { display: flex; gap: 16px; }
+.stat-chip { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--t2); }
+.stat-chip span { font-weight: 700; color: var(--white); }
+.alerts-grid { display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start; }
+.add-alert-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius2); padding: 24px; }
+.add-alert-card h3 { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 11px; color: var(--t3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 600; }
+.form-input, .form-select { width: 100%; height: 38px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 0 12px; color: var(--t1); font-size: 13px; outline: none; transition: border 0.15s; }
+.form-input:focus, .form-select:focus { border-color: var(--yellow); }
+.form-select { cursor: pointer; }
+.dir-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.dir-btn { height: 38px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg3); color: var(--t2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.dir-btn:hover { border-color: var(--border2); color: var(--t1); }
+.dir-btn.active-above { background: rgba(2,192,118,0.1); border-color: var(--green); color: var(--green); }
+.dir-btn.active-below { background: rgba(246,70,93,0.1); border-color: var(--red); color: var(--red); }
+.preview-row { background: var(--bg3); border-radius: var(--radius); padding: 10px 14px; font-size: 12px; color: var(--t2); margin-bottom: 14px; min-height: 36px; display: flex; align-items: center; gap: 6px; }
+.alerts-list-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius2); overflow: hidden; }
+.alerts-list-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.alerts-list-head h3 { font-size: 15px; font-weight: 700; color: var(--white); }
+.alerts-table { width: 100%; border-collapse: collapse; }
+.alerts-table th { padding: 10px 16px; font-size: 11px; color: var(--t3); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; background: var(--bg3); }
+.alerts-table td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.alerts-table tr:last-child td { border-bottom: none; }
+.alerts-table tr:hover td { background: rgba(255,255,255,0.015); }
+.alert-coin-cell { display: flex; align-items: center; gap: 10px; }
+.alert-coin-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; }
+.alert-status { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.status-active { background: rgba(2,192,118,0.1); color: var(--green); }
+.status-triggered { background: rgba(246,70,93,0.1); color: var(--red); }
+.type-above { color: var(--green); font-weight: 700; }
+.type-below { color: var(--red); font-weight: 700; }
+.del-btn { width: 28px; height: 28px; border-radius: var(--radius); background: transparent; border: 1px solid var(--border); color: var(--t3); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all 0.15s; }
+.del-btn:hover { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+.empty-state { padding: 48px 20px; text-align: center; color: var(--t3); }
+.empty-state i { font-size: 36px; margin-bottom: 12px; display: block; opacity: 0.4; }
+.notif-banner { background: rgba(240,185,11,0.08); border: 1px solid rgba(240,185,11,0.25); border-radius: var(--radius2); padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--t1); }
+.notif-banner i { color: var(--yellow); }
+@media(max-width:768px){
+  .alerts-grid { grid-template-columns: 1fr; }
+  .alerts-container { padding: 16px; }
+  .alerts-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+</style>
+</head>
+<body class="alerts-body">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg>
+    <span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='index.html'">Markets</button>
+    <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab" onclick="location.href='converter.html'">Converter</button>
+    <button class="nav-tab" onclick="location.href='news.html'">News</button>
+    <button class="nav-tab active"><i class="fas fa-bell" style="font-size:11px"></i> Alerts</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="login.html" style="color:var(--t2);font-size:13px;font-weight:600;padding:0 12px">Log In</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+    <div class="nav-divider"></div>
+    <button class="nav-icon-btn" id="themeBtn" title="Theme"><i class="fas fa-sun"></i></button>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="alerts-container">
+
+  <!-- Notification permission banner -->
+  <div class="notif-banner" id="notifBanner" style="display:none">
+    <i class="fas fa-bell"></i>
+    <span>Enable browser notifications to receive price alerts even when you switch tabs.</span>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto;flex-shrink:0" onclick="requestNotifPerm()">Enable Notifications</button>
+  </div>
+
+  <div class="alerts-header">
+    <div>
+      <div class="alerts-title"><i class="fas fa-bell" style="color:var(--yellow);margin-right:8px"></i>Price Alerts</div>
+      <p style="color:var(--t3);font-size:13px;margin-top:4px">Get notified when prices hit your targets</p>
+    </div>
+    <div class="alerts-stats" id="alertsStats">
+      <div class="stat-chip">Total: <span id="statTotal">0</span></div>
+      <div class="stat-chip">Active: <span id="statActive" style="color:var(--green)">0</span></div>
+      <div class="stat-chip">Triggered: <span id="statTriggered" style="color:var(--red)">0</span></div>
+    </div>
+  </div>
+
+  <div class="alerts-grid">
+    <!-- Add Alert Form -->
+    <div class="add-alert-card">
+      <h3><i class="fas fa-plus-circle" style="color:var(--yellow)"></i> Add New Alert</h3>
+
+      <div class="form-group">
+        <label class="form-label">Coin</label>
+        <select class="form-select" id="alertCoin" onchange="updatePreview()">
+          <option value="">Select a coin...</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Current Price</label>
+        <div style="height:38px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;display:flex;align-items:center;font-size:13px;color:var(--t2)" id="currentPriceDisplay">-- Select a coin first</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Target Price (USD)</label>
+        <input type="number" class="form-input" id="alertPrice" placeholder="e.g. 70000" oninput="updatePreview()" step="any" min="0"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Alert Direction</label>
+        <div class="dir-row">
+          <button class="dir-btn active-above" id="dirAbove" onclick="setDir('above')">
+            <i class="fas fa-arrow-up"></i> Price Above
+          </button>
+          <button class="dir-btn" id="dirBelow" onclick="setDir('below')">
+            <i class="fas fa-arrow-down"></i> Price Below
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Note (optional)</label>
+        <input type="text" class="form-input" id="alertNote" placeholder="e.g. Sell signal" maxlength="80"/>
+      </div>
+
+      <!-- Preview -->
+      <div class="preview-row" id="alertPreview">
+        <i class="fas fa-info-circle" style="color:var(--yellow);flex-shrink:0"></i>
+        Select a coin and target price to preview your alert
+      </div>
+
+      <button class="btn btn-primary btn-full" onclick="addNewAlert()" style="height:42px;font-size:14px">
+        <i class="fas fa-bell"></i> Set Alert
+      </button>
+    </div>
+
+    <!-- Alerts List -->
+    <div class="alerts-list-card">
+      <div class="alerts-list-head">
+        <h3><i class="fas fa-list-check" style="color:var(--yellow);margin-right:6px"></i> My Alerts</h3>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-dark btn-sm" onclick="clearTriggered()"><i class="fas fa-broom"></i> Clear Triggered</button>
+          <button class="btn btn-dark btn-sm" onclick="clearAll()" style="color:var(--red)"><i class="fas fa-trash"></i> Clear All</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="alerts-table">
+          <thead>
+            <tr>
+              <th>Coin</th>
+              <th>Type</th>
+              <th>Target Price</th>
+              <th>Current Price</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody id="alertsTbody"></tbody>
+        </table>
+        <div id="alertsEmptyState" class="empty-state" style="display:none">
+          <i class="fas fa-bell-slash"></i>
+          <div style="font-size:14px;font-weight:600;color:var(--t2);margin-bottom:6px">No Alerts Yet</div>
+          <div style="font-size:12px">Create your first price alert using the form on the left.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/alerts.js"></script>
+<script src="js/main.js"></script>
+<script>
+const COIN_COLORS_A = {BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',ADA:'#3CCAB0',AVAX:'#E84142',DOGE:'#C2A633',DOT:'#E6007A',MATIC:'#8247E5',LINK:'#2A5ADA',UNI:'#FF007A',LTC:'#BFBBBB',ATOM:'#6F7390',XLM:'#14B6E7',TRX:'#FF0013',ETC:'#328332',FIL:'#0090FF',NEAR:'#00C1DE',ARB:'#28A0F0'};
+let alertDir = 'above';
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Check notif permission
+  if ('Notification' in window && Notification.permission === 'default') {
+    document.getElementById('notifBanner').style.display = 'flex';
+  }
+
+  // Populate coin select
+  const sel = document.getElementById('alertCoin');
+  COINS.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = c.id + ' - ' + c.name;
+    sel.appendChild(opt);
+  });
+
+  renderAlertsList();
+  priceAlerts.startChecking(5000);
+
+  // Update current prices in table every 3s
+  setInterval(() => {
+    updateCurrentPriceDisplay();
+    if (document.visibilityState === 'visible') renderAlertsList();
+  }, 3000);
+});
+
+function requestNotifPerm() {
+  if ('Notification' in window) {
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted') {
+        document.getElementById('notifBanner').style.display = 'none';
+        showToast('Notifications enabled!', 't-success');
+      }
+    });
+  }
+}
+
+function setDir(dir) {
+  alertDir = dir;
+  document.getElementById('dirAbove').className = dir === 'above' ? 'dir-btn active-above' : 'dir-btn';
+  document.getElementById('dirBelow').className = dir === 'below' ? 'dir-btn active-below' : 'dir-btn';
+  updatePreview();
+}
+
+function updateCurrentPriceDisplay() {
+  const coinId = document.getElementById('alertCoin').value;
+  if (!coinId) return;
+  const coin = COINS.find(c => c.id === coinId);
+  if (!coin) return;
+  const el = document.getElementById('currentPriceDisplay');
+  const priceStr = coin.price >= 1 ? '$' + coin.price.toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2}) : '$' + coin.price.toFixed(6);
+  el.textContent = priceStr;
+  el.style.color = 'var(--white)';
+}
+
+function updatePreview() {
+  const coinId = document.getElementById('alertCoin').value;
+  const price = parseFloat(document.getElementById('alertPrice').value);
+  const prev = document.getElementById('alertPreview');
+
+  updateCurrentPriceDisplay();
+
+  if (!coinId || isNaN(price) || price <= 0) {
+    prev.innerHTML = '<i class="fas fa-info-circle" style="color:var(--yellow);flex-shrink:0"></i> Select a coin and target price to preview your alert';
+    return;
+  }
+
+  const fmtTarget = price >= 1 ? '$' + price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '$' + price.toFixed(6);
+  const arrowIcon = alertDir === 'above' ? '<i class="fas fa-arrow-up" style="color:var(--green)"></i>' : '<i class="fas fa-arrow-down" style="color:var(--red)"></i>';
+  prev.innerHTML = `${arrowIcon} <strong style="color:var(--white)">${coinId}</strong> price goes <strong style="color:${alertDir==='above'?'var(--green)':'var(--red)'}">${alertDir}</strong> ${fmtTarget}`;
+}
+
+function addNewAlert() {
+  const coinId = document.getElementById('alertCoin').value;
+  const price = parseFloat(document.getElementById('alertPrice').value);
+  const note = document.getElementById('alertNote').value.trim();
+
+  if (!coinId) { showToast('Please select a coin', 't-error'); return; }
+  if (isNaN(price) || price <= 0) { showToast('Please enter a valid target price', 't-error'); return; }
+
+  priceAlerts.addAlert(coinId, price, alertDir, note);
+  showToast('Alert created for ' + coinId + '!', 't-success');
+
+  // Reset form
+  document.getElementById('alertCoin').value = '';
+  document.getElementById('alertPrice').value = '';
+  document.getElementById('alertNote').value = '';
+  document.getElementById('currentPriceDisplay').textContent = '-- Select a coin first';
+  document.getElementById('currentPriceDisplay').style.color = '';
+  updatePreview();
+  renderAlertsList();
+}
+
+function renderAlertsList() {
+  const alerts = priceAlerts.getAlerts();
+  const tbody = document.getElementById('alertsTbody');
+  const empty = document.getElementById('alertsEmptyState');
+  const stats = priceAlerts.getStats();
+
+  document.getElementById('statTotal').textContent = stats.total;
+  document.getElementById('statActive').textContent = stats.active;
+  document.getElementById('statTriggered').textContent = stats.triggered;
+
+  if (!alerts.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const sorted = [...alerts].sort((a, b) => b.createdAt - a.createdAt);
+  tbody.innerHTML = sorted.map(alert => {
+    const coin = COINS.find(c => c.id === alert.coin);
+    const currentPrice = coin ? coin.price : 0;
+    const color = COIN_COLORS_A[alert.coin] || '#888';
+    const fmtTarget = alert.targetPrice >= 1 ? '$' + alert.targetPrice.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '$' + alert.targetPrice.toFixed(6);
+    const fmtCurrent = currentPrice >= 1 ? '$' + currentPrice.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '$' + currentPrice.toFixed(6);
+    const timeAgo = timeSince(alert.createdAt);
+    const statusHtml = alert.triggered
+      ? `<span class="alert-status status-triggered"><i class="fas fa-check-circle"></i> Triggered</span>`
+      : `<span class="alert-status status-active"><i class="fas fa-circle-dot"></i> Active</span>`;
+    const rowStyle = alert.triggered ? 'opacity:0.7;' : '';
+
+    return `<tr style="${rowStyle}">
+      <td>
+        <div class="alert-coin-cell">
+          <div class="alert-coin-icon" style="background:${color}22;color:${color}">${alert.coin.slice(0,3)}</div>
+          <div>
+            <div style="font-weight:700;color:var(--white)">${alert.coin}</div>
+            ${alert.note ? `<div style="font-size:11px;color:var(--t3)">${alert.note}</div>` : ''}
+          </div>
+        </div>
+      </td>
+      <td class="${alert.direction === 'above' ? 'type-above' : 'type-below'}">
+        <i class="fas fa-arrow-${alert.direction === 'above' ? 'up' : 'down'}"></i> ${alert.direction.charAt(0).toUpperCase() + alert.direction.slice(1)}
+      </td>
+      <td style="font-weight:700;color:var(--white)">${fmtTarget}</td>
+      <td style="color:var(--t1)">${fmtCurrent}</td>
+      <td>${statusHtml}</td>
+      <td style="color:var(--t3);font-size:12px">${timeAgo}</td>
+      <td>
+        <button class="del-btn" onclick="deleteAlert('${alert.id}')" title="Delete alert">
+          <i class="fas fa-times"></i>
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function deleteAlert(id) {
+  priceAlerts.removeAlert(id);
+  renderAlertsList();
+  showToast('Alert removed', 't-info');
+}
+
+function clearTriggered() {
+  const alerts = priceAlerts.getAlerts().filter(a => !a.triggered);
+  localStorage.setItem('cx_price_alerts', JSON.stringify(alerts));
+  renderAlertsList();
+  showToast('Triggered alerts cleared', 't-info');
+}
+
+function clearAll() {
+  if (!confirm('Clear all alerts? This cannot be undone.')) return;
+  localStorage.setItem('cx_price_alerts', '[]');
+  renderAlertsList();
+  showToast('All alerts cleared', 't-info');
+}
+
+function timeSince(ms) {
+  const s = Math.floor((Date.now() - ms) / 1000);
+  if (s < 60) return s + 's ago';
+  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  if (s < 86400) return Math.floor(s/3600) + 'h ago';
+  return Math.floor(s/86400) + 'd ago';
+}
+</script>
+</body>
+</html>

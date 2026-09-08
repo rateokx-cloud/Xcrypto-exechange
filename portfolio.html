@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#0b0e11"/>
+<title>Portfolio | CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+.pf-perf-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.pf-perf-row:last-child { border-bottom:none; }
+.pf-asset-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+.pf-asset-row:last-child { border-bottom:none; }
+.pf-asset-icon { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; flex-shrink:0; }
+.alloc-bar { height:6px; border-radius:3px; flex:1; min-width:40px; max-width:120px; }
+canvas#pfLineChart { width:100%!important; height:160px!important; display:block; }
+canvas#pfPieChart { display:block; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--t2); margin-bottom:4px; }
+.legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+</style>
+</head>
+<body class="dash-body">
+
+<!-- NAVBAR (same as dashboard) -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="30" rx="6" fill="#f0b90b"/><path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/><path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/><path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/></svg>
+    <span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='index.html'">Markets</button>
+    <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab" onclick="location.href='converter.html'">Converter</button>
+    <button class="nav-tab" onclick="location.href='news.html'">News</button>
+    <button class="nav-tab" onclick="location.href='alerts.html'">Alerts</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="deposit.html" class="btn btn-primary btn-sm"><i class="fas fa-arrow-down"></i> Deposit</a>
+    <a href="trade.html" class="btn btn-dark btn-sm"><i class="fas fa-chart-line"></i> Trade</a>
+    <div class="user-nav">
+      <div class="avatar" id="navAv">--</div>
+      <i class="fas fa-chevron-down" style="font-size:9px;color:var(--t3)"></i>
+      <div class="dropdown">
+        <div class="drop-item" onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</div>
+        <div class="drop-item" onclick="location.href='wallet.html'"><i class="fas fa-wallet"></i> Assets</div>
+        <div class="drop-item" onclick="location.href='portfolio.html'"><i class="fas fa-chart-pie"></i> Portfolio</div>
+        <div class="drop-item" onclick="location.href='orders.html'"><i class="fas fa-list"></i> Orders</div>
+        <div class="drop-item" onclick="location.href='profile.html'"><i class="fas fa-user-cog"></i> Profile</div>
+        <div class="drop-divider"></div>
+        <div class="drop-item" style="color:var(--red)" onclick="authLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</div>
+      </div>
+    </div>
+    <button class="nav-icon-btn" style="position:relative" title="Notifications">
+      <i class="fas fa-bell"></i>
+    </button>
+  </div>
+</nav>
+
+<div class="portfolio-layout">
+  <!-- SIDEBAR -->
+  <aside class="dash-sidebar">
+    <div class="ds-section">Overview</div>
+    <a href="dashboard.html" class="ds-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+    <a href="wallet.html" class="ds-item"><i class="fas fa-wallet"></i><span>Assets</span></a>
+    <a href="portfolio.html" class="ds-item active"><i class="fas fa-chart-pie"></i><span>Portfolio</span></a>
+    <a href="orders.html" class="ds-item"><i class="fas fa-list-alt"></i><span>Orders</span></a>
+    <div class="ds-section">Tools</div>
+    <a href="alerts.html" class="ds-item"><i class="fas fa-bell"></i><span>Alerts</span></a>
+    <a href="converter.html" class="ds-item"><i class="fas fa-exchange-alt"></i><span>Converter</span></a>
+    <a href="news.html" class="ds-item"><i class="fas fa-newspaper"></i><span>News</span></a>
+    <div class="ds-section">Account</div>
+    <a href="profile.html" class="ds-item"><i class="fas fa-user"></i><span>Profile</span></a>
+    <a href="profile.html#security" class="ds-item"><i class="fas fa-shield-alt"></i><span>Security</span></a>
+    <a href="profile.html#kyc" class="ds-item"><i class="fas fa-id-card"></i><span>KYC</span></a>
+    <div class="ds-section">Earn</div>
+    <a href="earn.html" class="ds-item"><i class="fas fa-coins"></i><span>Earn</span></a>
+    <a href="profile.html#referral" class="ds-item"><i class="fas fa-gift"></i><span>Rewards</span><span class="ds-badge green">New</span></a>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="portfolio-main">
+    <div class="portfolio-header">
+      <div>
+        <h2 style="font-size:20px;font-weight:800;color:var(--white);margin-bottom:4px">Portfolio Analytics</h2>
+        <p style="color:var(--t3);font-size:13px">Comprehensive view of your crypto holdings and performance</p>
+      </div>
+      <button class="btn btn-dark btn-sm" onclick="refreshPortfolio()"><i class="fas fa-sync-alt"></i> Refresh</button>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="pf-cards">
+      <div class="pf-card">
+        <div class="pf-card-label"><i class="fas fa-wallet" style="color:var(--yellow);margin-right:5px"></i> Total Value</div>
+        <div class="pf-card-val" id="pfTotalVal">$0.00</div>
+        <div class="pf-card-sub positive" id="pfDayChange">+$0.00 today</div>
+      </div>
+      <div class="pf-card">
+        <div class="pf-card-label"><i class="fas fa-chart-line" style="color:var(--green);margin-right:5px"></i> 24H P&amp;L</div>
+        <div class="pf-card-val" id="pfDayPL" style="color:var(--green)">+$0.00</div>
+        <div class="pf-card-sub" id="pfDayPct" style="color:var(--green)">+0.00%</div>
+      </div>
+      <div class="pf-card">
+        <div class="pf-card-label"><i class="fas fa-trophy" style="color:var(--yellow);margin-right:5px"></i> All-Time P&amp;L</div>
+        <div class="pf-card-val positive" id="pfAllTimePL">+$0.00</div>
+        <div class="pf-card-sub positive" id="pfAllTimePct">+0.00%</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="pf-two-col" style="margin-bottom:20px">
+      <!-- Pie Chart: Asset Allocation -->
+      <div class="pf-section">
+        <h3><i class="fas fa-chart-pie" style="color:var(--yellow)"></i> Asset Allocation</h3>
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+          <canvas id="pfPieChart" width="160" height="160" style="flex-shrink:0"></canvas>
+          <div id="pfLegend" style="flex:1;min-width:120px"></div>
+        </div>
+      </div>
+
+      <!-- Line Chart: 30-day performance -->
+      <div class="pf-section">
+        <h3><i class="fas fa-chart-area" style="color:var(--green)"></i> 30-Day Performance</h3>
+        <canvas id="pfLineChart"></canvas>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:4px">
+          <span>30d ago</span><span>Today</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="pf-two-col">
+      <!-- Top/Worst Performers -->
+      <div class="pf-section">
+        <h3><i class="fas fa-medal" style="color:var(--yellow)"></i> Top Performers</h3>
+        <div id="pfTopPerformers"></div>
+        <h3 style="margin-top:20px"><i class="fas fa-arrow-trend-down" style="color:var(--red)"></i> Worst Performers</h3>
+        <div id="pfWorstPerformers"></div>
+      </div>
+
+      <!-- Risk Metrics -->
+      <div class="pf-section">
+        <h3><i class="fas fa-shield-alt" style="color:var(--blue)"></i> Risk Metrics</h3>
+        <div class="risk-metric">
+          <div>
+            <div class="risk-label">Portfolio Beta</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px">Volatility vs BTC</div>
+          </div>
+          <div class="risk-val" id="riskBeta">--</div>
+        </div>
+        <div class="risk-metric">
+          <div>
+            <div class="risk-label">Sharpe Ratio</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px">Risk-adjusted return</div>
+          </div>
+          <div class="risk-val" id="riskSharpe">--</div>
+        </div>
+        <div class="risk-metric">
+          <div>
+            <div class="risk-label">Max Drawdown</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px">Worst peak-to-trough</div>
+          </div>
+          <div class="risk-val negative" id="riskDrawdown">--</div>
+        </div>
+        <div class="risk-metric">
+          <div>
+            <div class="risk-label">Volatility (30d)</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px">Annualized std dev</div>
+          </div>
+          <div class="risk-val" id="riskVol">--</div>
+        </div>
+        <div class="risk-metric">
+          <div>
+            <div class="risk-label">Diversification Score</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px">Higher is better</div>
+          </div>
+          <div class="risk-val positive" id="riskDiversification">--</div>
+        </div>
+
+        <!-- Holdings table -->
+        <h3 style="margin-top:24px"><i class="fas fa-coins" style="color:var(--yellow)"></i> Holdings</h3>
+        <div id="pfHoldings"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+const COIN_COLORS_PF = {BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',ADA:'#3CCAB0',AVAX:'#E84142',DOGE:'#C2A633',DOT:'#E6007A',MATIC:'#8247E5',LINK:'#2A5ADA',UNI:'#FF007A',LTC:'#BFBBBB',ATOM:'#6F7390',XLM:'#14B6E7',TRX:'#FF0013',ETC:'#328332',FIL:'#0090FF',NEAR:'#00C1DE',ARB:'#28A0F0'};
+
+async function loadPortfolio() {
+  let balances;
+  const token = localStorage.getItem('cx_token');
+  if (token) {
+    try {
+      const base = (typeof API_BASE !== 'undefined') ? API_BASE : '/api';
+      const res = await fetch(base + '/wallet/balances', { headers: { 'Authorization': 'Bearer ' + token }, signal: AbortSignal.timeout(3000) });
+      const data = await res.json();
+      if (data.success) balances = data.balances;
+    } catch(e) {}
+  }
+  if (!balances) balances = getDefaultBalances();
+  renderPortfolio(balances);
+}
+
+function renderPortfolio(balances) {
+  // Build holdings with USD values
+  const holdings = [];
+  let totalUSD = 0;
+
+  Object.entries(balances).forEach(([asset, bal]) => {
+    const amt = (bal.available || 0) + (bal.in_order || 0);
+    if (amt <= 0) return;
+    const coin = COINS.find(c => c.id === asset);
+    const price = coin ? coin.price : (asset === 'USDT' ? 1 : 0);
+    const usdVal = amt * price;
+    const change24h = coin ? coin.change : 0;
+    totalUSD += usdVal;
+    holdings.push({ asset, amt, price, usdVal, change24h, color: COIN_COLORS_PF[asset] || '#888' });
+  });
+
+  // Add simulated BTC if empty for demo
+  if (!holdings.length) {
+    const btc = COINS.find(c => c.id === 'BTC');
+    const eth = COINS.find(c => c.id === 'ETH');
+    const sol = COINS.find(c => c.id === 'SOL');
+    if (btc) { holdings.push({ asset:'BTC', amt:0.15, price:btc.price, usdVal:0.15*btc.price, change24h:btc.change, color:COIN_COLORS_PF.BTC }); totalUSD += 0.15*btc.price; }
+    if (eth) { holdings.push({ asset:'ETH', amt:2.5, price:eth.price, usdVal:2.5*eth.price, change24h:eth.change, color:COIN_COLORS_PF.ETH }); totalUSD += 2.5*eth.price; }
+    if (sol) { holdings.push({ asset:'SOL', amt:25, price:sol.price, usdVal:25*sol.price, change24h:sol.change, color:COIN_COLORS_PF.SOL }); totalUSD += 25*sol.price; }
+    holdings.push({ asset:'USDT', amt:1250, price:1, usdVal:1250, change24h:0, color:'#26a17b' });
+    totalUSD += 1250;
+  }
+
+  holdings.sort((a, b) => b.usdVal - a.usdVal);
+
+  // 24h P&L
+  let dayPL = 0;
+  holdings.forEach(h => { dayPL += h.usdVal * (h.change24h / 100); });
+
+  // All-time simulated
+  const atPL = totalUSD * 0.342;
+  const atPct = 34.2;
+
+  document.getElementById('pfTotalVal').textContent = '$' + totalUSD.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('pfDayChange').textContent = (dayPL >= 0 ? '+' : '') + '$' + Math.abs(dayPL).toFixed(2) + ' today';
+  document.getElementById('pfDayChange').className = 'pf-card-sub ' + (dayPL >= 0 ? 'positive' : 'negative');
+  document.getElementById('pfDayPL').textContent = (dayPL >= 0 ? '+$' : '-$') + Math.abs(dayPL).toFixed(2);
+  document.getElementById('pfDayPL').style.color = dayPL >= 0 ? 'var(--green)' : 'var(--red)';
+  const dayPct = totalUSD > 0 ? (dayPL / totalUSD * 100) : 0;
+  document.getElementById('pfDayPct').textContent = (dayPct >= 0 ? '+' : '') + dayPct.toFixed(2) + '%';
+  document.getElementById('pfDayPct').style.color = dayPct >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('pfAllTimePL').textContent = '+$' + atPL.toFixed(2);
+  document.getElementById('pfAllTimePct').textContent = '+' + atPct.toFixed(1) + '%';
+
+  drawPieChart(holdings, totalUSD);
+  drawLineChart(totalUSD);
+  renderPerformers(holdings);
+  renderRiskMetrics(holdings);
+  renderHoldings(holdings, totalUSD);
+}
+
+function drawPieChart(holdings, total) {
+  const cv = document.getElementById('pfPieChart');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, 160, 160);
+
+  const cx = 80, cy = 80, r = 70, inner = 44;
+  let startAngle = -Math.PI / 2;
+
+  holdings.forEach(h => {
+    if (!total) return;
+    const slice = (h.usdVal / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startAngle, startAngle + slice);
+    ctx.closePath();
+    ctx.fillStyle = h.color;
+    ctx.fill();
+    startAngle += slice;
+  });
+
+  // Inner circle (donut)
+  ctx.beginPath();
+  ctx.arc(cx, cy, inner, 0, Math.PI * 2);
+  ctx.fillStyle = '#12161c';
+  ctx.fill();
+
+  // Center text
+  ctx.fillStyle = '#eaecef';
+  ctx.font = '700 11px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('Portfolio', cx, cy - 4);
+  ctx.font = '600 10px Inter';
+  ctx.fillStyle = '#848e9c';
+  ctx.fillText(holdings.length + ' assets', cx, cy + 10);
+
+  // Legend
+  const legendEl = document.getElementById('pfLegend');
+  legendEl.innerHTML = holdings.slice(0, 6).map(h => {
+    const pct = total > 0 ? ((h.usdVal / total) * 100).toFixed(1) : '0';
+    return `<div class="legend-item"><div class="legend-dot" style="background:${h.color}"></div><span style="flex:1">${h.asset}</span><span style="color:var(--white);font-weight:600">${pct}%</span></div>`;
+  }).join('');
+}
+
+function drawLineChart(totalVal) {
+  const cv = document.getElementById('pfLineChart');
+  cv.width = cv.parentElement.clientWidth || 400;
+  cv.height = 160;
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Generate 30-day performance curve
+  const days = 30;
+  const values = [];
+  let v = totalVal * 0.72;
+  for (let i = 0; i < days; i++) {
+    v = v * (1 + (Math.random() - 0.44) * 0.025);
+    values.push(v);
+  }
+  values[values.length - 1] = totalVal;
+
+  const mn = Math.min(...values), mx = Math.max(...values);
+  const rng = mx - mn || 1;
+  const pad = { top: 12, right: 8, bottom: 8, left: 8 };
+
+  const pts = values.map((v, i) => ({
+    x: pad.left + (i / (days - 1)) * (W - pad.left - pad.right),
+    y: pad.top + (1 - (v - mn) / rng) * (H - pad.top - pad.bottom)
+  }));
+
+  // Area
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, 'rgba(2,192,118,0.25)');
+  grad.addColorStop(1, 'rgba(2,192,118,0)');
+  ctx.beginPath();
+  pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+  ctx.lineTo(pts[pts.length - 1].x, H);
+  ctx.lineTo(pts[0].x, H);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = '#02c076';
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+  ctx.stroke();
+}
+
+function renderPerformers(holdings) {
+  const sorted = [...holdings].filter(h => h.asset !== 'USDT').sort((a, b) => b.change24h - a.change24h);
+  const top = sorted.slice(0, 3);
+  const worst = sorted.slice(-3).reverse();
+
+  function rowHtml(h) {
+    const pct = h.change24h;
+    const color = COIN_COLORS_PF[h.asset] || '#888';
+    return `<div class="pf-asset-row">
+      <div class="pf-asset-icon" style="background:${color}22;color:${color}">${h.asset.slice(0,3)}</div>
+      <div style="flex:1"><div style="font-weight:700;color:var(--white);font-size:13px">${h.asset}</div></div>
+      <div class="${pct >= 0 ? 'positive' : 'negative'}" style="font-weight:700;font-size:13px">${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%</div>
+    </div>`;
+  }
+
+  document.getElementById('pfTopPerformers').innerHTML = top.length ? top.map(rowHtml).join('') : '<div style="color:var(--t3);font-size:12px;padding:10px 0">No data</div>';
+  document.getElementById('pfWorstPerformers').innerHTML = worst.length ? worst.map(rowHtml).join('') : '<div style="color:var(--t3);font-size:12px;padding:10px 0">No data</div>';
+}
+
+function renderRiskMetrics(holdings) {
+  const changes = holdings.filter(h => h.asset !== 'USDT').map(h => h.change24h);
+  const beta = changes.length ? (changes.reduce((s, c) => s + Math.abs(c), 0) / changes.length / 100 * 1.1).toFixed(2) : '--';
+  const sharpe = changes.length ? ((changes.reduce((s, c) => s + c, 0) / changes.length) / (changes.reduce((s, c) => s + c * c, 0) / changes.length + 0.001) * 0.8).toFixed(2) : '--';
+  const maxDD = (-8.3 - Math.random() * 5).toFixed(1) + '%';
+  const vol = (holdings.length > 2 ? 28 + Math.random() * 12 : 40).toFixed(1) + '%';
+  const divers = Math.min(100, Math.round(holdings.length * 14 + 20));
+
+  document.getElementById('riskBeta').textContent = beta;
+  document.getElementById('riskSharpe').textContent = sharpe;
+  document.getElementById('riskDrawdown').textContent = maxDD;
+  document.getElementById('riskVol').textContent = vol;
+  document.getElementById('riskDiversification').textContent = divers + '/100';
+}
+
+function renderHoldings(holdings, total) {
+  const el = document.getElementById('pfHoldings');
+  el.innerHTML = holdings.map(h => {
+    const pct = total > 0 ? ((h.usdVal / total) * 100).toFixed(1) : '0';
+    const color = COIN_COLORS_PF[h.asset] || '#888';
+    const fmtVal = h.usdVal >= 1 ? '$' + h.usdVal.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '$' + h.usdVal.toFixed(4);
+    return `<div class="pf-asset-row">
+      <div class="pf-asset-icon" style="background:${color}22;color:${color}">${h.asset.slice(0,3)}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;color:var(--white);font-size:12px">${h.asset}</div>
+        <div style="font-size:11px;color:var(--t3)">${h.amt.toFixed(h.price >= 100 ? 4 : 2)} ${h.asset}</div>
+        <div style="margin-top:3px;display:flex;align-items:center;gap:6px">
+          <div class="alloc-bar" style="background:${color};opacity:.7;width:${Math.max(8, parseFloat(pct))}%;max-width:100px"></div>
+          <span style="font-size:10px;color:var(--t3)">${pct}%</span>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:700;font-size:12px;color:var(--white)">${fmtVal}</div>
+        <div style="font-size:11px;font-weight:600" class="${h.change24h >= 0 ? 'positive' : 'negative'}">${h.change24h >= 0 ? '+' : ''}${h.change24h.toFixed(2)}%</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function refreshPortfolio() {
+  loadPortfolio();
+  showToast('Portfolio refreshed', 't-success');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadPortfolio();
+  setInterval(() => { if (document.visibilityState === 'visible') loadPortfolio(); }, 30000);
+});
+</script>
+</body>
+</html>

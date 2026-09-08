@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -49,13 +49,23 @@
     <button class="nav-tab" onclick="location.href='earn.html'">Earn <span class="nav-tag">APY 25%</span></button>
     <button class="nav-tab" onclick="location.href='futures.html'">Derivatives</button>
     <button class="nav-tab" onclick="location.href='p2p.html'">P2P</button>
+    <button class="nav-tab" onclick="location.href='converter.html'"><i class="fas fa-exchange-alt" style="font-size:11px"></i> Converter</button>
+    <button class="nav-tab" onclick="location.href='news.html'">News</button>
+    <button class="nav-tab" onclick="location.href='alerts.html'">Alerts</button>
     <button class="nav-tab" style="color:var(--yellow)"><i class="fas fa-gift" style="font-size:11px"></i> Rewards</button>
   </div>
   <div class="nav-right" id="navAuth">
     <a href="login.html" style="color:var(--t2);font-size:13px;font-weight:600;padding:0 12px;transition:color .12s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--t2)'">Log In</a>
     <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
     <div class="nav-divider"></div>
-    <button class="nav-icon-btn" title="Search"><i class="fas fa-search"></i></button>
+    <div class="global-search-wrap" id="globalSearchWrap">
+      <button class="nav-icon-btn" id="searchToggleBtn" title="Search" onclick="toggleGlobalSearch()"><i class="fas fa-search"></i></button>
+      <div class="global-search-box" id="globalSearchBox" style="display:none">
+        <input type="text" id="globalSearchInput" placeholder="Search coins, markets..." oninput="globalSearch(this.value)" onkeydown="handleSearchKey(event)" autocomplete="off"/>
+        <i class="fas fa-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:13px;pointer-events:none"></i>
+      </div>
+      <div class="global-search-results" id="globalSearchResults" style="display:none"></div>
+    </div>
     <button class="nav-icon-btn" title="Language"><i class="fas fa-globe"></i></button>
     <button class="nav-icon-btn" id="themeBtn" title="Theme"><i class="fas fa-sun"></i></button>
   </div>
@@ -308,11 +318,12 @@
     </div>
     <div class="mkt-filter-bar">
       <div class="mkt-tabs">
-        <button class="mkt-tab active" data-f="hot">🔥 Hot</button>
-        <button class="mkt-tab" data-f="gainers">▲ Gainers</button>
-        <button class="mkt-tab" data-f="losers">▼ Losers</button>
+        <button class="mkt-tab active" data-f="hot">&#x1F525; Hot</button>
+        <button class="mkt-tab" data-f="gainers">&#9650; Gainers</button>
+        <button class="mkt-tab" data-f="losers">&#9660; Losers</button>
         <button class="mkt-tab" data-f="volume">Volume</button>
         <button class="mkt-tab" data-f="new">New</button>
+        <button class="mkt-tab" data-f="watchlist"><i class="fas fa-star" style="color:var(--yellow);font-size:10px"></i> Watchlist</button>
       </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
         <input type="text" id="mktSearch" placeholder="Search..." style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:6px 12px;color:var(--t1);font-size:12px;outline:none;width:160px" oninput="renderMktTable(currentFilter,this.value)"/>
@@ -322,6 +333,7 @@
       <table class="mkt-table">
         <thead>
           <tr>
+            <th style="width:36px"><i class="fas fa-star" style="color:var(--yellow);font-size:11px"></i></th>
             <th style="width:40px">#</th>
             <th style="text-align:left">Name</th>
             <th>Price</th>
@@ -786,7 +798,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
 function renderHeroPrices(){
   const el=document.getElementById('heroPriceList'); if(!el)return;
-  el.innerHTML=COINS.slice(0,7).map(c=>`
+  el.innerHTML=COINS.slice(0,10).map(c=>`
     <div class="hpr-row" onclick="location.href='trade.html?pair=${c.id}USDT'">
       <div class="hpr-left">
         <div class="coin-icon" style="background:${COIN_COLORS[c.id]||'#888'}22;color:${COIN_COLORS[c.id]||'#888'}">${c.id.slice(0,3)}</div>
@@ -821,9 +833,19 @@ function renderMktTable(f,search=''){
   if(f==='gainers') list=list.filter(c=>c.change>0).sort((a,b)=>b.change-a.change);
   else if(f==='losers') list=list.filter(c=>c.change<0).sort((a,b)=>a.change-b.change);
   else if(f==='volume') list=[...list].sort((a,b)=>parseFloat(b.vol.replace(/[^0-9.]/g,''))-parseFloat(a.vol.replace(/[^0-9.]/g,'')));
+  else if(f==='watchlist') { const wl=getWatchlist(); list=list.filter(c=>wl.includes(c.id)); }
   const tbody=document.getElementById('mktTbody'); if(!tbody)return;
-  tbody.innerHTML=list.slice(0,16).map((c,i)=>`
+  if(!list.length && f==='watchlist'){
+    tbody.innerHTML=`<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--t3)"><i class="fas fa-star" style="font-size:24px;margin-bottom:10px;display:block;opacity:.3"></i>No coins in watchlist.<br>Click the star icon next to any coin to add it.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=list.slice(0,50).map((c,i)=>{
+    const watched=isWatched(c.id);
+    return `
     <tr onclick="location.href='trade.html?pair=${c.id}USDT'" style="cursor:pointer">
+      <td onclick="event.stopPropagation()" style="text-align:center">
+        <button class="star-btn ${watched?'watched':''}" onclick="handleWatchlist('${c.id}',this)" title="${watched?'Remove from watchlist':'Add to watchlist'}">&#9733;</button>
+      </td>
       <td style="color:var(--t3)">${c.rank||i+1}</td>
       <td>
         <div class="coin-row">
@@ -832,17 +854,24 @@ function renderMktTable(f,search=''){
         </div>
       </td>
       <td style="font-weight:700;color:var(--white)">$${fmt(c.price,c.price)}</td>
-      <td><span class="chg-pill ${c.change>=0?'chg-up':'chg-dn'}">${c.change>=0?'▲ +':'▼ '}${c.change.toFixed(2)}%</span></td>
+      <td><span class="chg-pill ${c.change>=0?'chg-up':'chg-dn'}">${c.change>=0?'&#9650; +':'&#9660; '}${c.change.toFixed(2)}%</span></td>
       <td style="color:var(--green)">$${fmt(c.price*1.035,c.price)}</td>
       <td style="color:var(--red)">$${fmt(c.price*0.965,c.price)}</td>
       <td style="color:var(--t2)">${c.vol}</td>
       <td><canvas class="sparkline" id="sp_${c.id}" width="72" height="28"></canvas></td>
       <td><a href="trade.html?pair=${c.id}USDT" class="btn btn-ghost btn-xs" onclick="event.stopPropagation()">Trade</a></td>
-    </tr>`).join('');
+    </tr>`}).join('');
   list.slice(0,16).forEach(c=>{
     const cv=document.getElementById('sp_'+c.id);
     if(cv) drawSparkline(cv,Array.from({length:20},()=>c.price*(1+(Math.random()-.48)*.015)),c.change>=0);
   });
+}
+
+function handleWatchlist(coinId, btn) {
+  const isNowWatched = toggleWatchlist(coinId);
+  btn.classList.toggle('watched', isNowWatched);
+  showToast(isNowWatched ? coinId + ' added to watchlist' : coinId + ' removed from watchlist', 't-info');
+  if (currentFilter === 'watchlist') renderMktTable('watchlist', document.getElementById('mktSearch').value);
 }
 
 function drawSparkline(cv,data,up){
@@ -911,5 +940,49 @@ function updateNavAuth(){
     <button class="nav-icon-btn" title="Language"><i class="fas fa-globe"></i></button>`;
 }
 </script>
+
+<script>
+function toggleGlobalSearch() {
+  const box = document.getElementById('globalSearchBox');
+  const res = document.getElementById('globalSearchResults');
+  const isVisible = box.style.display !== 'none';
+  box.style.display = isVisible ? 'none' : 'block';
+  res.style.display = 'none';
+  if (!isVisible) setTimeout(() => document.getElementById('globalSearchInput') && document.getElementById('globalSearchInput').focus(), 50);
+}
+function globalSearch(q) {
+  const res = document.getElementById('globalSearchResults');
+  if (!q || q.length < 1) { res.style.display='none'; return; }
+  const matches = COINS.filter(c => c.id.toLowerCase().includes(q.toLowerCase()) || c.name.toLowerCase().includes(q.toLowerCase())).slice(0,8);
+  if (!matches.length) { res.style.display='none'; return; }
+  const COIN_COLORS_S = {BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',ADA:'#3CCAB0',AVAX:'#E84142',DOGE:'#C2A633',DOT:'#E6007A',MATIC:'#8247E5',LINK:'#2A5ADA',UNI:'#FF007A'};
+  res.innerHTML = matches.map(c => `
+    <div class="gsr-item" onclick="location.href='trade.html?pair=${c.id}USDT'">
+      <div class="gsr-coin-icon" style="background:${COIN_COLORS_S[c.id]||'#888'}22;color:${COIN_COLORS_S[c.id]||'#888'}">${c.id.slice(0,3)}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px">${c.id}<span style="color:var(--t3);font-weight:400;font-size:11px">/USDT</span></div>
+        <div style="font-size:11px;color:var(--t3)">${c.name}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:600;font-size:13px">$${fmt(c.price,c.price)}</div>
+        <div style="font-size:11px;font-weight:600" class="${c.change>=0?'positive':'negative'}">${c.change>=0?'+':''}${c.change.toFixed(2)}%</div>
+      </div>
+    </div>`).join('');
+  res.style.display = 'block';
+}
+function handleSearchKey(e) {
+  if (e.key === 'Escape') { toggleGlobalSearch(); }
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('globalSearchWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const box = document.getElementById('globalSearchBox');
+    const res = document.getElementById('globalSearchResults');
+    if (box) box.style.display = 'none';
+    if (res) res.style.display = 'none';
+  }
+});
+</script>
+<script src="js/main.js"></script>
 </body>
 </html>

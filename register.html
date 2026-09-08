@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="CryptoX"/>
 <link rel="manifest" href="/manifest.json"/>
 <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
-<title>Sign Up – CryptoX</title>
+<title>Sign Up | CryptoX</title>
 <link rel="stylesheet" href="css/style.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -150,7 +150,7 @@ function checkStrength(v){
   const bar=document.getElementById('pwdBar');
   const hint=document.getElementById('pwdHint');
   const classes=['','pwd-weak','pwd-fair','pwd-good','pwd-strong'];
-  const msgs=['','Weak — too short','Fair — add uppercase or numbers','Good — add special characters','Strong password ?'];
+  const msgs=['','Weak &rsaquo; too short','Fair &rsaquo; add uppercase or numbers','Good &rsaquo; add special characters','Strong password ?'];
   bar.className='pwd-bar '+(classes[s]||'');
   hint.textContent=v.length?msgs[s]:'';
   hint.style.color=s>=3?'var(--green)':s>=2?'var(--yellow)':'var(--red)';
