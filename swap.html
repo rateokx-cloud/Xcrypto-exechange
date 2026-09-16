@@ -739,36 +739,53 @@ function updateBalances() {
 }
 
 // ── Token UI ───────────────────────────────────────────────────────────────
+function getTokenPrice(tokenId) {
+  if (tokenId === 'USDT' || tokenId === 'USDC') return 1;
+  const coin = COINS.find(c => c.id === tokenId);
+  return coin && coin.price > 0 ? coin.price : 0;
+}
+
 function updateTokenUI() {
   // Sync prices from COINS array
-  const fc = COINS.find(c => c.id === fromToken.id);
-  const tc = COINS.find(c => c.id === toToken.id);
-  if (fc) fromToken.price = fc.price;
-  if (tc) toToken.price   = tc.price;
-  if (fromToken.id === 'USDT' || fromToken.id === 'USDC') fromToken.price = 1;
-  if (toToken.id   === 'USDT' || toToken.id   === 'USDC') toToken.price   = 1;
+  fromToken.price = getTokenPrice(fromToken.id);
+  toToken.price   = getTokenPrice(toToken.id);
 
-  // From icon
+  // Fallback prices jika COINS belum load
+  if (!fromToken.price) fromToken.price = 1;
+  if (!toToken.price)   toToken.price   = 67450; // BTC default
+
+  // From icon + symbol
   const fIcon = document.getElementById('fromIcon');
-  fIcon.textContent = fromToken.id.slice(0,3);
-  fIcon.style.background = (COIN_COLORS_SW[fromToken.id]||'#888') + '22';
-  fIcon.style.color = COIN_COLORS_SW[fromToken.id]||'#888';
-  document.getElementById('fromSym').textContent = fromToken.id;
+  if (fIcon) {
+    fIcon.textContent        = fromToken.id.slice(0, 3);
+    fIcon.style.background   = (COIN_COLORS_SW[fromToken.id] || '#888') + '22';
+    fIcon.style.color        = COIN_COLORS_SW[fromToken.id] || '#888';
+  }
+  const fSym = document.getElementById('fromSym');
+  if (fSym) fSym.textContent = fromToken.id;
 
-  // To icon
+  // To icon + symbol
   const tIcon = document.getElementById('toIcon');
-  tIcon.textContent = toToken.id.slice(0,3);
-  tIcon.style.background = (COIN_COLORS_SW[toToken.id]||'#888') + '22';
-  tIcon.style.color = COIN_COLORS_SW[toToken.id]||'#888';
-  document.getElementById('toSym').textContent = toToken.id;
+  if (tIcon) {
+    tIcon.textContent        = toToken.id.slice(0, 3);
+    tIcon.style.background   = (COIN_COLORS_SW[toToken.id] || '#888') + '22';
+    tIcon.style.color        = COIN_COLORS_SW[toToken.id] || '#888';
+  }
+  const tSym = document.getElementById('toSym');
+  if (tSym) tSym.textContent = toToken.id;
 
   calculate();
 }
 
 // ── Calculate ──────────────────────────────────────────────────────────────
 function calculate() {
+  // Selalu sync harga terbaru
+  fromToken.price = getTokenPrice(fromToken.id) || fromToken.price || 1;
+  toToken.price   = getTokenPrice(toToken.id)   || toToken.price   || 1;
+
   const fromAmt = parseFloat(document.getElementById('fromAmount').value) || 0;
-  if (fromAmt <= 0) {
+
+  if (fromAmt <= 0 || !fromToken.price || !toToken.price) {
     document.getElementById('toAmount').value = '';
     document.getElementById('swapInfo').style.display = 'none';
     document.getElementById('fromUsdVal').textContent = '\u2248 $0.00';
@@ -782,47 +799,46 @@ function calculate() {
   const minAmt  = toAmt * (1 - slippage / 100);
   const fee     = fromAmt * FEE_RATE;
 
-  // Format output
+  // Decimal places based on price
   const dp = (p) => p >= 1000 ? 2 : p >= 1 ? 4 : 8;
+
   document.getElementById('toAmount').value = toAmt.toFixed(dp(toToken.price));
-
-  // USD values
   document.getElementById('fromUsdVal').textContent = '\u2248 $' + fmtUSD(fromUSD);
-  document.getElementById('toUsdVal').textContent   = '\u2248 $' + fmtUSD(fromUSD * (1-FEE_RATE));
+  document.getElementById('toUsdVal').textContent   = '\u2248 $' + fmtUSD(fromUSD * (1 - FEE_RATE));
 
-  // Rate
+  // Rate display
   const rate = fromToken.price / toToken.price;
   const rateStr = rateFlipped
-    ? `1 ${toToken.id} = ${fmtNum(1/rate)} ${fromToken.id}`
+    ? `1 ${toToken.id} = ${fmtNum(1 / rate)} ${fromToken.id}`
     : `1 ${fromToken.id} = ${fmtNum(rate)} ${toToken.id}`;
   document.getElementById('swapRateText').textContent = rateStr;
 
-  // Min received
+  // Details
   document.getElementById('minReceived').textContent = minAmt.toFixed(dp(toToken.price)) + ' ' + toToken.id;
-  // Fee
-  document.getElementById('swapFee').textContent = fee.toFixed(fromToken.price > 100 ? 4 : 6) + ' ' + fromToken.id;
-  // Route
-  document.getElementById('swapRoute').innerHTML = fromToken.id + ' &rarr; ' + toToken.id;
-  // Price impact (simulated, very low for large amounts)
+  document.getElementById('swapFee').textContent     = fee.toFixed(dp(fromToken.price)) + ' ' + fromToken.id;
+  document.getElementById('swapRoute').innerHTML     = fromToken.id + ' &rarr; ' + toToken.id;
+
   const impact = Math.min(fromUSD / 10000000 * 100, 5).toFixed(3);
   const impactEl = document.getElementById('priceImpact');
-  impactEl.textContent = '~' + impact + '%';
-  impactEl.className = 'val ' + (parseFloat(impact) > 1 ? 'warn' : 'good');
+  if (impactEl) {
+    impactEl.textContent = '~' + impact + '%';
+    impactEl.className   = 'val ' + (parseFloat(impact) > 1 ? 'warn' : 'good');
+  }
 
   document.getElementById('swapInfo').style.display = 'block';
 
-  // Check balance
+  // Button state
   const user = getCurrentUser();
   if (!user) {
-    setSwapBtn(true, '<i class="fas fa-retweet"></i> Swap (Login to confirm)');
+    setSwapBtn(true, '<i class="fas fa-sign-in-alt"></i> Login to Swap');
     return;
   }
   const bal = userBalances[fromToken.id]?.available || 0;
   if (fromAmt > bal) {
-    setSwapBtn(false, '<i class="fas fa-exclamation-circle"></i> Insufficient ' + fromToken.id + ' Balance');
+    setSwapBtn(false, '<i class="fas fa-exclamation-circle"></i> Insufficient ' + fromToken.id);
     return;
   }
-  setSwapBtn(true, '<i class="fas fa-retweet"></i> Swap ' + fromToken.id + ' &rarr; ' + toToken.id);
+  setSwapBtn(true, '<i class="fas fa-retweet"></i> Swap ' + fromToken.id + ' \u2192 ' + toToken.id);
 }
 
 function fmtUSD(n) {
