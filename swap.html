@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#0b0e11"/>
+<title>Swap | CryptoX</title>
+<link rel="stylesheet" href="css/style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+/* ===== SWAP PAGE ===== */
+.swap-body { min-height:100vh; background:var(--bg); }
+.swap-page { max-width:480px; margin:0 auto; padding:40px 16px 80px; }
+
+.swap-heading { text-align:center; margin-bottom:32px; }
+.swap-heading h1 { font-size:28px; font-weight:900; color:var(--white); margin-bottom:6px; }
+.swap-heading p  { font-size:14px; color:var(--t2); }
+
+/* ── Main Swap Card ── */
+.swap-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+}
+.swap-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 21px;
+  background: linear-gradient(135deg, rgba(240,185,11,.15), transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.swap-card:hover::before { opacity: 1; }
+
+/* Token Input Box */
+.token-box {
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  transition: border-color .15s;
+  position: relative;
+}
+.token-box:focus-within { border-color: var(--yellow); }
+.token-box-label {
+  font-size: 11px;
+  color: var(--t3);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.token-balance {
+  font-size: 11px;
+  color: var(--t3);
+  cursor: pointer;
+  transition: color .12s;
+}
+.token-balance:hover { color: var(--yellow); }
+.token-balance span { color: var(--t2); font-weight: 600; }
+
+.token-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.token-amount {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--white);
+  width: 100%;
+  min-width: 0;
+}
+.token-amount::placeholder { color: var(--t4); }
+.token-amount:read-only { color: var(--green); cursor: default; }
+
+/* Token Selector Button */
+.token-sel-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  border-radius: 50px;
+  padding: 8px 12px 8px 8px;
+  cursor: pointer;
+  transition: all .15s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.token-sel-btn:hover { border-color: var(--yellow); background: var(--bg5); }
+.token-sel-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.token-sel-sym { font-size: 15px; font-weight: 800; color: var(--white); }
+.token-sel-arrow { font-size: 10px; color: var(--t3); }
+
+.token-usd-val {
+  font-size: 12px;
+  color: var(--t3);
+  margin-top: 8px;
+}
+
+/* Swap Button (middle arrow) */
+.swap-mid-btn {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0;
+  position: relative;
+  z-index: 1;
+}
+.swap-arrow-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--bg3);
+  border: 2px solid var(--border2);
+  color: var(--yellow);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s;
+  position: relative;
+}
+.swap-arrow-btn:hover {
+  background: var(--yellow);
+  color: #111;
+  border-color: var(--yellow);
+  transform: rotate(180deg);
+}
+
+/* Route / Info */
+.swap-info {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  font-size: 12px;
+}
+.swap-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  color: var(--t2);
+}
+.swap-info-row .val { color: var(--t1); font-weight: 600; }
+.swap-info-row .val.good { color: var(--green); }
+.swap-info-row .val.warn { color: var(--yellow); }
+.swap-rate-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+  padding: 8px 0 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.swap-rate-row i { color: var(--yellow); font-size: 11px; }
+
+/* Slippage Settings */
+.slippage-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+.slippage-label { font-size: 12px; color: var(--t3); }
+.slippage-btns { display: flex; gap: 4px; margin-left: auto; }
+.slippage-btn {
+  padding: 4px 10px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--t2);
+  cursor: pointer;
+  transition: all .12s;
+}
+.slippage-btn:hover, .slippage-btn.active {
+  background: rgba(240,185,11,.1);
+  border-color: var(--yellow);
+  color: var(--yellow);
+}
+.slippage-custom {
+  width: 54px;
+  height: 26px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--t1);
+  outline: none;
+  padding: 0 6px;
+}
+.slippage-custom:focus { border-color: var(--yellow); }
+
+/* Confirm Button */
+.swap-confirm-btn {
+  width: 100%;
+  height: 52px;
+  background: var(--yellow);
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #111;
+  cursor: pointer;
+  margin-top: 14px;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.swap-confirm-btn:hover { background: #d9a609; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(240,185,11,.25); }
+.swap-confirm-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+.swap-confirm-btn.preview { background: var(--bg3); color: var(--t1); border: 1px solid var(--border2); }
+.swap-confirm-btn.preview:hover { border-color: var(--yellow); background: var(--bg4); }
+
+/* Recent Swaps */
+.recent-swaps { margin-top: 28px; }
+.recent-swaps h3 { font-size: 14px; font-weight: 700; color: var(--t2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .5px; }
+.swap-history-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: border-color .12s;
+}
+.swap-history-item:hover { border-color: var(--border2); }
+.shi-icon { font-size: 18px; color: var(--yellow); flex-shrink: 0; }
+.shi-info { flex: 1; }
+.shi-pair { font-size: 13px; font-weight: 700; color: var(--white); }
+.shi-detail { font-size: 11px; color: var(--t3); margin-top: 2px; }
+.shi-amount { text-align: right; }
+.shi-val { font-size: 13px; font-weight: 700; color: var(--green); }
+.shi-time { font-size: 11px; color: var(--t3); margin-top: 2px; }
+
+/* Token Modal */
+.token-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.token-modal-overlay.open { opacity: 1; pointer-events: auto; }
+.token-modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(.95) translateY(10px);
+  transition: transform .2s;
+  margin: 0 16px;
+}
+.token-modal-overlay.open .token-modal { transform: scale(1) translateY(0); }
+.token-modal-head {
+  padding: 18px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.token-modal-head h3 { font-size: 16px; font-weight: 800; color: var(--white); }
+.token-modal-close {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: none;
+  color: var(--t2);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .12s;
+}
+.token-modal-close:hover { background: var(--bg4); color: var(--white); }
+.token-search-wrap {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.token-search-inp {
+  width: 100%;
+  height: 40px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 0 12px 0 36px;
+  color: var(--t1);
+  font-size: 13px;
+  outline: none;
+  transition: border .12s;
+  position: relative;
+}
+.token-search-inp:focus { border-color: var(--yellow); }
+.token-search-icon {
+  position: absolute;
+  left: 28px;
+  margin-top: -28px;
+  color: var(--t3);
+  font-size: 13px;
+  pointer-events: none;
+}
+/* Popular tokens */
+.popular-tokens {
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.popular-token-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--t2);
+  cursor: pointer;
+  transition: all .12s;
+}
+.popular-token-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+.popular-token-icon {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 7px; font-weight: 800; flex-shrink: 0;
+}
+/* Token List */
+.token-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px 0;
+}
+.token-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background .1s;
+}
+.token-list-item:hover { background: var(--bg3); }
+.token-list-item.disabled { opacity: .4; cursor: not-allowed; }
+.tli-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; flex-shrink: 0;
+}
+.tli-info { flex: 1; }
+.tli-sym { font-size: 14px; font-weight: 700; color: var(--white); }
+.tli-name { font-size: 11px; color: var(--t3); margin-top: 1px; }
+.tli-right { text-align: right; }
+.tli-price { font-size: 13px; font-weight: 600; color: var(--t1); }
+.tli-change { font-size: 11px; font-weight: 600; margin-top: 1px; }
+
+/* Confirm Modal */
+.confirm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.confirm-modal-overlay.open { opacity: 1; pointer-events: auto; }
+.confirm-modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+  margin: 0 16px;
+  transform: scale(.95);
+  transition: transform .2s;
+}
+.confirm-modal-overlay.open .confirm-modal { transform: scale(1); }
+
+/* Success animation */
+@keyframes successPop {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.success-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--green-dim);
+  color: var(--green);
+  font-size: 28px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  animation: successPop .4s ease forwards;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .swap-page { padding: 20px 12px 60px; }
+  .token-amount { font-size: 22px; }
+  .swap-confirm-btn { height: 48px; font-size: 15px; }
+}
+</style>
+</head>
+<body class="swap-body">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="30" height="30" rx="6" fill="#f0b90b"/>
+      <path d="M15 4.5L20.5 8V12L15 8.5L9.5 12V8L15 4.5Z" fill="#111" fill-opacity="0.9"/>
+      <path d="M9.5 12V19.5L15 23L20.5 19.5V12L15 15.5L9.5 12Z" fill="#111" fill-opacity="0.75"/>
+      <path d="M15 15.5L20.5 12V19.5L15 23V15.5Z" fill="#111" fill-opacity="0.5"/>
+    </svg>
+    <span class="nav-logo-text">CryptoX</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-tab" onclick="location.href='index.html'">Markets</button>
+    <button class="nav-tab" onclick="location.href='trade.html'">Trade</button>
+    <button class="nav-tab active"><i class="fas fa-retweet" style="font-size:11px"></i> Swap</button>
+    <button class="nav-tab" onclick="location.href='converter.html'">Converter</button>
+    <button class="nav-tab" onclick="location.href='earn.html'">Earn</button>
+  </div>
+  <div class="nav-right" id="navAuth">
+    <a href="login.html" style="color:var(--t2);font-size:13px;font-weight:600;padding:0 12px">Log In</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+    <div class="nav-divider"></div>
+    <button class="nav-icon-btn" id="themeBtn" title="Theme"><i class="fas fa-sun"></i></button>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="swap-page">
+
+  <div class="swap-heading">
+    <h1><i class="fas fa-retweet" style="color:var(--yellow)"></i> Swap</h1>
+    <p>Instantly swap between 100+ cryptocurrencies</p>
+  </div>
+
+  <!-- SWAP CARD -->
+  <div class="swap-card">
+
+    <!-- Slippage Settings -->
+    <div class="slippage-row">
+      <span class="slippage-label"><i class="fas fa-sliders-h" style="margin-right:4px"></i> Slippage Tolerance</span>
+      <div class="slippage-btns">
+        <button class="slippage-btn active" onclick="setSlippage(0.1,this)">0.1%</button>
+        <button class="slippage-btn" onclick="setSlippage(0.5,this)">0.5%</button>
+        <button class="slippage-btn" onclick="setSlippage(1,this)">1%</button>
+        <input class="slippage-custom" type="number" id="slippageCustom" placeholder="%" min="0.01" max="50" step="0.1" oninput="setSlippageCustom(this.value)" title="Custom slippage"/>
+      </div>
+    </div>
+
+    <div style="height:14px"></div>
+
+    <!-- FROM TOKEN -->
+    <div class="token-box" id="fromBox">
+      <div class="token-box-label">
+        <span>You Pay</span>
+        <span class="token-balance" onclick="setMaxFrom()">
+          Balance: <span id="fromBalance">0.00</span>
+        </span>
+      </div>
+      <div class="token-input-row">
+        <input class="token-amount" type="number" id="fromAmount" placeholder="0.0"
+               oninput="onFromInput()" min="0" step="any"/>
+        <button class="token-sel-btn" onclick="openTokenModal('from')">
+          <div class="token-sel-icon" id="fromIcon" style="background:#26A17B22;color:#26A17B">USD</div>
+          <span class="token-sel-sym" id="fromSym">USDT</span>
+          <i class="fas fa-chevron-down token-sel-arrow"></i>
+        </button>
+      </div>
+      <div class="token-usd-val" id="fromUsdVal">&#x2248; $0.00</div>
+    </div>
+
+    <!-- SWAP ARROW -->
+    <div class="swap-mid-btn">
+      <button class="swap-arrow-btn" onclick="flipTokens()" title="Flip tokens">
+        <i class="fas fa-arrow-down"></i>
+      </button>
+    </div>
+
+    <!-- TO TOKEN -->
+    <div class="token-box" id="toBox">
+      <div class="token-box-label">
+        <span>You Receive</span>
+        <span class="token-balance">
+          Balance: <span id="toBalance">0.00</span>
+        </span>
+      </div>
+      <div class="token-input-row">
+        <input class="token-amount" type="number" id="toAmount" placeholder="0.0" readonly/>
+        <button class="token-sel-btn" onclick="openTokenModal('to')">
+          <div class="token-sel-icon" id="toIcon" style="background:#F7931A22;color:#F7931A">BTC</div>
+          <span class="token-sel-sym" id="toSym">BTC</span>
+          <i class="fas fa-chevron-down token-sel-arrow"></i>
+        </button>
+      </div>
+      <div class="token-usd-val" id="toUsdVal">&#x2248; $0.00</div>
+    </div>
+
+    <!-- Rate Info -->
+    <div class="swap-info" id="swapInfo" style="display:none">
+      <div class="swap-rate-row">
+        <i class="fas fa-bolt"></i>
+        <span id="swapRateText">1 USDT = 0.00001482 BTC</span>
+        <button onclick="flipRate()" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:11px;margin-left:auto" title="Flip rate">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+      <div class="swap-info-row">
+        <span>Price Impact</span>
+        <span class="val good" id="priceImpact">~0.01%</span>
+      </div>
+      <div class="swap-info-row">
+        <span>Minimum Received</span>
+        <span class="val" id="minReceived">-- BTC</span>
+      </div>
+      <div class="swap-info-row">
+        <span>Swap Fee</span>
+        <span class="val" id="swapFee">0.00 USDT</span>
+      </div>
+      <div class="swap-info-row">
+        <span>Route</span>
+        <span class="val" id="swapRoute">USDT &rarr; BTC</span>
+      </div>
+    </div>
+
+    <!-- Confirm Button -->
+    <button class="swap-confirm-btn" id="swapBtn" onclick="initiateSwap()" disabled>
+      <i class="fas fa-retweet"></i> Enter an amount
+    </button>
+
+  </div>
+
+  <!-- Recent Swaps -->
+  <div class="recent-swaps">
+    <h3><i class="fas fa-history" style="margin-right:6px"></i> Recent Swaps</h3>
+    <div id="recentSwapsList">
+      <div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">
+        <i class="fas fa-retweet" style="font-size:28px;opacity:.3;display:block;margin-bottom:8px"></i>
+        No recent swaps yet
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOKEN SELECTOR MODAL -->
+<div class="token-modal-overlay" id="tokenModalOverlay" onclick="closeTokenModal(event)">
+  <div class="token-modal">
+    <div class="token-modal-head">
+      <h3>Select Token</h3>
+      <button class="token-modal-close" onclick="closeTokenModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="token-search-wrap" style="position:relative">
+      <i class="fas fa-search token-search-icon" style="position:absolute;left:28px;top:50%;transform:translateY(-50%);pointer-events:none"></i>
+      <input class="token-search-inp" id="tokenSearchInp" type="text"
+             placeholder="Search by name or symbol..."
+             oninput="filterTokenList(this.value)"
+             style="padding-left:36px"/>
+    </div>
+    <div class="popular-tokens" id="popularTokens"></div>
+    <div class="token-list" id="tokenListEl"></div>
+  </div>
+</div>
+
+<!-- CONFIRM SWAP MODAL -->
+<div class="confirm-modal-overlay" id="confirmModalOverlay">
+  <div class="confirm-modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <h3 style="font-size:18px;font-weight:800;color:var(--white)">Confirm Swap</h3>
+      <button class="token-modal-close" onclick="closeConfirmModal()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- From → To display -->
+    <div style="background:var(--bg3);border-radius:14px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div id="confFromIcon" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0"></div>
+        <div style="flex:1">
+          <div style="font-size:22px;font-weight:800;color:var(--white)" id="confFromAmt"></div>
+          <div style="font-size:12px;color:var(--t3)" id="confFromSym"></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;margin:10px 0">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;color:var(--yellow)">
+          <i class="fas fa-arrow-down" style="font-size:12px"></i>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div id="confToIcon" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0"></div>
+        <div style="flex:1">
+          <div style="font-size:22px;font-weight:800;color:var(--green)" id="confToAmt"></div>
+          <div style="font-size:12px;color:var(--t3)" id="confToSym"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div style="font-size:12px;color:var(--t2);padding:4px 0">
+      <div class="swap-info-row"><span>Rate</span><span class="val" id="confRate"></span></div>
+      <div class="swap-info-row"><span>Slippage</span><span class="val warn" id="confSlippage"></span></div>
+      <div class="swap-info-row"><span>Fee (0.1%)</span><span class="val" id="confFee"></span></div>
+      <div class="swap-info-row"><span>Min. Received</span><span class="val" id="confMin"></span></div>
+    </div>
+
+    <p style="font-size:11px;color:var(--t3);margin:12px 0;line-height:1.5">
+      <i class="fas fa-info-circle" style="color:var(--yellow);margin-right:4px"></i>
+      Output is estimated. Transaction will revert if price moves more than your slippage tolerance.
+    </p>
+
+    <button class="swap-confirm-btn" id="confirmSwapBtn" onclick="executeSwap()">
+      <i class="fas fa-check"></i> Confirm Swap
+    </button>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+const COIN_COLORS_SW = {
+  BTC:'#F7931A',ETH:'#627EEA',BNB:'#F0B90B',SOL:'#9945FF',XRP:'#00AAE4',
+  USDT:'#26A17B',USDC:'#2775CA',ADA:'#3CCAB0',AVAX:'#E84142',DOGE:'#C2A633',
+  TRX:'#FF0013',TON:'#0098EA',MATIC:'#8247E5',DOT:'#E6007A',LINK:'#2A5ADA',
+  SHIB:'#FFA409',LTC:'#BFBBBB',BCH:'#8DC351',UNI:'#FF007A',ATOM:'#6F7390',
+  NEAR:'#00C1DE',ARB:'#28A0F0',OP:'#FF0420',AAVE:'#B6509E',MKR:'#1AAB9B',
+  INJ:'#00D4FF',APT:'#00CDAC',SUI:'#6FBCF0',PEPE:'#009A00',WIF:'#A52A2A',
+  BONK:'#F7931A',FET:'#1B2D44',RENDER:'#FF4B00',JUP:'#C4AC6E',SEI:'#9B2335',
+};
+
+let fromToken   = { id:'USDT', name:'Tether USD',  color:'#26A17B', price:1      };
+let toToken     = { id:'BTC',  name:'Bitcoin',      color:'#F7931A', price:67450  };
+let slippage    = 0.1;
+let modalTarget = 'from'; // 'from' or 'to'
+let rateFlipped = false;
+let userBalances = {};
+const FEE_RATE  = 0.001; // 0.1%
+const POPULAR_TOKENS = ['USDT','BTC','ETH','BNB','SOL','XRP','ADA','DOGE','MATIC','USDC','TRX','TON'];
+
+// ── Init ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  await initAuthOnLoad();
+  const user = getCurrentUser();
+  if (user) {
+    loadBalances(user);
+    renderRecentSwaps();
+  }
+  updateTokenUI();
+  renderPopularTokens();
+  renderTokenList('');
+  // Auto-update prices every 3s
+  setInterval(() => {
+    updateTokenUI();
+    calculate();
+  }, 3000);
+});
+
+// ── Load Balances ──────────────────────────────────────────────────────────
+async function loadBalances(user) {
+  try {
+    const token = localStorage.getItem('cx_token');
+    if (token) {
+      const res  = await fetch('/api/wallet/balances', { headers: { 'Authorization': 'Bearer ' + token } });
+      const data = await res.json();
+      if (data.success) { userBalances = data.balances; updateBalances(); return; }
+    }
+  } catch(e) {}
+  userBalances = getDefaultBalances();
+  updateBalances();
+}
+
+function updateBalances() {
+  const fb = userBalances[fromToken.id];
+  const tb = userBalances[toToken.id];
+  const fromBal = fb ? (fb.available || 0) : 0;
+  const toBal   = tb ? (tb.available || 0) : 0;
+  const dp = (id) => id === 'USDT' || id === 'USDC' ? 2 : 6;
+  document.getElementById('fromBalance').textContent = fromBal.toFixed(dp(fromToken.id)) + ' ' + fromToken.id;
+  document.getElementById('toBalance').textContent   = toBal.toFixed(dp(toToken.id))   + ' ' + toToken.id;
+}
+
+// ── Token UI ───────────────────────────────────────────────────────────────
+function updateTokenUI() {
+  // Sync prices from COINS array
+  const fc = COINS.find(c => c.id === fromToken.id);
+  const tc = COINS.find(c => c.id === toToken.id);
+  if (fc) fromToken.price = fc.price;
+  if (tc) toToken.price   = tc.price;
+  if (fromToken.id === 'USDT' || fromToken.id === 'USDC') fromToken.price = 1;
+  if (toToken.id   === 'USDT' || toToken.id   === 'USDC') toToken.price   = 1;
+
+  // From icon
+  const fIcon = document.getElementById('fromIcon');
+  fIcon.textContent = fromToken.id.slice(0,3);
+  fIcon.style.background = (COIN_COLORS_SW[fromToken.id]||'#888') + '22';
+  fIcon.style.color = COIN_COLORS_SW[fromToken.id]||'#888';
+  document.getElementById('fromSym').textContent = fromToken.id;
+
+  // To icon
+  const tIcon = document.getElementById('toIcon');
+  tIcon.textContent = toToken.id.slice(0,3);
+  tIcon.style.background = (COIN_COLORS_SW[toToken.id]||'#888') + '22';
+  tIcon.style.color = COIN_COLORS_SW[toToken.id]||'#888';
+  document.getElementById('toSym').textContent = toToken.id;
+
+  calculate();
+}
+
+// ── Calculate ──────────────────────────────────────────────────────────────
+function calculate() {
+  const fromAmt = parseFloat(document.getElementById('fromAmount').value) || 0;
+  if (fromAmt <= 0) {
+    document.getElementById('toAmount').value = '';
+    document.getElementById('swapInfo').style.display = 'none';
+    document.getElementById('fromUsdVal').textContent = '\u2248 $0.00';
+    document.getElementById('toUsdVal').textContent   = '\u2248 $0.00';
+    setSwapBtn(false, '<i class="fas fa-retweet"></i> Enter an amount');
+    return;
+  }
+
+  const fromUSD = fromAmt * fromToken.price;
+  const toAmt   = (fromUSD * (1 - FEE_RATE)) / toToken.price;
+  const minAmt  = toAmt * (1 - slippage / 100);
+  const fee     = fromAmt * FEE_RATE;
+
+  // Format output
+  const dp = (p) => p >= 1000 ? 2 : p >= 1 ? 4 : 8;
+  document.getElementById('toAmount').value = toAmt.toFixed(dp(toToken.price));
+
+  // USD values
+  document.getElementById('fromUsdVal').textContent = '\u2248 $' + fmtUSD(fromUSD);
+  document.getElementById('toUsdVal').textContent   = '\u2248 $' + fmtUSD(fromUSD * (1-FEE_RATE));
+
+  // Rate
+  const rate = fromToken.price / toToken.price;
+  const rateStr = rateFlipped
+    ? `1 ${toToken.id} = ${fmtNum(1/rate)} ${fromToken.id}`
+    : `1 ${fromToken.id} = ${fmtNum(rate)} ${toToken.id}`;
+  document.getElementById('swapRateText').textContent = rateStr;
+
+  // Min received
+  document.getElementById('minReceived').textContent = minAmt.toFixed(dp(toToken.price)) + ' ' + toToken.id;
+  // Fee
+  document.getElementById('swapFee').textContent = fee.toFixed(fromToken.price > 100 ? 4 : 6) + ' ' + fromToken.id;
+  // Route
+  document.getElementById('swapRoute').innerHTML = fromToken.id + ' &rarr; ' + toToken.id;
+  // Price impact (simulated, very low for large amounts)
+  const impact = Math.min(fromUSD / 10000000 * 100, 5).toFixed(3);
+  const impactEl = document.getElementById('priceImpact');
+  impactEl.textContent = '~' + impact + '%';
+  impactEl.className = 'val ' + (parseFloat(impact) > 1 ? 'warn' : 'good');
+
+  document.getElementById('swapInfo').style.display = 'block';
+
+  // Check balance
+  const user = getCurrentUser();
+  if (!user) {
+    setSwapBtn(true, '<i class="fas fa-retweet"></i> Swap (Login to confirm)');
+    return;
+  }
+  const bal = userBalances[fromToken.id]?.available || 0;
+  if (fromAmt > bal) {
+    setSwapBtn(false, '<i class="fas fa-exclamation-circle"></i> Insufficient ' + fromToken.id + ' Balance');
+    return;
+  }
+  setSwapBtn(true, '<i class="fas fa-retweet"></i> Swap ' + fromToken.id + ' &rarr; ' + toToken.id);
+}
+
+function fmtUSD(n) {
+  return n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+function fmtNum(n) {
+  if (n >= 1000) return n.toLocaleString('en-US',{maximumFractionDigits:2});
+  if (n >= 1)    return n.toFixed(4);
+  if (n >= 0.001)return n.toFixed(6);
+  return n.toFixed(10);
+}
+
+function setSwapBtn(enabled, html) {
+  const btn = document.getElementById('swapBtn');
+  btn.disabled = !enabled;
+  btn.innerHTML = html;
+  btn.className = 'swap-confirm-btn' + (enabled ? '' : '');
+}
+
+function onFromInput() { calculate(); }
+
+function setMaxFrom() {
+  const bal = userBalances[fromToken.id]?.available || 0;
+  if (bal > 0) {
+    document.getElementById('fromAmount').value = bal.toFixed(fromToken.id === 'USDT' ? 2 : 6);
+    calculate();
+  }
+}
+
+function flipRate() {
+  rateFlipped = !rateFlipped;
+  calculate();
+}
+
+// ── Flip Tokens ────────────────────────────────────────────────────────────
+function flipTokens() {
+  [fromToken, toToken] = [toToken, fromToken];
+  const fromAmt = parseFloat(document.getElementById('fromAmount').value) || 0;
+  const toAmt   = parseFloat(document.getElementById('toAmount').value)   || 0;
+  document.getElementById('fromAmount').value = toAmt > 0 ? toAmt.toFixed(6) : '';
+  updateBalances();
+  updateTokenUI();
+  // Animate
+  document.getElementById('fromBox').style.transform = 'translateY(10px)';
+  document.getElementById('toBox').style.transform   = 'translateY(-10px)';
+  setTimeout(() => {
+    document.getElementById('fromBox').style.transform = '';
+    document.getElementById('toBox').style.transform   = '';
+  }, 300);
+}
+
+// ── Slippage ───────────────────────────────────────────────────────────────
+function setSlippage(val, btn) {
+  slippage = val;
+  document.querySelectorAll('.slippage-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('slippageCustom').value = '';
+  calculate();
+}
+function setSlippageCustom(val) {
+  const v = parseFloat(val);
+  if (v > 0 && v <= 50) {
+    slippage = v;
+    document.querySelectorAll('.slippage-btn').forEach(b => b.classList.remove('active'));
+    calculate();
+  }
+}
+
+// ── Token Modal ────────────────────────────────────────────────────────────
+function openTokenModal(target) {
+  modalTarget = target;
+  document.getElementById('tokenModalOverlay').classList.add('open');
+  document.getElementById('tokenSearchInp').value = '';
+  renderPopularTokens();
+  renderTokenList('');
+  setTimeout(() => document.getElementById('tokenSearchInp').focus(), 100);
+}
+function closeTokenModal(e) {
+  if (e && e.target !== document.getElementById('tokenModalOverlay')) return;
+  document.getElementById('tokenModalOverlay').classList.remove('open');
+}
+function filterTokenList(q) {
+  renderTokenList(q);
+}
+function selectToken(coinId) {
+  const coin = COINS.find(c => c.id === coinId) || { id:coinId, name:coinId, color:'#888', price:1 };
+  if (coinId === 'USDT' || coinId === 'USDC') coin.price = 1;
+  if (modalTarget === 'from') {
+    if (coinId === toToken.id) { [fromToken, toToken] = [{ ...coin }, fromToken]; }
+    else fromToken = { ...coin, price: coin.price };
+  } else {
+    if (coinId === fromToken.id) { [fromToken, toToken] = [toToken, { ...coin }]; }
+    else toToken = { ...coin, price: coin.price };
+  }
+  document.getElementById('tokenModalOverlay').classList.remove('open');
+  updateBalances();
+  updateTokenUI();
+}
+
+function renderPopularTokens() {
+  const el = document.getElementById('popularTokens');
+  el.innerHTML = POPULAR_TOKENS.map(id => {
+    const c = COINS.find(x => x.id === id) || { id, color:'#888' };
+    const col = COIN_COLORS_SW[id] || '#888';
+    return `<button class="popular-token-btn" onclick="selectToken('${id}')">
+      <div class="popular-token-icon" style="background:${col}22;color:${col}">${id.slice(0,3)}</div>
+      ${id}
+    </button>`;
+  }).join('');
+}
+
+function renderTokenList(search) {
+  const el = document.getElementById('tokenListEl');
+  const q  = (search || '').toLowerCase();
+  const list = COINS.filter(c =>
+    !q || c.id.toLowerCase().includes(q) || c.name.toLowerCase().includes(q)
+  );
+
+  el.innerHTML = list.map(c => {
+    const col    = COIN_COLORS_SW[c.id] || '#888';
+    const isFrom = c.id === fromToken.id;
+    const isTo   = c.id === toToken.id;
+    const dp     = c.price >= 1000 ? 2 : c.price >= 1 ? 4 : 8;
+    const chgCls = c.change >= 0 ? 'positive' : 'negative';
+    return `<div class="token-list-item ${isFrom||isTo?'disabled':''}" onclick="${isFrom||isTo?'':('selectToken(\''+c.id+'\')')}">
+      <div class="tli-icon" style="background:${col}22;color:${col}">${c.id.slice(0,3)}</div>
+      <div class="tli-info">
+        <div class="tli-sym">${c.id} ${isFrom?'<span style="font-size:10px;color:var(--t3)">(From)</span>':isTo?'<span style="font-size:10px;color:var(--t3)">(To)</span>':''}</div>
+        <div class="tli-name">${c.name}</div>
+      </div>
+      <div class="tli-right">
+        <div class="tli-price">$${c.price.toFixed(dp)}</div>
+        <div class="tli-change ${chgCls}">${c.change>=0?'+':''}${c.change.toFixed(2)}%</div>
+      </div>
+    </div>`;
+  }).join('') || `<div style="text-align:center;padding:32px;color:var(--t3)">No tokens found</div>`;
+}
+
+// ── Initiate Swap ─────────────────────────────────────────────────────────
+function initiateSwap() {
+  const user = getCurrentUser();
+  if (!user) { location.href = 'login.html'; return; }
+
+  const fromAmt = parseFloat(document.getElementById('fromAmount').value) || 0;
+  const toAmt   = parseFloat(document.getElementById('toAmount').value)   || 0;
+  if (fromAmt <= 0) return;
+
+  const fee    = fromAmt * FEE_RATE;
+  const minAmt = toAmt * (1 - slippage / 100);
+  const dp     = (p) => p >= 1000 ? 2 : p >= 1 ? 4 : 8;
+  const col    = id => COIN_COLORS_SW[id] || '#888';
+
+  // Fill confirm modal
+  document.getElementById('confFromIcon').textContent    = fromToken.id.slice(0,3);
+  document.getElementById('confFromIcon').style.background = col(fromToken.id) + '22';
+  document.getElementById('confFromIcon').style.color    = col(fromToken.id);
+  document.getElementById('confFromAmt').textContent     = fromAmt.toFixed(dp(fromToken.price));
+  document.getElementById('confFromSym').textContent     = fromToken.id + ' (' + fromToken.name + ')';
+
+  document.getElementById('confToIcon').textContent      = toToken.id.slice(0,3);
+  document.getElementById('confToIcon').style.background = col(toToken.id) + '22';
+  document.getElementById('confToIcon').style.color      = col(toToken.id);
+  document.getElementById('confToAmt').textContent       = toAmt.toFixed(dp(toToken.price));
+  document.getElementById('confToSym').textContent       = toToken.id + ' (' + toToken.name + ')';
+
+  document.getElementById('confRate').textContent     = '1 ' + fromToken.id + ' = ' + fmtNum(fromToken.price/toToken.price) + ' ' + toToken.id;
+  document.getElementById('confSlippage').textContent = slippage + '%';
+  document.getElementById('confFee').textContent      = fee.toFixed(dp(fromToken.price)) + ' ' + fromToken.id;
+  document.getElementById('confMin').textContent      = minAmt.toFixed(dp(toToken.price)) + ' ' + toToken.id;
+
+  document.getElementById('confirmModalOverlay').classList.add('open');
+}
+
+function closeConfirmModal() {
+  document.getElementById('confirmModalOverlay').classList.remove('open');
+}
+
+// ── Execute Swap ───────────────────────────────────────────────────────────
+async function executeSwap() {
+  const user    = getCurrentUser();
+  const fromAmt = parseFloat(document.getElementById('fromAmount').value) || 0;
+  const toAmt   = parseFloat(document.getElementById('toAmount').value)   || 0;
+  if (!user || fromAmt <= 0) return;
+
+  const btn = document.getElementById('confirmSwapBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+  // Simulate network delay
+  await new Promise(r => setTimeout(r, 1500));
+
+  // Try backend API first
+  let success = false;
+  try {
+    const token = localStorage.getItem('cx_token');
+    if (token) {
+      const res  = await fetch('/api/trading/swap', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer '+token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from_coin: fromToken.id, to_coin: toToken.id,
+          from_amount: fromAmt, to_amount: toAmt,
+          slippage, fee_rate: FEE_RATE
+        })
+      });
+      const data = await res.json();
+      if (data.success) success = true;
+    }
+  } catch(e) {}
+
+  // Local fallback (update balances in memory)
+  if (!success) {
+    const fromBal = userBalances[fromToken.id]?.available || 0;
+    if (fromAmt > fromBal) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check"></i> Confirm Swap';
+      showToast('Insufficient balance', 't-err');
+      return;
+    }
+    if (!userBalances[fromToken.id]) userBalances[fromToken.id] = { available: 0, in_order: 0 };
+    if (!userBalances[toToken.id])   userBalances[toToken.id]   = { available: 0, in_order: 0 };
+    userBalances[fromToken.id].available -= fromAmt;
+    userBalances[toToken.id].available   += toAmt * (1 - slippage/100/2); // apply partial slippage
+    success = true;
+  }
+
+  closeConfirmModal();
+
+  // Save to recent swaps
+  const swapRecord = {
+    id: 'SW' + Date.now(),
+    fromToken: fromToken.id, fromAmt,
+    toToken: toToken.id,     toAmt,
+    rate: fromToken.price / toToken.price,
+    fee: fromAmt * FEE_RATE,
+    time: Date.now()
+  };
+  const history = JSON.parse(localStorage.getItem('cx_swaps') || '[]');
+  history.unshift(swapRecord);
+  localStorage.setItem('cx_swaps', JSON.stringify(history.slice(0, 20)));
+
+  // Show success
+  showSwapSuccess(fromAmt, toAmt);
+  updateBalances();
+  document.getElementById('fromAmount').value = '';
+  document.getElementById('toAmount').value   = '';
+  document.getElementById('swapInfo').style.display = 'none';
+  setSwapBtn(false, '<i class="fas fa-retweet"></i> Enter an amount');
+  renderRecentSwaps();
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-check"></i> Confirm Swap';
+}
+
+function showSwapSuccess(fromAmt, toAmt) {
+  const dp = (p) => p >= 1000 ? 2 : p >= 1 ? 4 : 8;
+  const msg = `Swapped ${fromAmt.toFixed(dp(fromToken.price))} ${fromToken.id} for ${toAmt.toFixed(dp(toToken.price))} ${toToken.id}`;
+  showToast(msg, 't-ok');
+}
+
+// ── Recent Swaps ───────────────────────────────────────────────────────────
+function renderRecentSwaps() {
+  const history = JSON.parse(localStorage.getItem('cx_swaps') || '[]');
+  const el = document.getElementById('recentSwapsList');
+  if (!history.length) {
+    el.innerHTML = `<div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">
+      <i class="fas fa-retweet" style="font-size:28px;opacity:.3;display:block;margin-bottom:8px"></i>No recent swaps yet</div>`;
+    return;
+  }
+  el.innerHTML = history.slice(0, 5).map(s => {
+    const colF = COIN_COLORS_SW[s.fromToken] || '#888';
+    const colT = COIN_COLORS_SW[s.toToken]   || '#888';
+    const dp   = (p) => p >= 1000 ? 2 : p >= 1 ? 4 : 8;
+    const rate = (typeof s.rate === 'number') ? s.rate : 0;
+    const dp2  = rate >= 1000 ? 2 : rate >= 1 ? 4 : 8;
+    const timeStr = timeSince ? timeSince(s.time) : new Date(s.time).toLocaleTimeString();
+    return `<div class="swap-history-item">
+      <i class="fas fa-retweet shi-icon"></i>
+      <div class="shi-info">
+        <div class="shi-pair">
+          <span style="color:${colF};font-weight:800">${s.fromToken}</span>
+          <i class="fas fa-arrow-right" style="font-size:10px;color:var(--t3);margin:0 5px"></i>
+          <span style="color:${colT};font-weight:800">${s.toToken}</span>
+        </div>
+        <div class="shi-detail">Rate: 1 ${s.fromToken} = ${rate.toFixed(dp2)} ${s.toToken}</div>
+      </div>
+      <div class="shi-amount">
+        <div class="shi-val">+${s.toAmt.toFixed(dp(s.toAmt))} ${s.toToken}</div>
+        <div class="shi-time">${timeStr}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg, type='t-info') {
+  const c = document.getElementById('toastContainer'); if (!c) return;
+  const icons = {'t-ok':'fa-check-circle','t-err':'fa-times-circle','t-warn':'fa-exclamation-triangle','t-info':'fa-info-circle'};
+  const t = document.createElement('div'); t.className='toast '+type;
+  t.innerHTML=`<i class="toast-icon fas ${icons[type]||'fa-info-circle'}"></i><span class="toast-msg">${msg}</span>`;
+  c.appendChild(t); setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},4000);
+}
+window.showToast = showToast;
+</script>
+</body>
+</html>
